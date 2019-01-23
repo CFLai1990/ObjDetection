@@ -1,24 +1,21 @@
-import socketio
-import tornado
+#!/usr/bin/env python
 
-# create a Socket.IO server
-sio = socketio.AsyncServer(async_mode='tornado')
+# WS server example
 
-# wrap with ASGI application
-app = tornado.web.Application(
-    [
-        (r"/socketio.io/", socketio.get_tornado_handler(sio)),
-    ],
-    # ... other application options
-)
+import asyncio
+import websockets
+import logging
 
-@sio.on('connect')
-def connect(sid, environ):
-    print('connect ', sid)
+async def hello(websocket, path):
+    name = await websocket.recv()
+    print(f"< {name}")
 
-@sio.on('disconnect')
-def disconnect(sid):
-    print('disconnect ', sid)
+    greeting = f"Hello {name}!"
 
-app.listen(5000)
-tornado.ioloop.IOLoop.current().start()
+    await websocket.send(greeting)
+    print(f"> {greeting}")
+
+start_server = websockets.serve(hello, 'localhost', 5000)
+
+asyncio.get_event_loop().run_until_complete(start_server)
+asyncio.get_event_loop().run_forever()

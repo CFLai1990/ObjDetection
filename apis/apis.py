@@ -1,30 +1,24 @@
-# Socket.io handlers
-from flask_socketio import emit
-import importlib
+# the default APIs
+from .default import APIs as defaultAPIs
+from .default import namespace as defaultNamespace
 
-#message - apiPath
-eventDict = {
-  'Hello': '.hello',
+# the bye APIs
+from .bye import APIs as byeAPIs
+from .bye import namespace as byeNamespace
+
+# the router dictionary
+# namespace: APIsClass
+routerDict = {
+  defaultNamespace: defaultAPIs,
+  byeNamespace: byeAPIs,
 }
 
 class APIs:
     'The wrapper for all APIs'
     def __init__(self, socket):
       self.socket=socket
-      self.connectSocket()
-      self.bindEvents()
-      self.disconnectSocket()
+      self.routeByNamespace()
 
-    def connectSocket(self):
-      @self.socket.on('connect', namespace='/apis')
-      def test_connect():
-        print('Client connected')
-
-    def bindEvents(self):
-      for message,apiPath in eventDict.items():
-        api = importlib.import_module(apiPath, package='apis').apiClass(self.socket, message)
-
-    def disconnectSocket(self):
-      @self.socket.on('disconnect', namespace='/apis')
-      def test_disconnect():
-        print('Client disconnected')
+    def routeByNamespace(self):
+      for namespace, APIsClass in routerDict.items():
+        APIs = APIsClass(self.socket)

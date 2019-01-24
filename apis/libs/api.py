@@ -11,6 +11,7 @@ class API:
   def bindEvents(self):
     @self.socket.on(self.message, namespace=self.namespace)
     def call_back(data):
+      print('[' + self.namespace + '] ' + 'Message received: ' + self.message)
       self.exec(data)
 
   def exec(self, data):

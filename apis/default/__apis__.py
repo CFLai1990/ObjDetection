@@ -18,7 +18,7 @@ class APIs:
     def connectSocket(self):
       @self.socket.on('connect', namespace=namespace)
       def test_connect():
-        print('Client connected, namespace: ' + namespace)
+        print('[' + namespace + '] ' + 'Client connected')
 
     def bindEvents(self):
       for message,apiName in eventDict.items():
@@ -27,4 +27,4 @@ class APIs:
     def disconnectSocket(self):
       @self.socket.on('disconnect', namespace=namespace)
       def test_disconnect():
-        print('Client disconnected, namespace: ' + namespace)
+        print('[' + namespace + '] ' + 'Client disconnected')

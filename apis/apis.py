@@ -2,15 +2,10 @@
 from .default import APIs as defaultAPIs
 from .default import namespace as defaultNamespace
 
-# the bye APIs
-from .bye import APIs as byeAPIs
-from .bye import namespace as byeNamespace
-
 # the router dictionary
 # namespace: APIsClass
 routerDict = {
   defaultNamespace: defaultAPIs,
-  byeNamespace: byeAPIs,
 }
 
 class APIs:

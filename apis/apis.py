@@ -8,6 +8,10 @@ routerDict = {
   defaultNamespace: defaultAPIs,
 }
 
+# the APIs dictionary
+# namespace: APIsInstance
+apisDict = {}
+
 class APIs:
     'The wrapper for all APIs'
     def __init__(self, socket):
@@ -16,4 +20,4 @@ class APIs:
 
     def routeByNamespace(self):
       for namespace, APIsClass in routerDict.items():
-        APIs = APIsClass(self.socket)
+        apisDict[namespace] = APIsClass(self.socket)

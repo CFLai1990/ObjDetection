@@ -9,6 +9,7 @@ import logging
 from logging import Formatter, FileHandler
 from forms import *
 import os
+import logsettings
 from apis import APIs
 
 #----------------------------------------------------------------------------#
@@ -103,6 +104,6 @@ if not app.debug:
 
 # Or specify port manually:
 if __name__ == '__main__':
-    NLPapis = APIs(socketio)
+    NLPapis = APIs(app.logger, socketio)
     port = int(os.environ.get('PORT', 5000))
-    socketio.run(app, host='127.0.0.1', port=port)
+    socketio.run(app, debug = False, host='127.0.0.1', port=port)

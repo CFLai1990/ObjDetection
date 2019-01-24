@@ -1,4 +1,4 @@
-from ..libs import API
+from ..libs import API, Logger
 
 # settings for this package
 namespace = '/api'

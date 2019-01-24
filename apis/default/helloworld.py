@@ -1,5 +1,5 @@
 from flask_socketio import emit
-from .__api__ import API
+from .__settings__ import API
 
 class apiClass(API):
   def __init__(self, socket, message, namespace):

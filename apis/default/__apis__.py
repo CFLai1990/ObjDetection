@@ -1,6 +1,6 @@
 # Socket.io handlers
 import importlib
-from .__api__ import namespace, packageName
+from .__settings__ import namespace, packageName
 
 # message - apiName
 eventDict = {

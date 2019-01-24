@@ -1,0 +1,16 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>Object Detection Test</h1>
+</div>
+<div class="input-group" style="width:100%">
+    <div class="form-group shadow-textarea">
+        <label for="nlptest">Please type in a description</label>
+        <textarea class="form-control z-depth-1" id="nlptest-input" rows="12" style="resize:none;width:100%" placeholder="Write something here..."></textarea>
+    </div>
+    <div>
+        <button type="button" class="btn btn-md btn-default" id="nlptest-submit">Submit</button>
+    </div>
+</div>
+{% endblock %}

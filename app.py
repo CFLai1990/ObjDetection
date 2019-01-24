@@ -106,4 +106,4 @@ if not app.debug:
 if __name__ == '__main__':
     NLPapis = APIs(app.logger, socketio)
     port = int(os.environ.get('PORT', 5000))
-    socketio.run(app, debug = False, host='127.0.0.1', port=port)
+    socketio.run(app, debug = True, host='127.0.0.1', port=port)

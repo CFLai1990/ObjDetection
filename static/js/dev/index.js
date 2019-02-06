@@ -1,7 +1,7 @@
 import io from 'socket.io-client'
 import FSocket from './filesocket.js'
 let $ = window.$
-let VERSION = 'db'
+let VERSION = 'dl'
 
 $(document).ready(function () {
     // Socket.io demo
@@ -13,7 +13,10 @@ $(document).ready(function () {
     case 'db':
       socket = io('http://192.168.10.9:2020/api/annotation')
       break
-    case 'websocket':
+    case 'dl':
+      socket = io('http://192.168.10.21:2020/api/annotation')
+      break
+    case 'public':
       break
   }
   let fsocket = new FSocket(socket)

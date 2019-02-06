@@ -4,10 +4,15 @@ from .libs import Logger
 from .default import APIs as defaultAPIs
 from .default import namespace as defaultNamespace
 
+# the default APIs
+from .annotation import APIs as antAPIs
+from .annotation import namespace as antNamespace
+
 # the router dictionary
 # namespace: APIsClass
 routerDict = {
   defaultNamespace: defaultAPIs,
+  antNamespace: antAPIs,
 }
 
 # the APIs dictionary

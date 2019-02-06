@@ -14,7 +14,7 @@ class API:
     @self.socket.on(self.message, namespace=self.namespace)
     def call_back(data):
       self.logger.info('Message received')
-      self.exec(data)
+      self.execute(data)
 
-  def exec(self, data):
+  def execute(self, data):
     self.socket.emit('API not found!')

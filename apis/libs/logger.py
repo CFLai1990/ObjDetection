@@ -8,16 +8,16 @@ class Logger:
     self.header = header
 
   def info(self, message):
-    self.logger.info(self.header + ' > ' + message)
+    self.logger.info(str(self.header) + ' > ' + str(message))
 
   def debug(self, message):
-    self.logger.debug(self.header + ' > ' + message)
+    self.logger.debug(str(self.header) + ' > ' + str(message))
 
   def warning(self, message):
-    self.logger.warning(self.header + ' > ' + message)
+    self.logger.warning(str(self.header) + ' > ' + str(message))
 
   def error(self, message):
-    self.logger.error(self.header + ' > ' + message)
+    self.logger.error(str(self.header) + ' > ' + str(message))
     
   def critical(self, message):
-    self.logger.critical(self.header + ' > ' + message)
+    self.logger.critical(str(self.header) + ' > ' + str(message))

@@ -1,25 +1,10 @@
 import io from 'socket.io-client'
+import FSocket from './filesocket.js'
 let $ = window.$
-let VERSION = 'local'
-
-let callbackCreator = function (socket) {
-  let callback = function () {
-    socket.on('Test', function (msg) {
-      console.log(msg)
-    })
-    $('#nlptest-submit').on('click', function () {
-      let text = $('#nlptest-input').val()
-      if (text !== '' || undefined) {
-        socket.emit('Test', text)
-      }
-    })
-  }
-  return callback
-}
+let VERSION = 'db'
 
 $(document).ready(function () {
     // Socket.io demo
-  $('#odtest-input').fileinput()
   let socket
   switch (VERSION) {
     case 'local':
@@ -31,5 +16,6 @@ $(document).ready(function () {
     case 'websocket':
       break
   }
-  socket.on('connect', callbackCreator(socket))
+  let fsocket = new FSocket(socket)
+  socket.on('connect', () => { fsocket.callback() })
 })

@@ -21,18 +21,20 @@ class apiClass(API):
 
   def loadImage(self, path):
     file = open(path, 'rb')
+    print(path)
     imgBinary = file.read()
     imgBase64 = 'data:image/png;base64,' + base64.b64encode(imgBinary)
+    print(imgBase64)
     file.close()
     return imgBase64
 
   def OD(self, obj):
     extType = obj['type']
     imgPath = self.saveImage(obj)
-    self.logger.info('image saved')
+    self.logger.info('Image saved')
     imgType = self.typeDict[extType]
     outputPath = self.objDetector.infer(imgPath, imgType, self.outputDir)
-    self.logger.info('image detection finished')
+    self.logger.info('Image detection finished')
     outputName = os.path.basename(outputPath)
     imgData = self.loadImage(outputPath)
     result = {
@@ -46,4 +48,4 @@ class apiClass(API):
     # save the text into file
     result = self.OD(obj)
     self.socket.emit(self.message, result, namespace=self.namespace)
-    self.logger.info('result sent')
+    self.logger.info('Result sent')

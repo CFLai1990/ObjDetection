@@ -20,28 +20,32 @@ class FSocket {
     console.info(`File '${this.data.name}' uploaded!`)
   }
   handleUpload () {
-    // Read the file when uploaded
+        // Read the file when uploaded
     this.fload.bind('fileloaded', (event, file) => {
       this.fread.getFile(file)
       this.fread.read((data) => {
         this.getData(data)
       })
     })
-    // Remove the file when cleared
+        // Remove the file when cleared
     this.fload.bind('fileclear', () => {
       console.log(`File '${this.data.name}' removed!`)
       this.fread.getFile(null)
     })
-    // Upload the file
+        // Upload the file
     this.fload.bind('upload', () => {
       if (this.data !== null) {
         this.handleEmit()
+        // Show the original image
+        this.iview.getImg(this.data)
+        this.iview.show()
       }
     })
   }
   handleReceive () {
     this.socket.on(this.message, (data) => {
       this.fload.show(false)
+      // Show the processed image
       this.iview.getImg(data)
       this.iview.show()
     })

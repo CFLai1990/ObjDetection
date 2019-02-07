@@ -5,7 +5,6 @@ class ImgViewer {
     this.id = '#odresult'
   }
   getImg (img) {
-    console.log(img)
     $(`${this.id} .content`).attr('src', `data:${img.type};base64,${img.data}`)
   }
   show (visible = true) {

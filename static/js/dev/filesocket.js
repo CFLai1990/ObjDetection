@@ -41,7 +41,6 @@ class FSocket {
   }
   handleReceive () {
     this.socket.on(this.message, (data) => {
-      console.log(`What's wrong with you???`)
       this.fload.show(false)
       this.iview.getImg(data)
       this.iview.show()

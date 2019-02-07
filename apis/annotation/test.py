@@ -19,10 +19,10 @@ class apiClass(API):
     file.close()
     return imgPath
 
-  def loadImage(self, path, type):
+  def loadImage(self, path):
     file = open(path, 'rb')
     imgBinary = file.read()
-    imgBase64 = 'data:' + type + ';base64,' + base64.b64encode(imgBinary)
+    imgBase64 = 'data:image/png;base64,' + base64.b64encode(imgBinary)
     file.close()
     return imgBase64
 
@@ -34,7 +34,7 @@ class apiClass(API):
     outputPath = self.objDetector.infer(imgPath, imgType, self.outputDir)
     self.logger.info('image detection finished')
     outputName = os.path.basename(outputPath)
-    imgData = self.loadImage(outputPath, extType)
+    imgData = self.loadImage(outputPath)
     result = {
       'name': outputName,
       'type': extType,

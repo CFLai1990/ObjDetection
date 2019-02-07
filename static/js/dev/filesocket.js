@@ -1,6 +1,7 @@
 import FRead from './filereader.js'
 import FLoad from './fileuploader.js'
 import IView from './imgviewer.js'
+let $ = window.$
 
 class FSocket {
   constructor (socket) {
@@ -41,6 +42,7 @@ class FSocket {
         this.iview.show()
         // Upload the original image
         this.handleEmit()
+        $('body').loadingModal('animation', 'threeBounce')
       }
     })
   }
@@ -49,6 +51,7 @@ class FSocket {
       // Show the processed image
       this.iview.getImg(data)
       this.iview.show()
+      $('body').loadingModal('hide')
     })
   }
   callback () {

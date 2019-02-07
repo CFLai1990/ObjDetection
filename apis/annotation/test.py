@@ -20,11 +20,8 @@ class apiClass(API):
 
   def loadImage(self, path):
     with open(path, 'rb') as file:
-      imgBase64 = base64.b64encode(file.read())
+      imgBase64 = str(base64.b64encode(file.read()))
       file.close()
-    print(type(imgBase64))
-    print(imgBase64)
-    print(str(imgBase64))
     return imgBase64
 
   def OD(self, obj):

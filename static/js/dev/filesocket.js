@@ -35,16 +35,17 @@ class FSocket {
         // Upload the file
     this.fload.bind('upload', () => {
       if (this.data !== null) {
-        this.handleEmit()
         // Show the original image
+        this.fload.show(false)
         this.iview.getImg(this.data)
         this.iview.show()
+        // Upload the original image
+        this.handleEmit()
       }
     })
   }
   handleReceive () {
     this.socket.on(this.message, (data) => {
-      this.fload.show(false)
       // Show the processed image
       this.iview.getImg(data)
       this.iview.show()

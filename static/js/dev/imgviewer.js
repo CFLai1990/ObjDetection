@@ -6,13 +6,13 @@ class ImgViewer {
   }
   getImg (img) {
     console.log(img)
-    $(`${this.container} .content`).attr('src', `data:${img.type};base64,${img.data}`)
+    $(`${this.id} .content`).attr('src', `data:${img.type};base64,${img.data}`)
   }
   show (visible = true) {
     if (visible === true) {
-      $(this.container).show()
+      $(this.id).show()
     } else {
-      $(this.container).hide()
+      $(this.id).hide()
     }
   }
 }

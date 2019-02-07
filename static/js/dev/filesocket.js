@@ -40,7 +40,7 @@ class FSocket {
     })
   }
   handleReceive () {
-    this.socket.on(this.message, function (data) {
+    this.socket.on(this.message, (data) => {
       this.fload.show(false)
       this.iview.getImg(data)
       this.iview.show()

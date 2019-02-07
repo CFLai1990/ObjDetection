@@ -4,3 +4,7 @@ from ..libs import API, Logger
 namespace = '/api/annotation'
 packageName = 'apis.annotation'
 filePath = './files/annotation'
+fileType = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+}

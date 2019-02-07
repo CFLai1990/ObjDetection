@@ -29,7 +29,6 @@ class FRead {
       let data = {
         name: this.file.name,
         type: this.file.type,
-        size: this.file.size,
         data: this.fread.result
       }
       cb(data)

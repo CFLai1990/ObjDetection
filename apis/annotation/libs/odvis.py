@@ -255,8 +255,6 @@ def vis_one_image(
         kp_thresh=2, dpi=200, box_alpha=0.0, dataset=None, show_class=False,
         out_when_no_box=False):
     """Visual debugging of detections."""
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
 
     if isinstance(boxes, list):
         boxes, segms, keypoints, classes = convert_from_cls_format(

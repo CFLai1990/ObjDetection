@@ -42,7 +42,7 @@ class FSocket {
         this.iview.show()
         // Upload the original image
         this.handleEmit()
-        $('body').loadingModal('animation', 'threeBounce')
+        $('body').loadingModal('animation', 'threeBounce').loadingModal('backgroundColor', 'black')
       }
     })
   }

@@ -29,7 +29,7 @@ from detectron.utils.timer import Timer
 import detectron.core.test_engine as infer_engine
 import detectron.datasets.dummy_datasets as dummy_datasets
 import detectron.utils.c2 as c2_utils
-import detectron.utils.vis as vis_utils
+from .odvis import vis_one_image
 
 from .__settings__ import DT
 
@@ -69,7 +69,7 @@ class ObjDetection:
     print(imgType)
     print(outputDir)
     # get the image name without suffix
-    imgName = os.path.basename(imgPath).replace('.' + imgType)
+    imgName = os.path.basename(imgPath).replace('.' + imgType, '')
     print(imgName)
     # the path of the output file
     outputPath = os.path.join(outputDir, '{}'.format(imgName + '_dt.' + imgType))
@@ -91,10 +91,9 @@ class ObjDetection:
         self.logger.info(' | {}: {:.3f}s'.format(k, v.average_time))
 
     # Render the masks
-    vis_utils.vis_one_image(
+    vis_one_image(
         img[:, :, ::-1],  # BGR -> RGB for visualization
-        imgPath,
-        outputDir,
+        outputPath,
         cls_boxes,
         cls_segms,
         cls_keyps,

@@ -29,8 +29,10 @@ class apiClass(API):
   def OD(self, obj):
     extType = obj['type']
     imgPath = self.saveImage(obj)
+    self.logger.info('image saved')
     imgType = self.typeDict[extType]
     outputPath = self.objDetector.infer(imgPath, imgType, self.outputPath)
+    self.logger.info('image detection finished')
     outputName = os.path.basename(outputPath)
     imgData = self.loadImage(outputPath, extType)
     result = {
@@ -44,4 +46,4 @@ class apiClass(API):
     # save the text into file
     result = self.OD(obj)
     self.socket.emit(self.message, result, namespace=self.namespace)
-    self.logger.info('API executed')
+    self.logger.info('result sent')

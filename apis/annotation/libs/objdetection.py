@@ -65,15 +65,10 @@ class ObjDetection:
     self.classDict = dummy_datasets.get_coco_dataset()
 
   def infer(self, imgPath, imgType, outputDir):
-    print(imgPath)
-    print(imgType)
-    print(outputDir)
     # get the image name without suffix
     imgName = os.path.basename(imgPath).replace('.' + imgType, '')
-    print(imgName)
     # the path of the output file
-    outputPath = os.path.join(outputDir, '{}'.format(imgName + '_dt.' + imgType))
-    print(outputPath)
+    outputPath = os.path.join(outputDir, '{}'.format(imgName + '_dt.png'))
     self.logger.info('Processing {} -> {}'.format(imgPath, outputPath))
 
     # Read the image using opencv, the result is stored in GBR
@@ -102,7 +97,6 @@ class ObjDetection:
         show_class=True,
         thresh=self.dt['threshold_detection'],
         kp_thresh=self.dt['threshold_keypoint'],
-        ext=imgType,
         out_when_no_box=True
     )
     return outputPath

@@ -65,10 +65,15 @@ class ObjDetection:
     self.classDict = dummy_datasets.get_coco_dataset()
 
   def infer(self, imgPath, imgType, outputDir):
+    print(imgPath)
+    print(imgType)
+    print(outputDir)
     # get the image name without suffix
     imgName = os.path.basename(imgPath).replace('.' + imgType)
+    print(imgName)
     # the path of the output file
     outputPath = os.path.join(outputDir, '{}'.format(imgName + '_dt.' + imgType))
+    print(outputPath)
     self.logger.info('Processing {} -> {}'.format(imgPath, outputPath))
 
     # Read the image using opencv, the result is stored in GBR

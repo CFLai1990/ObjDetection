@@ -23,7 +23,6 @@ from __future__ import unicode_literals
 import cv2
 import numpy as np
 import os
-import Image
 
 import pycocotools.mask as mask_util
 

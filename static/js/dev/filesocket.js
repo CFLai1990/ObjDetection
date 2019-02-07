@@ -1,6 +1,7 @@
 import FRead from './filereader.js'
 import FLoad from './fileuploader.js'
 import IView from './imgviewer.js'
+import Modal from './loading.js'
 let $ = window.$
 
 class FSocket {
@@ -11,6 +12,7 @@ class FSocket {
     this.fread = new FRead()
     this.fload = new FLoad()
     this.iview = new IView()
+    this.mdl = new Modal()
     this.fload.init()
   }
   getData (data) {
@@ -42,7 +44,7 @@ class FSocket {
         this.iview.show()
         // Upload the original image
         this.handleEmit()
-        $('body').loadingModal('animation', 'threeBounce').loadingModal('backgroundColor', 'black')
+        this.mdl.show(true, 'Running object detection ...')
       }
     })
   }
@@ -51,7 +53,7 @@ class FSocket {
       // Show the processed image
       this.iview.getImg(data)
       this.iview.show()
-      $('body').loadingModal('hide')
+      this.mdl.show(false)
     })
   }
   callback () {

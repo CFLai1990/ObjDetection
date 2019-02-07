@@ -1,5 +1,6 @@
 import FRead from './filereader.js'
 import FLoad from './fileuploader.js'
+import IView from './imgviewer.js'
 
 class FSocket {
   constructor (socket) {
@@ -8,6 +9,7 @@ class FSocket {
     this.data = null
     this.fread = new FRead()
     this.fload = new FLoad()
+    this.iview = new IView()
     this.fload.init()
   }
   getData (data) {
@@ -39,7 +41,9 @@ class FSocket {
   }
   handleReceive () {
     this.socket.on(this.message, function (data) {
-      console.log(data)
+      this.fload.show(false)
+      this.iview.getImg(data)
+      this.iview.show()
     })
   }
   callback () {

@@ -20,7 +20,7 @@ class apiClass(API):
 
   def loadImage(self, path):
     with open(path, 'rb') as file:
-      imgBase64 = str(base64.b64encode(file.read()))
+      imgBase64 = str(base64.b64encode(file.read()), 'utf-8') # for Python 3
       file.close()
     return imgBase64
 

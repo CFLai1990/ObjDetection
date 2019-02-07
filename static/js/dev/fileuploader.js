@@ -26,6 +26,13 @@ class FileUploader {
       $(this.id).on(event, callback)
     }
   }
+  show (visible = true) {
+    if (visible === true) {
+      $(this.container).show()
+    } else {
+      $(this.container).hide()
+    }
+  }
 }
 
 export default FileUploader

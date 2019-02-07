@@ -13,19 +13,15 @@ class apiClass(API):
 
   def saveImage(self, obj):
     imgPath = fileDir + '/' + obj['name']
-    imgBase64 = obj['data'].replace('data:' + obj['type'] + ';base64,', '')
-    file = open(imgPath, 'wb')
-    file.write(base64.b64decode(imgBase64))
-    file.close()
+    with open(imgPath, 'wb') as file:
+      file.write(base64.b64decode(obj['data']))
+      file.close()
     return imgPath
 
   def loadImage(self, path):
-    file = open(path, 'rb')
-    print(path)
-    imgBinary = file.read()
-    imgBase64 = 'data:image/png;base64,' + base64.b64encode(imgBinary)
-    print(imgBase64)
-    file.close()
+    with open(path, 'rb') as file:
+      imgBase64 = base64.b64encode(file.read())
+      file.close()
     return imgBase64
 
   def OD(self, obj):

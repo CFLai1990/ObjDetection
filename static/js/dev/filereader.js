@@ -26,10 +26,11 @@ class FRead {
     this.fread.readAsDataURL(this.file)
     this.fread.onload = () => {
       this.readSuccess()
+      let imgBase64 = this.fread.result.replace(`data:${this.file.type};base64,`, '')
       let data = {
         name: this.file.name,
         type: this.file.type,
-        data: this.fread.result
+        data: imgBase64
       }
       cb(data)
     }

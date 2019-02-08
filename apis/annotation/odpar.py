@@ -1,15 +1,14 @@
 from flask_socketio import emit
 from .__settings__ import API, fileDir, fileType
-from .libs import ObjDetection
 import base64
 import os
 
 class apiClass(API):
-  def __init__(self, logger, socket, message, namespace):
+  def __init__(self, logger, socket, message, namespace, detector):
     API.__init__(self, logger, socket, message, namespace)
     self.typeDict = fileType
     self.outputDir = fileDir
-    self.objDetector = ObjDetection()
+    self.objDetector = detector
 
   def saveImage(self, obj):
     imgPath = fileDir + '/' + obj['name']
@@ -27,7 +26,7 @@ class apiClass(API):
   def OD(self, obj):
     imgPath = self.saveImage(obj)
     self.logger.info('Image saved')
-    result = self.objDetector.infer_parameters(imgPath)
+    result = self.objDetector.inferParameters(imgPath)
     self.logger.info('Image detection finished')
     return result
 

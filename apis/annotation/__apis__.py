@@ -1,6 +1,7 @@
 # Socket.io handlers
 import importlib
 from .__settings__ import Logger, namespace, packageName
+from .libs import ObjDetection
 
 # message - apiName
 eventDict = {
@@ -16,6 +17,7 @@ class APIs:
       self.connectSocket()
       self.bindEvents()
       self.disconnectSocket()
+      self.objDetector = ObjDetection()
 
     def connectSocket(self):
       @self.socket.on('connect', namespace=namespace)
@@ -24,7 +26,7 @@ class APIs:
 
     def bindEvents(self):
       for message,apiName in eventDict.items():
-        api = importlib.import_module('.' + apiName, package=packageName).apiClass(self.logger, self.socket, message, namespace)
+        api = importlib.import_module('.' + apiName, package=packageName).apiClass(self.logger, self.socket, message, namespace, self.objDetector)
 
     def disconnectSocket(self):
       @self.socket.on('disconnect', namespace=namespace)

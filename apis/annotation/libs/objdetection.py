@@ -86,7 +86,7 @@ class ObjDetection:
     return img
 
 
-  def infer_image(self, imgPath, imgType, outputDir):
+  def inferImage(self, imgPath, imgType, outputDir):
     # get the image name without suffix
     imgName = os.path.basename(imgPath).replace('.' + imgType, '')
     # the path of the output file
@@ -109,7 +109,7 @@ class ObjDetection:
     )
     return outputPath
 
-def infer_parameters(self, imgPath):
+def inferParameters(self, imgPath):
     self.logger.info('Processing {} -> parameters'.format(imgPath))
     img = self.infer(imgPath)
     # Get the result parameters

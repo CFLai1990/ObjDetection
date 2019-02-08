@@ -10,7 +10,7 @@ class FSocket {
       'OD_Image': get the image with masks
       'OD_Pars': get the mask parameters
     */
-    this.message = 'OD_Image'
+    this.message = 'OD_Pars'
     this.data = null
     this.fread = new FRead()
     this.fload = new FLoad()

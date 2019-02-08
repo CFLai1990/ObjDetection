@@ -14,10 +14,10 @@ class APIs:
     def __init__(self, logger, socket):
       self.logger = Logger('\'' + namespace + '\'', logger)
       self.socket=socket
+      self.objDetector = ObjDetection()
       self.connectSocket()
       self.bindEvents()
       self.disconnectSocket()
-      self.objDetector = ObjDetection()
 
     def connectSocket(self):
       @self.socket.on('connect', namespace=namespace)

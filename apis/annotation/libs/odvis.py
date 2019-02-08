@@ -408,7 +408,7 @@ def parse_results(
         # Display in largest to smallest order to reduce occlusion
         areas = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])
         sorted_inds = np.argsort(-areas)    
-    results = {}
+    results = []
     # Go through the bounding boxes
     for i in sorted_inds:
         resultGen = ODResultGenerator()
@@ -428,5 +428,5 @@ def parse_results(
             e = masks[:, :, i]
             contours, hier = cv2.findContours(e.copy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
             resultGen.getMask(contours)
-        results[str(i)] = resultGen.pack()
+        results.append(resultGen.pack())
     return results

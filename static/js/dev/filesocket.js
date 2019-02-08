@@ -8,9 +8,9 @@ class FSocket {
     this.socket = socket
     /* message:
       'OD_Image': get the image with masks
-      'OD_Pars': get the mask parameters
+      'OD_Mask': get the mask parameters
     */
-    this.message = 'OD_Pars'
+    this.message = 'OD_Mask'
     this.data = null
     this.fread = new FRead()
     this.fload = new FLoad()
@@ -59,7 +59,7 @@ class FSocket {
           this.iview.getImg(data)
           this.iview.show()
           break
-        case 'OD_Pars':
+        case 'OD_Mask':
           console.log(data)
           break
       }

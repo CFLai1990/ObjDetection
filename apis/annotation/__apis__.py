@@ -6,7 +6,7 @@ from .libs import ObjDetection
 # message - apiName
 eventDict = {
   'OD_Image': 'odimg',
-  'OD_Mask': 'odpar'
+  'OD_Mask': 'odmsk'
 }
 
 class APIs:

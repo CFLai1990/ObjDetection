@@ -22,7 +22,7 @@ class apiClass(API):
     imgPath = self.saveImage(obj)
     self.logger.info('Image saved')
     result = self.objDetector.inferParameters(imgPath)
-    result = json.dumps(result)
+    result = json.dumps(result, ensure_ascii=False)
     self.logger.info('Image detection finished')
     return result
 

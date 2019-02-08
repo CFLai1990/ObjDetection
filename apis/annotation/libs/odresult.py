@@ -29,9 +29,10 @@ class ODResultGenerator:
 
   def pack(self):
     result = {
-      'class': self.className,
-      'score': self.score,
-      'bbox': self.bbox,
-      'mask': self.masks
+      self.className: {
+        'score': self.score,
+        'bbox': self.bbox,
+        'mask': self.masks
+      }
     }
     return result

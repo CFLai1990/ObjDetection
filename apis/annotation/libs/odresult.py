@@ -17,12 +17,13 @@ class ODResultGenerator:
     self.className = className
 
   def getBbox(self, x=0, y=0, width=0, height=0):
-    self.bbox = {
-      'x': x,
-      'y': y,
-      'width': width,
-      'height': height
-    }
+    self.bbox = {}
+    # {
+    #   'x': x,
+    #   'y': y,
+    #   'width': width,
+    #   'height': height
+    # }
 
   def getMask(self, contours = None):
     self.masks = []

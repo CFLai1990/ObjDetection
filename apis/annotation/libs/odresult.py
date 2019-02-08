@@ -1,5 +1,9 @@
 import numpy as np
 
+# Transform numpy data types into python data types
+def _n_(npData, dataType='float64'):
+  return npData.astype(dataType)
+
 class ODResultGenerator:
   def __init__(self):
     self.clearAll()
@@ -11,20 +15,19 @@ class ODResultGenerator:
     self.getMask()
 
   def getScore(self, score=-1):
-    print(type(score))
-    self.score = -1
+    self.score = _n_(score)
 
   def getClass(self, className='undefined'):
     self.className = className
 
   def getBbox(self, x=0, y=0, width=0, height=0):
     self.bbox = {}
-    # {
-    #   'x': x,
-    #   'y': y,
-    #   'width': width,
-    #   'height': height
-    # }
+    {
+      'x': _n_(x),
+      'y': _n_(y),
+      'width': _n_(width),
+      'height': _n_(height)
+    }
 
   def getMask(self, contours = None):
     self.masks = []

@@ -396,23 +396,23 @@ def parse_results(
         out_when_no_box=False):
     """Parse the results of Detectron, modified from vis_one_image."""
 
-        print('a')
+    print('a')
     if isinstance(boxes, list):
         boxes, segms, keypoints, classes = convert_from_cls_format(
             boxes, segms, keypoints)
 
-        print('b')
+    print('b')
     if (boxes is None or boxes.shape[0] == 0 or max(boxes[:, 4]) < thresh) and not out_when_no_box:
         return
 
-        print('c')
+    print('c')
     dataset_keypoints, _ = keypoint_utils.get_keypoints()
 
-        print('d')
+    print('d')
     if segms is not None and len(segms) > 0:
         masks = mask_util.decode(segms)
 
-        print('e')
+    print('e')
     if boxes is None:
         sorted_inds = [] # avoid crash when 'boxes' is None
     else:
@@ -420,7 +420,7 @@ def parse_results(
         areas = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])
         sorted_inds = np.argsort(-areas)
     
-        print('f')
+    print('f')
     results = {}
     # Go through the bounding boxes
     for i in sorted_inds:

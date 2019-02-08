@@ -2,12 +2,15 @@ import FRead from './filereader.js'
 import FLoad from './fileuploader.js'
 import IView from './imgviewer.js'
 import Modal from './loading.js'
-let $ = window.$
 
 class FSocket {
   constructor (socket) {
     this.socket = socket
-    this.message = 'Test'
+    /* message:
+      'OD_Image': get the image with masks
+      'OD_Pars': get the mask parameters
+    */
+    this.message = 'OD_Image'
     this.data = null
     this.fread = new FRead()
     this.fload = new FLoad()
@@ -38,11 +41,11 @@ class FSocket {
         // Upload the file
     this.fload.bind('upload', () => {
       if (this.data !== null) {
-        // Show the original image
+                // Show the original image
         this.fload.show(false)
         this.iview.getImg(this.data)
         this.iview.show()
-        // Upload the original image
+                // Upload the original image
         this.handleEmit()
         this.mdl.show(true, 'Running object detection ...')
       }
@@ -50,9 +53,16 @@ class FSocket {
   }
   handleReceive () {
     this.socket.on(this.message, (data) => {
-      // Show the processed image
-      this.iview.getImg(data)
-      this.iview.show()
+            // Show the processed image
+      switch (this.message) {
+        case 'OD_Image':
+          this.iview.getImg(data)
+          this.iview.show()
+          break
+        case 'OD_Pars':
+          console.log(data)
+          break
+      }
       this.mdl.show(false)
     })
   }

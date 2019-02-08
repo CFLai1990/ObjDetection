@@ -29,7 +29,7 @@ from detectron.utils.timer import Timer
 import detectron.core.test_engine as infer_engine
 import detectron.datasets.dummy_datasets as dummy_datasets
 import detectron.utils.c2 as c2_utils
-from .odvis import vis_one_image
+from .odvis import vis_one_image, parse_results
 
 from .__settings__ import DT
 
@@ -64,13 +64,7 @@ class ObjDetection:
     # Each value is a dictionary that looks like this: 0:'__background__', 1:'person', ...
     self.classDict = dummy_datasets.get_coco_dataset()
 
-  def infer(self, imgPath, imgType, outputDir):
-    # get the image name without suffix
-    imgName = os.path.basename(imgPath).replace('.' + imgType, '')
-    # the path of the output file
-    outputPath = os.path.join(outputDir, '{}'.format(imgName + '_dt.png'))
-    self.logger.info('Processing {} -> {}'.format(imgPath, outputPath))
-
+  def infer(self, imgPath):
     # Read the image using opencv, the result is stored in GBR
     img = cv2.imread(imgPath)
     # Start the timer
@@ -84,14 +78,28 @@ class ObjDetection:
     self.logger.info('Inference time: {:.3f}s'.format(time.time() - t))
     for k, v in timers.items():
         self.logger.info(' | {}: {:.3f}s'.format(k, v.average_time))
+    self.result = {
+        'boxes': cls_boxes,
+        'segms': cls_segms,
+        'keyps': cls_keyps
+    }
+    return img
 
+
+  def infer_image(self, imgPath, imgType, outputDir):
+    # get the image name without suffix
+    imgName = os.path.basename(imgPath).replace('.' + imgType, '')
+    # the path of the output file
+    outputPath = os.path.join(outputDir, '{}'.format(imgName + '_dt.png'))
+    self.logger.info('Processing {} -> {}'.format(imgPath, outputPath))
+    img = self.infer(imgPath)
     # Render the masks
     vis_one_image(
         img[:, :, ::-1],  # BGR -> RGB for visualization
         outputPath,
-        cls_boxes,
-        cls_segms,
-        cls_keyps,
+        self.result['boxes'],
+        self.result['segms'],
+        self.result['keyps'],
         dataset=self.classDict,
         box_alpha=0.3,
         show_class=True,
@@ -100,3 +108,19 @@ class ObjDetection:
         out_when_no_box=True
     )
     return outputPath
+
+def infer_parameters(self, imgPath):
+    self.logger.info('Processing {} -> parameters'.format(imgPath))
+    img = self.infer(imgPath)
+    # Get the result parameters
+    parameters = parse_results(
+        img[:, :, ::-1],  # BGR -> RGB for visualization
+        self.result['boxes'],
+        self.result['segms'],
+        self.result['keyps'],
+        dataset=self.classDict,
+        thresh=self.dt['threshold_detection'],
+        kp_thresh=self.dt['threshold_keypoint'],
+        out_when_no_box=True
+    )
+    return parameters

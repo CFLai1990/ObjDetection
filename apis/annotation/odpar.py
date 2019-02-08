@@ -25,19 +25,10 @@ class apiClass(API):
     return imgBase64
 
   def OD(self, obj):
-    extType = obj['type']
     imgPath = self.saveImage(obj)
     self.logger.info('Image saved')
-    imgType = self.typeDict[extType]
-    outputPath = self.objDetector.infer(imgPath, imgType, self.outputDir)
+    result = self.objDetector.infer_parameters(imgPath)
     self.logger.info('Image detection finished')
-    outputName = os.path.basename(outputPath)
-    imgData = self.loadImage(outputPath)
-    result = {
-      'name': outputName,
-      'type': extType,
-      'data': imgData,
-    }
     return result
 
   def execute(self, obj):

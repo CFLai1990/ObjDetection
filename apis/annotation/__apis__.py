@@ -4,7 +4,8 @@ from .__settings__ import Logger, namespace, packageName
 
 # message - apiName
 eventDict = {
-  'Test': 'test',
+  'OD_Image': 'odimg',
+  'OD_Mask': 'odpar'
 }
 
 class APIs:

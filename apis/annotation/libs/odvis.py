@@ -35,6 +35,7 @@ import detectron.utils.keypoints as keypoint_utils
 envu.set_up_matplotlib()
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
+from .odresult import ODResultGenerator
 
 plt.rcParams['pdf.fonttype'] = 42  # For editing in Adobe Illustrator
 
@@ -249,7 +250,6 @@ def vis_one_image_opencv(
 
     return im
 
-
 def vis_one_image(
         im, outputPath, boxes, segms=None, keypoints=None, thresh=0.9,
         kp_thresh=2, dpi=200, box_alpha=0.0, dataset=None, show_class=False,
@@ -389,3 +389,51 @@ def vis_one_image(
 
     fig.savefig(outputPath, dpi=dpi)
     plt.close('all')
+
+def parse_results(
+        im, boxes, segms=None, keypoints=None, thresh=0.9,
+        kp_thresh=2, dpi=200, dataset=None,
+        out_when_no_box=False):
+    """Parse the results of Detectron, modified from vis_one_image."""
+
+    if isinstance(boxes, list):
+        boxes, segms, keypoints, classes = convert_from_cls_format(
+            boxes, segms, keypoints)
+
+    if (boxes is None or boxes.shape[0] == 0 or max(boxes[:, 4]) < thresh) and not out_when_no_box:
+        return
+
+    dataset_keypoints, _ = keypoint_utils.get_keypoints()
+
+    if segms is not None and len(segms) > 0:
+        masks = mask_util.decode(segms)
+
+    if boxes is None:
+        sorted_inds = [] # avoid crash when 'boxes' is None
+    else:
+        # Display in largest to smallest order to reduce occlusion
+        areas = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])
+        sorted_inds = np.argsort(-areas)
+    
+    results = {}
+    # Go through the bounding boxes
+    for i in sorted_inds:
+        resultGen = ODResultGenerator()
+        bbox = boxes[i, :4]
+        score = boxes[i, -1]
+        if score < thresh:
+            continue
+        # Get the score
+        resultGen.getScore(score)
+        # Get the class name
+        className = dataset.classes[classes[i]]
+        resultGen.getClass(className)
+        # Get the bounding box
+        resultGen.getBbox(bbox[0], bbox[1], bbox[2] - bbox[0], bbox[3] - bbox[1])
+        # Get the masks
+        if segms is not None and len(segms) > i:
+            e = masks[:, :, i]
+            contours, hier = cv2.findContours(e.copy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
+            resultGen.getMask(contours)
+        results[str(i)] = resultGen.pack()
+    return results

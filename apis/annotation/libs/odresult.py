@@ -11,23 +11,17 @@ class ODResultGenerator:
     self.getMask()
 
   def getScore(self, score=-1):
-    print(type(score))
-    print(type(score.item()))
-    self.score = score.item()
+    self.score = score
 
   def getClass(self, className='undefined'):
     self.className = className
 
   def getBbox(self, x=0, y=0, width=0, height=0):
-    print(type(x))
-    print(type(x.item()))
-    print(type(width))
-    print(type(width.item()))
     self.bbox = {
-      'x': x.item(),
-      'y': y.item(),
-      'width': width.item(),
-      'height': height.item()
+      'x': x,
+      'y': y,
+      'width': width,
+      'height': height
     }
 
   def getMask(self, contours = None):

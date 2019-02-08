@@ -26,8 +26,11 @@ class ODResultGenerator:
 
   def getMask(self, contours = None):
     self.masks = contours
+    print(type(contours))
     if not(contours is None):
+      print('before')
       self.masks = contours.tolist()
+      print('after')
 
   def pack(self):
     result = {

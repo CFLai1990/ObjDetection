@@ -394,32 +394,20 @@ def parse_results(
         im, boxes, segms=None, keypoints=None, thresh=0.9,
         kp_thresh=2, dataset=None, out_when_no_box=False):
     """Parse the results of Detectron, modified from vis_one_image."""
-
-    print('a')
     if isinstance(boxes, list):
         boxes, segms, keypoints, classes = convert_from_cls_format(
             boxes, segms, keypoints)
-
-    print('b')
     if (boxes is None or boxes.shape[0] == 0 or max(boxes[:, 4]) < thresh) and not out_when_no_box:
         return
-
-    print('c')
     dataset_keypoints, _ = keypoint_utils.get_keypoints()
-
-    print('d')
     if segms is not None and len(segms) > 0:
         masks = mask_util.decode(segms)
-
-    print('e')
     if boxes is None:
         sorted_inds = [] # avoid crash when 'boxes' is None
     else:
         # Display in largest to smallest order to reduce occlusion
         areas = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])
-        sorted_inds = np.argsort(-areas)
-    
-    print('f')
+        sorted_inds = np.argsort(-areas)    
     results = {}
     # Go through the bounding boxes
     for i in sorted_inds:
@@ -428,17 +416,13 @@ def parse_results(
         score = boxes[i, -1]
         if score < thresh:
             continue
-        print('1')
         # Get the score
         resultGen.getScore(score)
-        print('2')
         # Get the class name
         className = dataset.classes[classes[i]]
         resultGen.getClass(className)
-        print('3')
         # Get the bounding box
         resultGen.getBbox(bbox[0], bbox[1], bbox[2] - bbox[0], bbox[3] - bbox[1])
-        print('4')
         # Get the masks
         if segms is not None and len(segms) > i:
             e = masks[:, :, i]

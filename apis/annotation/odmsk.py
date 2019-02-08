@@ -27,6 +27,7 @@ class apiClass(API):
     imgPath = self.saveImage(obj)
     self.logger.info('Image saved')
     result = self.objDetector.inferParameters(imgPath)
+    print(result)
     self.logger.info('Image detection finished')
     return result
 

@@ -392,8 +392,7 @@ def vis_one_image(
 
 def parse_results(
         im, boxes, segms=None, keypoints=None, thresh=0.9,
-        kp_thresh=2, dpi=200, dataset=None,
-        out_when_no_box=False):
+        kp_thresh=2, dataset=None, out_when_no_box=False):
     """Parse the results of Detectron, modified from vis_one_image."""
 
     print('a')

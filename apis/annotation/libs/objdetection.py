@@ -110,7 +110,9 @@ class ObjDetection:
     return outputPath
 
 def inferParameters(self, imgPath):
+    print('11')
     self.logger.info('Processing {} -> parameters'.format(imgPath))
+    print('22')
     img = self.infer(imgPath)
     # Get the result parameters
     parameters = parse_results(

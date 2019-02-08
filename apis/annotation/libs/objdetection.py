@@ -92,6 +92,7 @@ class ObjDetection:
     # the path of the output file
     outputPath = os.path.join(outputDir, '{}'.format(imgName + '_dt.png'))
     self.logger.info('Processing {} -> {}'.format(imgPath, outputPath))
+    # Run object detection
     img = self.infer(imgPath)
     # Render the masks
     vis_one_image(
@@ -109,10 +110,9 @@ class ObjDetection:
     )
     return outputPath
 
-def inferParameters(self, imgPath):
-    print('11')
+  def inferParameters(self, imgPath):
     self.logger.info('Processing {} -> parameters'.format(imgPath))
-    print('22')
+    # Run object detection
     img = self.infer(imgPath)
     # Get the result parameters
     parameters = parse_results(

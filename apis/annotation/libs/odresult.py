@@ -25,11 +25,7 @@ class ODResultGenerator:
     }
 
   def getMask(self, contours = None):
-    self.masks = []
-    if not(contours is None):
-      for ctr in contours:
-        msk = ctr.reshape((-1,2)).astype(float).tolist()
-        self.masks.append(msk)
+    self.masks = contours
 
   def pack(self):
     result = {

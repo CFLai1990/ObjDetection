@@ -426,7 +426,11 @@ def parse_results(
         # Get the masks
         if segms is not None and len(segms) > i:
             e = masks[:, :, i]
-            contours, hier = cv2.findContours(e.copy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
+            contourList, hier = cv2.findContours(e.copy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
+            contours = []
+            for contour in contourList:
+                ctr = contour.reshape((-1,2)).astype(float).tolist()
+                contours.append(ctr)
             resultGen.getMask(contours)
         results.append(resultGen.pack())
     return results

@@ -25,7 +25,8 @@ class apiClass(API):
 
   def OD(self, obj):
     imgPath = self.saveImage(obj)
-    self.logger.info('Image saved')
+    self.logger.info('Image saved -- msk')
+    print(imgPath)
     result = self.objDetector.inferParameters(imgPath)
     self.logger.info('Image detection finished')
     return result

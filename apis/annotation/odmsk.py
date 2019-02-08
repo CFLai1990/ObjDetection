@@ -27,6 +27,5 @@ class apiClass(API):
   def execute(self, obj):
     # save the text into file
     result = self.OD(obj)
-    test=['1','2','3']
-    self.socket.emit(self.message, test, namespace=self.namespace)
+    self.socket.emit(self.message, result, namespace=self.namespace)
     self.logger.info('Result sent')

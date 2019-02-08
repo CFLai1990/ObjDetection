@@ -423,13 +423,17 @@ def parse_results(
         score = boxes[i, -1]
         if score < thresh:
             continue
+        print('1')
         # Get the score
         resultGen.getScore(score)
+        print('2')
         # Get the class name
         className = dataset.classes[classes[i]]
         resultGen.getClass(className)
+        print('3')
         # Get the bounding box
         resultGen.getBbox(bbox[0], bbox[1], bbox[2] - bbox[0], bbox[3] - bbox[1])
+        print('4')
         # Get the masks
         if segms is not None and len(segms) > i:
             e = masks[:, :, i]

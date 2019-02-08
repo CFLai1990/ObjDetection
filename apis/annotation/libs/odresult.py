@@ -16,18 +16,19 @@ class ODResultGenerator:
 
   def getScore(self, score=-1):
     self.score = _n_(score)
+    print(type(self.score))
 
   def getClass(self, className='undefined'):
     self.className = className
 
   def getBbox(self, x=0, y=0, width=0, height=0):
     self.bbox = {}
-    {
-      'x': _n_(x),
-      'y': _n_(y),
-      'width': _n_(width),
-      'height': _n_(height)
-    }
+    # {
+    #   'x': _n_(x),
+    #   'y': _n_(y),
+    #   'width': _n_(width),
+    #   'height': _n_(height)
+    # }
 
   def getMask(self, contours = None):
     self.masks = []

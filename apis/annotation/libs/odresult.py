@@ -11,7 +11,8 @@ class ODResultGenerator:
     self.getMask()
 
   def getScore(self, score=-1):
-    self.score = score
+    print(type(score))
+    self.score = -1
 
   def getClass(self, className='undefined'):
     self.className = className

@@ -2,6 +2,7 @@
 import importlib
 from .__settings__ import Logger, namespace, packageName
 from .libs import ObjDetection
+from flask import request
 
 # message - apiName
 eventDict = {
@@ -22,7 +23,7 @@ class APIs:
     def connectSocket(self):
       @self.socket.on('connect', namespace=namespace)
       def test_connect():
-        self.logger.info('Client connected')
+        self.logger.info('Client connected: ' + request.sid)
 
     def bindEvents(self):
       for message,apiName in eventDict.items():
@@ -31,4 +32,4 @@ class APIs:
     def disconnectSocket(self):
       @self.socket.on('disconnect', namespace=namespace)
       def test_disconnect():
-        self.logger.info('Client disconnected')
+        self.logger.info('Client disconnected: ' + request.sid)

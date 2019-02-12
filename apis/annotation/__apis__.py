@@ -33,7 +33,7 @@ class APIs:
         clientID = request.sid
         self.initOutput(clientID)
         self.bindEvents(clientID)
-        self.socket.emit('__room', clientID, namespace=namespace, room=clientID)
+        self.socket.emit('__room', clientID, namespace=namespace)
         self.logger.info('Client connected: [ID]' + clientID)
 
     def bindEvents(self, clientID):

@@ -1,6 +1,9 @@
 from flask_socketio import emit
 from .logger import Logger
 
+def Msg(message, clientID):
+  return message + '@' + clientID
+
 class API:
   'The universal API class'
   def __init__(self, parameters):
@@ -14,7 +17,7 @@ class API:
     self.bindEvents()
 
   def bindEvents(self):
-    self.clientMsg = self.message + '@' + self.clientID
+    self.clientMsg = Msg(self.message, self.clientID)
     @self.socket.on(self.clientMsg, namespace=self.namespace)
     def call_back(data):
       self.logger.info('Message received: ID_' + self.clientID)

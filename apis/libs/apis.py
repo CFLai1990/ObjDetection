@@ -1,6 +1,7 @@
 import importlib
 from .logger import Logger
 from .file import FileOperations as FileOp
+from .api import Msg
 from flask import request
 
 class APIs:
@@ -18,6 +19,7 @@ class APIs:
       self.events = parameters['events']
       self.outputDir = parameters['outputDir']
       self.fileOps = {}
+      self.clients = {}
 
     def start(self):
       self.connectSocket()
@@ -33,8 +35,15 @@ class APIs:
       @self.socket.on('connect', namespace=self.namespace)
       def test_connect():
         clientID = request.sid
+        self.wait4Ready(clientID)
+
+    def wait4Ready(self, clientID):
+      @self.socket.on(Msg('__ready__', clientID), namespace=self.namespace)
+      def init():
         self.initOutput(clientID)
         self.bindEvents(clientID)
+        # save the information of the client socket
+        self.clients[clientID] = clientID
         self.logger.info('Client connected: ID_' + clientID)
 
     def initOutput(self, clientID):
@@ -54,8 +63,7 @@ class APIs:
 
     def unbindEvents(self, clientID):
       for message,apiName in self.events.items():
-        messageByRoom = message + '_' + clientID
-        @self.socket.on(messageByRoom, namespace=self.namespace)
+        @self.socket.on(Msg(message, clientID), namespace=self.namespace)
         def call_back():
           pass
 
@@ -69,6 +77,7 @@ class APIs:
       @self.socket.on('disconnect', namespace=self.namespace)
       def test_disconnect():
         clientID = request.sid
-        self.unbindEvents(clientID)
-        self.rmOutput(clientID)
-        self.logger.info('Client disconnected: ID_' + clientID)
+        if not(self.clients.get(clientID) is None):
+          self.unbindEvents(clientID)
+          self.rmOutput(clientID)
+          self.logger.info('Client disconnected: ID_' + clientID)

@@ -1,4 +1,3 @@
-from flask_socketio import emit
 from .__settings__ import API
 import base64
 

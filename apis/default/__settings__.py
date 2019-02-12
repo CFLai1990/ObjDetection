@@ -1,7 +1,12 @@
 import os
-from ..libs import API, Logger, FileOp
+from ..libs import API, APIs
 
 # settings for this package
 namespace = '/api'
-packageName = 'apis.default'
+package = 'apis.default'
 outputDir = os.path.abspath('./files/default')
+
+# message - apiName
+eventDict = {
+  'Hello': 'helloworld',
+}

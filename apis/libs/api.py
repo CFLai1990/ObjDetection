@@ -14,10 +14,10 @@ class API:
     self.bindEvents()
 
   def bindEvents(self):
-    messageByRoom = self.message + '_' + self.clientID
-    @self.socket.on(messageByRoom, namespace=self.namespace)
+    self.clientMsg = self.message + '_' + self.clientID
+    @self.socket.on(self.clientMsg, namespace=self.namespace)
     def call_back(info):
-      self.logger.info('Message received: [ID]' + self.clientID)
+      self.logger.info('Message received: ID_' + self.clientID)
       self.execute(info.data)
 
   def execute(self, data):
@@ -28,4 +28,4 @@ class API:
       namespace = self.namespace
     if room is None:
       room = self.clientID
-    self.socket.emit(self.message, data, namespace=namespace, room=room)
+    self.socket.emit(self.clientMsg, data, namespace=namespace, room=room)

@@ -31,6 +31,10 @@ class APIs:
       @self.socket.on('connect', namespace=namespace)
       def test_connect():
         clientID = request.sid
+        print(type(clientID))
+        print(namespace)
+        print(clientID)
+        print(self.socket.emit)
         self.socket.emit('__room', str(clientID), namespace=namespace, room=clientID)
         self.initOutput(clientID)
         self.bindEvents(clientID)

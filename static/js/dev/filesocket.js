@@ -31,7 +31,7 @@ class FSocket {
     })
     // Remove the file when cleared
     this.fload.bind('fileclear', () => {
-      console.log(`File '${this.data.name}' removed!`)
+      console.info(`File '${this.data.name}' removed!`)
       this.fread.getFile(null)
     })
     // Upload the file

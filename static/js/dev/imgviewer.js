@@ -15,7 +15,7 @@ class ImgViewer {
         $(`${this.id} .img`).attr('src', `data:${img.type};base64,${img.data}`)
         break
       case 'OD_Mask':
-        console.log('Before:', img)
+        console.info('Before:', img)
         break
     }
   }
@@ -25,7 +25,7 @@ class ImgViewer {
         $(`${this.id} .img`).attr('src', `data:${img.type};base64,${img.data}`)
         break
       case 'OD_Mask':
-        console.log('After:', img)
+        console.info('After:', img)
         break
     }
   }

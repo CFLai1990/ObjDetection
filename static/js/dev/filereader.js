@@ -18,7 +18,7 @@ class FRead {
     let cb = callback
     let ecb = errorCallback
     if (cb === undefined || cb === null) {
-      cb = (data) => { console.log(data) }
+      cb = (data) => { console.info(data) }
     }
     if (ecb === undefined || ecb === null) {
       ecb = () => {}

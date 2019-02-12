@@ -45,11 +45,13 @@ class APIs:
 
     def bindEvents(self, clientID):
       for message,apiName in self.events.items():
+        print('0')
         tempParameters = self.tempParms({
         'message': message, 
         'clientID': clientID,
         'fileOp': self.fileOps[clientID]
         })
+        print('1')
         api = importlib.import_module('.' + apiName, package=self.package).apiClass(tempParameters)
 
     def unbindEvents(self, clientID):

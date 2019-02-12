@@ -40,7 +40,7 @@ class APIs:
     def wait4Ready(self, clientID):
       @self.socket.on(Msg('__ready__', clientID), namespace=self.namespace)
       def init_socket(data):
-        print('IP: ' + jsonify({'ip': request.remote_addr}))
+        print(type(jsonify({'ip': request.remote_addr})))
         self.initOutput(clientID)
         self.bindEvents(clientID)
         # save the information of the client socket

@@ -26,6 +26,7 @@ class ClientSocket {
         this.socket.on('connect', () => {
           this.id = this.socket.id.replace(`/${this.namespace}#`, '')
           this.emit('__ready__', this.getInfo())
+          this.autoClose()
           callback()
         })
         break
@@ -38,13 +39,18 @@ class ClientSocket {
     }
   }
   getInfo () {
-    // Return the information of this client for registration on server
+        // Return the information of this client for registration on server
     return this.id
+  }
+  autoClose () {
+    window.onbeforeunload = function (e) {
+      this.socket.close()
+    }
   }
 }
 
 class ClientIO {
-  constructor ({address, port, namespace, setting = {}}) {
+  constructor ({ address, port, namespace, setting = {} }) {
     let realAddress = address
     if (globalAddress[address] !== undefined) {
       realAddress = globalAddress[address]

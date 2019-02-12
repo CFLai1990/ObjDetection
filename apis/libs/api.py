@@ -14,7 +14,8 @@ class API:
     self.bindEvents()
 
   def bindEvents(self):
-    self.clientMsg = self.message + '_' + self.clientID
+    self.clientMsg = self.message + '@' + self.clientID
+    print(' _______________________ ' + self.clientMsg + ' _______________________ ')
     @self.socket.on(self.clientMsg, namespace=self.namespace)
     def call_back(info):
       self.logger.info('Message received: ID_' + self.clientID)

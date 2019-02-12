@@ -31,9 +31,9 @@ class APIs:
       @self.socket.on('connect', namespace=namespace)
       def test_connect():
         clientID = request.sid
+        self.socket.emit('__room', str(clientID), namespace=namespace, room=clientID)
         self.initOutput(clientID)
         self.bindEvents(clientID)
-        self.socket.emit('__room', clientID, namespace=namespace)
         self.logger.info('Client connected: [ID]' + clientID)
 
     def bindEvents(self, clientID):

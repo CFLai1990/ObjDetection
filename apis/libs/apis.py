@@ -38,8 +38,10 @@ class APIs:
         self.wait4Ready(clientID)
 
     def wait4Ready(self, clientID):
+      print(Msg('__ready__', clientID))
       @self.socket.on(Msg('__ready__', clientID), namespace=self.namespace)
       def init():
+        print('Received!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         self.initOutput(clientID)
         self.bindEvents(clientID)
         # save the information of the client socket

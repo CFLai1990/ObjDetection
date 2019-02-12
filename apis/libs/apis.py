@@ -42,11 +42,11 @@ class APIs:
       @self.socket.on(Msg('__ready__', clientID), namespace=self.namespace)
       def init():
         print('Received!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        self.initOutput(clientID)
-        self.bindEvents(clientID)
-        # save the information of the client socket
-        self.clients[clientID] = clientID
-        self.logger.info('Client connected: ID_' + clientID)
+        # self.initOutput(clientID)
+        # self.bindEvents(clientID)
+        # # save the information of the client socket
+        # self.clients[clientID] = clientID
+        # self.logger.info('Client connected: ID_' + clientID)
 
     def initOutput(self, clientID):
       fOp = FileOp(self.outputDir)

@@ -15,11 +15,10 @@ class API:
 
   def bindEvents(self):
     self.clientMsg = self.message + '@' + self.clientID
-    print(' _______________________ ' + self.clientMsg + ' _______________________ ')
     @self.socket.on(self.clientMsg, namespace=self.namespace)
-    def call_back(info):
+    def call_back(data):
       self.logger.info('Message received: ID_' + self.clientID)
-      self.execute(info.data)
+      self.execute(data)
 
   def execute(self, data):
     self.emit2Client('API not found!')

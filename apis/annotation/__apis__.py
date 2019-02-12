@@ -14,6 +14,6 @@ class THIS_APIs(APIs):
         'outputDir': outputDir
       })
       self.apiParms({
-        'objDetector': ObjDetection()
+        'detector': ObjDetection()
       })
       self.start()

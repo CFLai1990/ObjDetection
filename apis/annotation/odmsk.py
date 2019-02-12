@@ -3,11 +3,8 @@ import base64
 
 class apiClass(API):
   def __init__(self, parameters):
-    print('3')
     API.__init__(self, parameters)
-    print('4')
     self.objDetector = parameters['detector']
-    print('5')
 
   def saveImage(self, obj):
     imgPath = self.fileOp.getPath(obj['name'])

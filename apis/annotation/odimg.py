@@ -1,17 +1,14 @@
 from flask_socketio import emit
-from .__settings__ import API, fileDir, fileType
+from .__settings__ import API
 import base64
-import os
 
 class apiClass(API):
-  def __init__(self, logger, socket, message, namespace, detector):
-    API.__init__(self, logger, socket, message, namespace)
-    self.typeDict = fileType
-    self.outputDir = fileDir
-    self.objDetector = detector
+  def __init__(self, parameters):
+    API.__init__(self, parameters)
+    self.objDetector = parameters['detector']
 
   def saveImage(self, obj):
-    imgPath = fileDir + '/' + obj['name']
+    imgPath = self.fileOp.getPath(obj['name'])
     with open(imgPath, 'wb') as file:
       file.write(base64.b64decode(obj['data']))
       file.close()
@@ -23,14 +20,18 @@ class apiClass(API):
       file.close()
     return imgBase64
 
-  def OD(self, obj):
+  def OD_Image(self, obj):
+    # Save the original image
     imgPath = self.saveImage(obj)
     self.logger.info('Image saved')
+    # Object detection
     extType = obj['type']
-    imgType = self.typeDict[extType]
-    outputPath = self.objDetector.inferImage(imgPath, imgType, self.outputDir)
+    imgType = self.fileOp.getType(extType)
+    outputDir = self.fileOp.getRoot()
+    outputPath = self.objDetector.inferImage(imgPath, imgType, outputDir)
     self.logger.info('Image detection finished')
-    outputName = os.path.basename(outputPath)
+    # Load the processed image
+    outputName = self.fileOp.getName(outputPath)
     imgData = self.loadImage(outputPath)
     result = {
       'name': outputName,
@@ -40,7 +41,6 @@ class apiClass(API):
     return result
 
   def execute(self, obj):
-    # save the text into file
-    result = self.OD(obj)
-    self.socket.emit(self.message, result, namespace=self.namespace)
+    result = self.OD_Image(obj)
+    self.emit2Client(result)
     self.logger.info('Result sent')

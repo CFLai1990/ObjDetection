@@ -3,11 +3,14 @@ from .logger import Logger
 
 class API:
   'The universal API class'
-  def __init__(self, logger, socket, message, namespace):
-    self.socket = socket
-    self.message = message
-    self.namespace = namespace
-    self.logger = Logger('\'' + self.message + '\'', logger)
+  def __init__(self, parameters):
+    self.socket = parameters['socket']
+    self.message = parameters['message']
+    self.namespace = parameters['namespace']
+    self.clientID = parameters['clientID']
+    if not(parameters['fileOp'] is None):
+      self.fileOp = parameters['fileOp']
+    self.logger = Logger('\'' + self.message + '\'', parameters['logger'])
     self.bindEvents()
 
   def bindEvents(self):
@@ -18,3 +21,10 @@ class API:
 
   def execute(self, data):
     self.socket.emit('API not found!')
+
+  def emit2Client(self, data, namespace=None, room=None):
+    if namespace is None:
+      namespace = self.namespace
+    if room is None:
+      room = self.clientID
+    self.socket.emit(self.message, data, namespace=namespace, room=room)

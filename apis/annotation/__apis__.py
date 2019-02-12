@@ -38,6 +38,7 @@ class APIs:
 
     def bindEvents(self, clientID):
       for message,apiName in eventDict.items():
+        print(message)
         api = importlib.import_module('.' + apiName, package=packageName).apiClass({
           'logger': self.logger,
           'socket': self.socket, 

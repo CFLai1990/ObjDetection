@@ -28,13 +28,14 @@ class APIs:
       @self.socket.on('connect', namespace=namespace)
       def test_connect():
         clientID = request.sid
-        self.socket.emit('__room', str(clientID), namespace=namespace, room=clientID)
         self.initOutput(clientID)
         self.bindEvents(clientID)
         self.logger.info('Client connected: [ID]' + clientID)
+        return clientID
 
     def bindEvents(self, clientID):
       for message,apiName in eventDict.items():
+        print(message)
         api = importlib.import_module('.' + apiName, package=packageName).apiClass({
           'logger': self.logger,
           'socket': self.socket, 

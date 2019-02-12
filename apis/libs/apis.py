@@ -35,21 +35,18 @@ class APIs:
       @self.socket.on('connect', namespace=self.namespace)
       def test_connect():
         clientID = request.sid
+        print('1')
         self.wait4Ready(clientID)
-      @self.socket.on('READY', namespace=self.namespace)
-      def call_back():
-        print('Received!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        print('2')
 
     def wait4Ready(self, clientID):
-      print(Msg('READY', clientID))
-      @self.socket.on('READY', namespace=self.namespace)
-      def call_back():
-        print('Received!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        # self.initOutput(clientID)
-        # self.bindEvents(clientID)
-        # # save the information of the client socket
-        # self.clients[clientID] = clientID
-        # self.logger.info('Client connected: ID_' + clientID)
+      @self.socket.on(Msg('__ready__', clientID), namespace=self.namespace)
+      def init_socket():
+        self.initOutput(clientID)
+        self.bindEvents(clientID)
+        # save the information of the client socket
+        self.clients[clientID] = clientID
+        self.logger.info('Client connected: ID_' + clientID)
 
     def initOutput(self, clientID):
       fOp = FileOp(self.outputDir)

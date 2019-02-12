@@ -38,9 +38,9 @@ class APIs:
         self.wait4Ready(clientID)
 
     def wait4Ready(self, clientID):
-      print(Msg('__ready__', clientID))
-      @self.socket.on(Msg('__ready__', clientID), namespace=self.namespace)
-      def init():
+      print(Msg('READY', clientID))
+      @self.socket.on(Msg('READY', clientID), namespace=self.namespace)
+      def initSocket():
         print('Received!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         # self.initOutput(clientID)
         # self.bindEvents(clientID)

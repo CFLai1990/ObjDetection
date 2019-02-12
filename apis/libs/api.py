@@ -14,13 +14,13 @@ class API:
     self.bindEvents()
 
   def bindEvents(self):
-    @self.socket.on(self.message, namespace=self.namespace)
+    @self.socket.on(self.message, namespace=self.namespace, room=self.clientID)
     def call_back(data):
       self.logger.info('Message received')
       self.execute(data)
 
   def execute(self, data):
-    self.socket.emit('API not found!')
+    self.emit2Client('API not found!')
 
   def emit2Client(self, data, namespace=None, room=None):
     if namespace is None:

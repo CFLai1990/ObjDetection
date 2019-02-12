@@ -14,7 +14,6 @@ class APIs:
       self.logger = Logger('\'' + namespace + '\'', logger)
       self.socket=socket
       self.connectSocket()
-      self.bindEvents()
       self.disconnectSocket()
       self.outputDir = outputDir
       self.fileOps = {}
@@ -30,11 +29,11 @@ class APIs:
       def test_connect():
         clientID = request.sid
         self.initOutput(clientID)
+        self.bindEvents(clientID)
         self.logger.info('Client connected: [ID]' + clientID)
 
-    def bindEvents(self):
+    def bindEvents(self, clientID):
       for message,apiName in eventDict.items():
-        clientID = request.sid
         api = importlib.import_module('.' + apiName, package=packageName).apiClass({
           'logger': self.logger,
           'socket': self.socket, 

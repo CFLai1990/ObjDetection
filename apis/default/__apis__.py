@@ -18,12 +18,6 @@ class APIs:
       self.outputDir = outputDir
       self.fileOps = {}
 
-    def initOutput(self, clientID):
-      fOp = FileOp(self.outputDir)
-      newRoot = fOp.mkdir(clientID)
-      fOp.changeRoot(newRoot)
-      self.fileOps[clientID] = fOp
-
     def connectSocket(self):
       @self.socket.on('connect', namespace=namespace)
       def test_connect():
@@ -33,9 +27,14 @@ class APIs:
         self.logger.info('Client connected: [ID]' + clientID)
         return clientID
 
+    def initOutput(self, clientID):
+      fOp = FileOp(self.outputDir)
+      newRoot = fOp.mkdir(clientID)
+      fOp.changeRoot(newRoot)
+      self.fileOps[clientID] = fOp
+
     def bindEvents(self, clientID):
       for message,apiName in eventDict.items():
-        print(message)
         api = importlib.import_module('.' + apiName, package=packageName).apiClass({
           'logger': self.logger,
           'socket': self.socket, 
@@ -44,6 +43,13 @@ class APIs:
           'clientID': clientID,
           'fileOp': self.fileOps[clientID],
           })
+
+    def unbindEvents(self, clientID):
+      for message,apiName in eventDict.items():
+        messageByRoom = message + '_' + clientID
+        @self.socket.on(messageByRoom, namespace=namespace)
+        def call_back():
+          pass
 
     def rmOutput(self, clientID):
       fOp = self.fileOps[clientID]
@@ -55,5 +61,6 @@ class APIs:
       @self.socket.on('disconnect', namespace=namespace)
       def test_disconnect():
         clientID = request.sid
+        self.unbindEvents(clientID)
         self.rmOutput(clientID)
         self.logger.info('Client disconnected: [ID]' + clientID)

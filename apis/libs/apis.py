@@ -39,12 +39,15 @@ class APIs:
 
     def wait4Ready(self, clientID):
       @self.socket.on(Msg('__ready__', clientID), namespace=self.namespace)
-      def init_socket(data):
+      def init_socket(clientInfo):
         print('IP: ' + request.remote_addr)
         self.initOutput(clientID)
         self.bindEvents(clientID)
         # save the information of the client socket
-        self.clients[clientID] = clientID
+        self.clients[clientID] = {
+          'IP': request.remote_addr,
+          'info': clientInfo
+        }
         self.logger.info('Client connected: ID_' + clientID)
 
     def initOutput(self, clientID):

@@ -4,14 +4,22 @@ from .logger import Logger
 class API:
   'The universal API class'
   def __init__(self, parameters):
+    print('00')
     self.socket = parameters['socket']
+    print('01')
     self.message = parameters['message']
+    print('02')
     self.namespace = parameters['namespace']
+    print('03')
     self.clientID = parameters['clientID']
+    print('04')
     if not(parameters['fileOp'] is None):
       self.fileOp = parameters['fileOp']
+    print('05')
     self.logger = Logger('\'' + self.message + '\'', parameters['logger'])
+    print('06')
     self.bindEvents()
+    print('07')
 
   def bindEvents(self):
     @self.socket.on(self.message, namespace=self.namespace, room=self.clientID)

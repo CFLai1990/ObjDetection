@@ -35,13 +35,12 @@ class APIs:
       @self.socket.on('connect', namespace=self.namespace)
       def test_connect():
         clientID = request.sid
-        print('1')
         self.wait4Ready(clientID)
-        print('2')
 
     def wait4Ready(self, clientID):
       @self.socket.on(Msg('__ready__', clientID), namespace=self.namespace)
-      def init_socket():
+      def init_socket(data):
+        print('RECEIVED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         self.initOutput(clientID)
         self.bindEvents(clientID)
         # save the information of the client socket

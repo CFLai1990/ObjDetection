@@ -2,7 +2,7 @@ import importlib
 from .logger import Logger
 from .file import FileOperations as FileOp
 from .api import Msg
-from flask import request, jsonify
+from flask import request
 
 class APIs:
     'The wrapper for all annotation APIs'
@@ -40,7 +40,7 @@ class APIs:
     def wait4Ready(self, clientID):
       @self.socket.on(Msg('__ready__', clientID), namespace=self.namespace)
       def init_socket(data):
-        print(type(jsonify({'ip': request.remote_addr})))
+        print('IP: ' + request.remote_addr)
         self.initOutput(clientID)
         self.bindEvents(clientID)
         # save the information of the client socket

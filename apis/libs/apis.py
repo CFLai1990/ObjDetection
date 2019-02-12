@@ -40,7 +40,7 @@ class APIs:
     def wait4Ready(self, clientID):
       print(Msg('READY', clientID))
       @self.socket.on(Msg('READY', clientID), namespace=self.namespace)
-      def initSocket():
+      def call_back():
         print('Received!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         # self.initOutput(clientID)
         # self.bindEvents(clientID)

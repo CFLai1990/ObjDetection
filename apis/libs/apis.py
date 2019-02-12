@@ -78,6 +78,7 @@ class APIs:
       def test_disconnect():
         clientID = request.sid
         if not(self.clients.get(clientID) is None):
+          del self.clients[clientID]
           self.unbindEvents(clientID)
           self.rmOutput(clientID)
           self.logger.info('Client disconnected: ID_' + clientID)

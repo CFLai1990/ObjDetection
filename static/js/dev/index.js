@@ -1,24 +1,24 @@
-import io from 'socket.io-client'
+import ClientIO from './csocketio.js'
 import FSocket from './filesocket.js'
+/* message:
+  'OD_Image': get the image with masks
+  'OD_Mask': get the mask parameters
+*/
+const MESSAGE = 'OD_Image'
+// const MESSAGE = 'OD_Mask'
+const MACHINE = 'dl'
 let $ = window.$
-let VERSION = 'dl'
 
 $(document).ready(function () {
     // Socket.io demo
-  let socket
-  switch (VERSION) {
-    case 'local':
-      socket = io('http://localhost:2020/api/annotation')
-      break
-    case 'db':
-      socket = io('http://192.168.10.9:2020/api/annotation')
-      break
-    case 'dl':
-      socket = io('http://192.168.10.21:2020/api/annotation')
-      break
-    case 'public':
-      break
-  }
-  let fsocket = new FSocket(socket)
-  socket.on('connect', () => { fsocket.callback() })
+  let socket = new ClientIO({
+    'address': MACHINE,
+    'port': 2020,
+    'namespace': 'api/annotation'
+  })
+  let fsocket = new FSocket(socket, MESSAGE)
+  socket.on('connect', () => {
+      // add more callbacks if necessary
+    fsocket.onConnect()
+  })
 })

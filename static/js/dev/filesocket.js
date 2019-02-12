@@ -4,17 +4,13 @@ import IView from './imgviewer.js'
 import Modal from './loading.js'
 
 class FSocket {
-  constructor (socket) {
+  constructor (socket, message) {
     this.socket = socket
-    /* message:
-      'OD_Image': get the image with masks
-      'OD_Mask': get the mask parameters
-    */
-    this.message = 'OD_Image'
+    this.message = message
     this.data = null
     this.fread = new FRead()
     this.fload = new FLoad()
-    this.iview = new IView()
+    this.iview = new IView(message)
     this.mdl = new Modal()
     this.fload.init()
   }
@@ -26,26 +22,26 @@ class FSocket {
     console.info(`File '${this.data.name}' uploaded!`)
   }
   handleUpload () {
-        // Read the file when uploaded
+    // Read the file when uploaded
     this.fload.bind('fileloaded', (event, file) => {
       this.fread.getFile(file)
       this.fread.read((data) => {
         this.getData(data)
       })
     })
-        // Remove the file when cleared
+    // Remove the file when cleared
     this.fload.bind('fileclear', () => {
       console.log(`File '${this.data.name}' removed!`)
       this.fread.getFile(null)
     })
-        // Upload the file
+    // Upload the file
     this.fload.bind('upload', () => {
       if (this.data !== null) {
-                // Show the original image
+        // Show the original image
         this.fload.show(false)
-        this.iview.getImg(this.data)
+        this.iview.getOriginal(this.data)
         this.iview.show()
-                // Upload the original image
+        // Upload the original image
         this.handleEmit()
         this.mdl.show(true, 'Running object detection ...')
       }
@@ -53,20 +49,13 @@ class FSocket {
   }
   handleReceive () {
     this.socket.on(this.message, (data) => {
-            // Show the processed image
-      switch (this.message) {
-        case 'OD_Image':
-          this.iview.getImg(data)
-          this.iview.show()
-          break
-        case 'OD_Mask':
-          console.log(data)
-          break
-      }
+      // Show the processed image
+      this.iview.getResult(data)
+      this.iview.show()
       this.mdl.show(false)
     })
   }
-  callback () {
+  onConnect () {
     this.handleUpload()
     this.handleReceive()
   }

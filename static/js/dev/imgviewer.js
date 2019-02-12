@@ -1,11 +1,33 @@
 let $ = window.$
+/* message:
+  'OD_Image': get the image with masks
+  'OD_Mask': get the mask parameters
+*/
 
 class ImgViewer {
-  constructor () {
+  constructor (message) {
     this.id = '#odresult'
+    this.message = message
   }
-  getImg (img) {
-    $(`${this.id} .content`).attr('src', `data:${img.type};base64,${img.data}`)
+  getOriginal (img) {
+    switch (this.message) {
+      case 'OD_Image':
+        $(`${this.id} .img`).attr('src', `data:${img.type};base64,${img.data}`)
+        break
+      case 'OD_Mask':
+        console.log('Before:', img)
+        break
+    }
+  }
+  getResult (img) {
+    switch (this.message) {
+      case 'OD_Image':
+        $(`${this.id} .img`).attr('src', `data:${img.type};base64,${img.data}`)
+        break
+      case 'OD_Mask':
+        console.log('After:', img)
+        break
+    }
   }
   show (visible = true) {
     if (visible === true) {

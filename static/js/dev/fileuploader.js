@@ -7,7 +7,7 @@ class FileUploader {
     this.uploadOptions = {
       uploadUrl: '/upload',
       allowedFileExtensions: ['jpg', 'png'],
-      autoOrientImage: true,
+      autoOrientImage: false,
       maxFileCount: 1,
       dropZoneEnable: true,
       maxImageWidth: 200,

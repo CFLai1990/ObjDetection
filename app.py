@@ -106,4 +106,4 @@ if not app.debug:
 if __name__ == '__main__':
     ODapis = APIs(app.logger, socketio)
     port = int(os.environ.get('PORT', 2020))
-    socketio.run(app, debug = True, host='0.0.0.0', port=port)
+    socketio.run(app, debug = False, host='0.0.0.0', port=port)

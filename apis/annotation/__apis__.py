@@ -31,13 +31,13 @@ class APIs:
       @self.socket.on('connect', namespace=namespace)
       def test_connect():
         clientID = request.sid
-        print(type(clientID))
-        print(namespace)
-        print(clientID)
-        print(self.socket.emit)
+        print('1')
         self.socket.emit('__room', str(clientID), namespace=namespace, room=clientID)
+        print('2')
         self.initOutput(clientID)
+        print('3')
         self.bindEvents(clientID)
+        print('4')
         self.logger.info('Client connected: [ID]' + clientID)
 
     def bindEvents(self, clientID):

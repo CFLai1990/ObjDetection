@@ -36,6 +36,9 @@ class APIs:
       def test_connect():
         clientID = request.sid
         self.wait4Ready(clientID)
+      @self.socket.on('READY', namespace=self.namespace)
+      def call_back():
+        print('Received!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
     def wait4Ready(self, clientID):
       print(Msg('READY', clientID))

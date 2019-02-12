@@ -36,7 +36,6 @@ class APIs:
         self.initOutput(clientID)
         self.bindEvents(clientID)
         self.logger.info('Client connected: ID_' + clientID)
-        return clientID
 
     def initOutput(self, clientID):
       fOp = FileOp(self.outputDir)

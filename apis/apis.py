@@ -25,6 +25,7 @@ class APIs:
       self.socket=socket
       self.logger = Logger('APIs', logger)
       self.routeByNamespace()
+      self.logger.info('Server started')
 
     def routeByNamespace(self):
       for namespace, APIsClass in routerDict.items():

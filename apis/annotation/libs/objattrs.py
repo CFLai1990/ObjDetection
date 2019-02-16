@@ -41,9 +41,8 @@ class ObjAttrs:
         """Get the color name for each pixel"""
         height = img.shape[0]
         width = img.shape[1]
-        print('1')
         codes = np.ones((width, height), dtype=np.int16)
-        print(str(width) + ', ' + str(height))
+        print(type(height))
         for row in range(height):
             for col in range(width):
                 print('Infer image: ' + row + ', ' + col)

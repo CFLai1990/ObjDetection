@@ -117,6 +117,8 @@ class ObjDetection:
     self.logger.info('Processing {} -> parameters'.format(imgPath))
     # Run object detection
     img = self.infer(imgPath)
+    img *= 1./255
+    cv2.cvtColor(img, img, code=COLOR_BGR2Lab)
     # Get the result parameters
     parameters = parse_results(
         img[:, :, ::-1],  # BGR -> RGB for visualization

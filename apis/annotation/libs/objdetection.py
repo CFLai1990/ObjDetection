@@ -30,6 +30,7 @@ import detectron.core.test_engine as infer_engine
 import detectron.datasets.dummy_datasets as dummy_datasets
 import detectron.utils.c2 as c2_utils
 from .odvis import vis_one_image, parse_results
+from .getdata import getColor
 
 from .__settings__ import DT
 
@@ -63,6 +64,8 @@ class ObjDetection:
     # It returns a AttrDict object stored with 'classes: value'
     # Each value is a dictionary that looks like this: 0:'__background__', 1:'person', ...
     self.classDict = dummy_datasets.get_coco_dataset()
+    self.colorDict = getColor()
+
 
   def infer(self, imgPath):
     # Read the image using opencv, the result is stored in GBR

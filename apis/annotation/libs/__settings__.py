@@ -19,7 +19,7 @@ COLOR_CODE = [
     'purple',
     'pink',
     'brown',
-    'grey',
+    'gray',
     'black',
     'white',
 ]

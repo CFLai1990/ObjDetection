@@ -1,6 +1,6 @@
 import csv
 import os
-colorFile = os.path.abspath('../data/color_name.csv')
+colorFile = os.path.abspath('./apis/annotation/data/color_name.csv')
 
 def getColor():
   colorDict = []

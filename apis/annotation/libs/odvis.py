@@ -20,9 +20,8 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import cv2
 import numpy as np
-import os
+import cv2
 
 import pycocotools.mask as mask_util
 
@@ -32,10 +31,10 @@ import detectron.utils.keypoints as keypoint_utils
 
 # Matplotlib requires certain adjustments in some environments
 # Must happen before importing matplotlib
-envu.set_up_matplotlib()
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from .odresult import ODResultGenerator
+envu.set_up_matplotlib()
 
 plt.rcParams['pdf.fonttype'] = 42  # For editing in Adobe Illustrator
 
@@ -265,7 +264,7 @@ def vis_one_image(
 
     dataset_keypoints, _ = keypoint_utils.get_keypoints()
 
-    if segms is not None and len(segms) > 0:
+    if segms:
         masks = mask_util.decode(segms)
 
     color_list = colormap(rgb=True) / 255
@@ -391,47 +390,58 @@ def vis_one_image(
     plt.close('all')
 
 def parse_results(
-        im, boxes, segms=None, keypoints=None, thresh=0.9,
-        kp_thresh=2, dataset=None, out_when_no_box=False):
+        boxes, segms=None, keypoints=None, image=None, attrs=None, thresh=0.9,
+        dataset=None, out_when_no_box=False):
     """Parse the results of Detectron, modified from vis_one_image."""
     if isinstance(boxes, list):
         boxes, segms, keypoints, classes = convert_from_cls_format(
             boxes, segms, keypoints)
     if (boxes is None or boxes.shape[0] == 0 or max(boxes[:, 4]) < thresh) and not out_when_no_box:
-        return
-    dataset_keypoints, _ = keypoint_utils.get_keypoints()
-    if segms is not None and len(segms) > 0:
+        return None
+    if segms:
         masks = mask_util.decode(segms)
     if boxes is None:
         sorted_inds = [] # avoid crash when 'boxes' is None
     else:
         # Display in largest to smallest order to reduce occlusion
         areas = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])
-        sorted_inds = np.argsort(-areas)    
+        sorted_inds = np.argsort(-areas)
     results = []
+    attrs = attrs.infer(image)
     # Go through the bounding boxes
     for i in sorted_inds:
-        resultGen = ODResultGenerator()
+        result_generator = ODResultGenerator()
         bbox = boxes[i, :4]
         score = boxes[i, -1]
         if score < thresh:
             continue
         # Get the score
-        resultGen.getScore(score.item())
+        result_generator.get_score(score.item())
         # Get the class name
-        className = dataset.classes[classes[i]]
-        resultGen.getClass(className)
+        class_name = dataset.classes[classes[i]]
+        result_generator.get_class(class_name)
         # Get the bounding box
-        resultGen.getBbox(bbox[0].item(), bbox[1].item(), (bbox[2] - bbox[0]).item(), (bbox[3] - bbox[1]).item())
+        result_generator.get_bbox(
+            bbox[0].item(),
+            bbox[1].item(),
+            (bbox[2] - bbox[0]).item(),
+            (bbox[3] - bbox[1]).item())
         # Get the masks
         if segms is not None and len(segms) > i:
-            e = masks[:, :, i]
-            print(e.shape)
-            contourList, hier = cv2.findContours(e.copy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
+            binary = masks[:, :, i]
+            # Get the attributes
+            mask_attrs = attrs.get_mask(binary)
+            # Get the contour
+            # CHAIN_APPROX_NONE: detailed vertices
+            # CHAIN_APPROX_SIMPLE: brief vertices
+            contour_list, hier = cv2.findContours(
+                binary.copy(),
+                cv2.RETR_CCOMP,
+                cv2.CHAIN_APPROX_SIMPLE)
             contours = []
-            for contour in contourList:
-                ctr = contour.reshape((-1,2)).astype(float).tolist()
+            for contour in contour_list:
+                ctr = contour.reshape((-1, 2)).astype(float).tolist()
                 contours.append(ctr)
-            resultGen.getMask(contours)
-        results.append(resultGen.pack())
+            result_generator.get_mask(contours=contours, attrs=mask_attrs)
+        results.append(result_generator.pack())
     return results

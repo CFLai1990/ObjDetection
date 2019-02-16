@@ -1,28 +1,33 @@
-from .__settings__ import API
+"""odmsk: take the image, return the masks"""
 import base64
+from .__settings__ import API
 
-class apiClass(API):
-  def __init__(self, parameters):
-    API.__init__(self, parameters)
-    self.objDetector = parameters['detector']
+class ApiClass(API):
+    """API Class"""
+    def __init__(self, parameters):
+        API.__init__(self, parameters)
+        self.obj_detector = parameters['detector']
 
-  def saveImage(self, obj):
-    imgPath = self.fileOp.getPath(obj['name'])
-    with open(imgPath, 'wb') as file:
-      file.write(base64.b64decode(obj['data']))
-      file.close()
-    return imgPath
+    def save_image(self, obj):
+        """Save the original image"""
+        img_path = self.file_op.get_path(obj['name'])
+        with open(img_path, 'wb') as file:
+            file.write(base64.b64decode(obj['data']))
+            file.close()
+        return img_path
 
-  def OD_Mask(self, obj):
-    # Save the original image
-    imgPath = self.saveImage(obj)
-    self.logger.info('Image saved')
-    # Object detection
-    result = self.objDetector.inferParameters(imgPath)
-    self.logger.info('Image detection finished')
-    return result
+    def od_mask(self, obj):
+        """Run object detection, return the parameters"""
+        # Save the original image
+        img_path = self.save_image(obj)
+        self.logger.info('Image saved')
+        # Object detection
+        result = self.obj_detector.infer_parameters(img_path)
+        self.logger.info('Image detection finished')
+        return result
 
-  def execute(self, obj):
-    result = self.OD_Mask(obj)
-    self.emit2Client(result)
-    self.logger.info('Result sent')
+    def execute(self, data):
+        """Main function"""
+        result = self.od_mask(data)
+        self.emit2client(result)
+        self.logger.info('Result sent')

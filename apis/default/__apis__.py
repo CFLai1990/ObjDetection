@@ -1,15 +1,15 @@
-# Socket.io handlers
-from .__settings__ import APIs, namespace, package, outputDir, eventDict
+"""The default APIs"""
+from .__settings__ import APIs, NAMESPACE, PACKAGE, OUTPUT_DIR, EVENT_DICT
 
-class THIS_APIs(APIs):
-    'The wrapper for all default APIs'
+class THISAPIs(APIs):
+    """The wrapper for all default APIs"""
     def __init__(self, logger, socket):
-      APIs.__init__(self, {
-        'namespace': namespace,
-        'logger': logger,
-        'socket': socket,
-        'events': eventDict,
-        'package': package,
-        'outputDir': outputDir
-      })
-      self.start()
+        APIs.__init__(self, {
+            'namespace': NAMESPACE,
+            'logger': logger,
+            'socket': socket,
+            'events': EVENT_DICT,
+            'package': PACKAGE,
+            'output_dir': OUTPUT_DIR
+        })
+        self.start()

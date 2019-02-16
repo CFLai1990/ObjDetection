@@ -1,3 +1,4 @@
+"""apis.libs: __init__"""
 from .api import API
 from .apis import APIs
 from .logger import Logger

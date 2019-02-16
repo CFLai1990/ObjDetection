@@ -1,9 +1,11 @@
+"""helloworld: default testing api"""
 from .__settings__ import API
 
-class apiClass(API):
-  def __init__(self, parameters):
-    API.__init__(self, parameters)
+class ApiClass(API):
+    """API Class"""
+    def __init__(self, parameters):
+        API.__init__(self, parameters)
 
-  def execute(self, usrname):
-    self.emit2Client('Hello ' + usrname + '!')
-    self.logger.info('API executed')
+    def execute(self, data):
+        self.emit2client('Hello ' + data + '!')
+        self.logger.info('API executed')

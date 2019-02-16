@@ -6,6 +6,7 @@ Flask-WTF
 Flask-SocketIO
 WTForms
 coverage
+colormath
 # ecdsa
 # paramiko
 # pycrypto

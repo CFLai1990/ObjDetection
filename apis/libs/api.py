@@ -1,34 +1,39 @@
-from flask_socketio import emit
+"""The default API class"""
 from .logger import Logger
 
-def Msg(message, clientID):
-  return message + '@' + clientID
+def get_client_msg(message, client_id):
+    """get_client_msg: get the client-based-message"""
+    return message + '@' + client_id
 
 class API:
-  'The universal API class'
-  def __init__(self, parameters):
-    self.socket = parameters['socket']
-    self.message = parameters['message']
-    self.namespace = parameters['namespace']
-    self.clientID = parameters['clientID']
-    if not(parameters['fileOp'] is None):
-      self.fileOp = parameters['fileOp']
-    self.logger = Logger('\'' + self.message + '\'', parameters['logger'])
-    self.bindEvents()
+    """The universal API class"""
+    def __init__(self, parameters):
+        self.socket = parameters['socket']
+        self.message = parameters['message']
+        self.namespace = parameters['namespace']
+        self.client_id = parameters['client_id']
+        if parameters['file_op'] is not None:
+            self.file_op = parameters['file_op']
+        self.logger = Logger('\'' + self.message + '\'', parameters['logger'])
+        self.bind_events()
 
-  def bindEvents(self):
-    self.clientMsg = Msg(self.message, self.clientID)
-    @self.socket.on(self.clientMsg, namespace=self.namespace)
-    def call_back(data):
-      self.logger.info('Message received: ID_' + self.clientID)
-      self.execute(data)
+    def bind_events(self):
+        """bind the message for this api"""
+        self.client_msg = get_client_msg(self.message, self.client_id)
+        @self.socket.on(self.client_msg, namespace=self.namespace)
+        def _callback(data):
+            self.logger.info('Message received: ID_' + self.client_id)
+            self.execute(data)
 
-  def execute(self, data):
-    self.emit2Client('API not found!')
+    def execute(self, data):
+        """the default execute function"""
+        self.logger.info('Received from client: ' + data)
+        self.emit2client('API not found!')
 
-  def emit2Client(self, data, namespace=None, room=None):
-    if namespace is None:
-      namespace = self.namespace
-    if room is None:
-      room = self.clientID
-    self.socket.emit(self.clientMsg, data, namespace=namespace, room=room)
+    def emit2client(self, data, namespace=None, room=None):
+        """the emit function"""
+        if namespace is None:
+            namespace = self.namespace
+        if room is None:
+            room = self.client_id
+        self.socket.emit(self.client_msg, data, namespace=namespace, room=room)

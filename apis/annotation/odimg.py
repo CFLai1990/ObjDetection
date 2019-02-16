@@ -1,45 +1,51 @@
-from .__settings__ import API
+"""odimg: take the image, return the masked image"""
 import base64
+from .__settings__ import API
 
-class apiClass(API):
-  def __init__(self, parameters):
-    API.__init__(self, parameters)
-    self.objDetector = parameters['detector']
+class ApiClass(API):
+    """API Class"""
+    def __init__(self, parameters):
+        API.__init__(self, parameters)
+        self.obj_detector = parameters['detector']
 
-  def saveImage(self, obj):
-    imgPath = self.fileOp.getPath(obj['name'])
-    with open(imgPath, 'wb') as file:
-      file.write(base64.b64decode(obj['data']))
-      file.close()
-    return imgPath
+    def save_image(self, obj):
+        """Save the original image"""
+        img_path = self.file_op.get_path(obj['name'])
+        with open(img_path, 'wb') as file:
+            file.write(base64.b64decode(obj['data']))
+            file.close()
+        return img_path
 
-  def loadImage(self, path):
-    with open(path, 'rb') as file:
-      imgBase64 = str(base64.b64encode(file.read()), 'utf-8') # for Python 3
-      file.close()
-    return imgBase64
+    def load_image(self, path):
+        """Load the masked image"""
+        with open(path, 'rb') as file:
+            img_base64 = str(base64.b64encode(file.read()), 'utf-8') # for Python 3
+            file.close()
+        return img_base64
 
-  def OD_Image(self, obj):
-    # Save the original image
-    imgPath = self.saveImage(obj)
-    self.logger.info('Image saved')
-    # Object detection
-    extType = obj['type']
-    imgType = self.fileOp.getType(extType)
-    outputDir = self.fileOp.getRoot()
-    outputPath = self.objDetector.inferImage(imgPath, imgType, outputDir)
-    self.logger.info('Image detection finished')
-    # Load the processed image
-    outputName = self.fileOp.getName(outputPath)
-    imgData = self.loadImage(outputPath)
-    result = {
-      'name': outputName,
-      'type': extType,
-      'data': imgData,
-    }
-    return result
+    def od_image(self, obj):
+        """Run object detection, return the masked image"""
+        # Save the original image
+        img_path = self.save_image(obj)
+        self.logger.info('Image saved')
+        # Object detection
+        ext_type = obj['type']
+        img_type = self.file_op.get_type(ext_type)
+        output_dir = self.file_op.get_root()
+        output_path = self.obj_detector.infer_image(img_path, img_type, output_dir)
+        self.logger.info('Image detection finished')
+        # Load the processed image
+        output_name = self.file_op.get_name(output_path)
+        img_data = self.load_image(output_path)
+        result = {
+            'name': output_name,
+            'type': ext_type,
+            'data': img_data,
+        }
+        return result
 
-  def execute(self, obj):
-    result = self.OD_Image(obj)
-    self.emit2Client(result)
-    self.logger.info('Result sent')
+    def execute(self, data):
+        """Main function"""
+        result = self.od_image(data)
+        self.emit2client(result)
+        self.logger.info('Result sent')

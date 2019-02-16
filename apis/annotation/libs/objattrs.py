@@ -41,7 +41,9 @@ class ObjAttrs:
         """Get the color name for each pixel"""
         height = img.shape[0]
         width = img.shape[1]
+        print('3')
         codes = np.ones((width, height), dtype=np.int16)
+        print('4')
         for row in range(height):
             for col in range(width):
                 print('Infer image: ' + width + ', ' + height)
@@ -51,7 +53,9 @@ class ObjAttrs:
     def infer(self, img):
         """Get the color names for the whole image"""
         # Turn the image from BGR to LAB
+        print('1')
         img_lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+        print('2')
         # Classify the color of each pixel
         self.infer_pixel_color(img_lab)
 

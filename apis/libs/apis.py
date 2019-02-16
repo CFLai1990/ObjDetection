@@ -46,12 +46,9 @@ class APIs:
         """Initialize after the connection is stable and ready"""
         @self.socket.on(get_client_msg('__ready__', client_id), namespace=self.namespace)
         def _callback(data):
-            print('1')
             self.init_output(client_id)
-            print('2')
             self.bind_events(client_id)
             # save the information of the client socket
-            print('3')
             self.clients[client_id] = {
                 'IP': request.remote_addr,
                 'info': data
@@ -62,7 +59,7 @@ class APIs:
         """Build the output directory"""
         file_op = FileOp(self.output_dir)
         new_root = file_op.mkdir(client_id)
-        file_op.changeRoot(new_root)
+        file_op.change_root(new_root)
         self.file_ops[client_id] = file_op
 
     def bind_events(self, client_id):
@@ -85,7 +82,7 @@ class APIs:
     def rm_output(self, client_id):
         """Remove the output directory"""
         file_op = self.file_ops[client_id]
-        file_op.changeRoot(self.output_dir)
+        file_op.change_root(self.output_dir)
         file_op.rmdir(client_id)
         del self.file_ops[client_id]
 

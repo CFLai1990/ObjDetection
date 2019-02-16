@@ -42,10 +42,9 @@ class ObjAttrs:
         height = img.shape[0]
         width = img.shape[1]
         codes = np.ones((width, height), dtype=np.int16)
-        print(type(height))
         for row in range(height):
             for col in range(width):
-                print('Infer image: ' + row + ', ' + col)
+                print('Infer image: ' + str(row) + ', ' + str(col))
                 codes[row][col] = self.infer_color(img[row][col])
         self.color_codes = codes
 

@@ -4,6 +4,7 @@ eventlet
 Flask-SQLAlchemy
 Flask-WTF
 Flask-SocketIO
+opencv-python
 WTForms
 coverage
 # ecdsa

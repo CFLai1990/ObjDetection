@@ -44,6 +44,7 @@ class ObjAttrs:
         codes = np.ones((width, height), dtype=np.int16)
         for row in range(height):
             for col in range(width):
+                print('Infer image: ' + width + ', ' + height)
                 codes[row][col] = self.infer_color(img[row][col])
         self.color_codes = codes
 

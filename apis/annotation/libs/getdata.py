@@ -1,8 +1,10 @@
 import csv
+import os
+colorFile = os.path.abspath('../data/color_name.csv')
 
 def getColor():
   colorDict = []
-  with open('../data/color_name.csv', newline='') as csvfile:
+  with open(colorFile, newline='') as csvfile:
     print('OPENED!!!')
     reader = csv.DictReader(csvfile, delimiter=',')
     for row in reader:

@@ -102,8 +102,12 @@ if not app.debug:
 # if __name__ == '__main__':
 #     socketio.run(app)
 
+VERSION = 'dev' 
+# VERSION = 'public'
+
 # Or specify port manually:
 if __name__ == '__main__':
     ODapis = APIs(app.logger, socketio)
-    port = int(os.environ.get('PORT', 2020))
+    portNum = 2021 if VERSION == 'dev' else 2020
+    port = int(os.environ.get('PORT', portNum))
     socketio.run(app, debug = False, host='0.0.0.0', port=port)

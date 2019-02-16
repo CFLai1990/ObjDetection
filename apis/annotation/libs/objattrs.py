@@ -1,4 +1,5 @@
 """Detect the attributes inside each mask"""
+import time
 import csv
 import numpy as np
 import cv2
@@ -42,10 +43,12 @@ class ObjAttrs:
         height = img.shape[0]
         width = img.shape[1]
         codes = np.ones((width, height), dtype=np.int16)
+        print('Infer image started: ' + str(width) + ' * ' + str(height))
+        timer = time.time()
         for row in range(height):
             for col in range(width):
-                print('Infer image: ' + str(row) + ', ' + str(col))
                 codes[row][col] = self.infer_color(img[row][col])
+        print('Infer image ended: {:.3f}s'.format(time.time() - timer))
         self.color_codes = codes
 
     def infer(self, img):

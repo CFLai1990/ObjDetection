@@ -407,7 +407,9 @@ def parse_results(
         areas = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])
         sorted_inds = np.argsort(-areas)
     results = []
-    attrs = attrs.infer(image)
+    print('1')
+    attrs.infer(image)
+    print('2')
     # Go through the bounding boxes
     for i in sorted_inds:
         result_generator = ODResultGenerator()
@@ -430,7 +432,9 @@ def parse_results(
         if segms is not None and len(segms) > i:
             binary = masks[:, :, i]
             # Get the attributes
+            print('3')
             mask_attrs = attrs.get_mask(binary)
+            print('4')
             # Get the contour
             # CHAIN_APPROX_NONE: detailed vertices
             # CHAIN_APPROX_SIMPLE: brief vertices

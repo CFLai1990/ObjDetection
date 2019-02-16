@@ -74,7 +74,7 @@ class APIs:
 
     def unbind_events(self, client_id):
         """Unbind the message for each API"""
-        for message in self.events.keys():
+        for message in self.events:
             @self.socket.on(get_client_msg(message, client_id), namespace=self.namespace)
             def _callback():
                 pass

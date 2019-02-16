@@ -5,9 +5,7 @@ colorFile = os.path.abspath('./apis/annotation/data/color_name.csv')
 def getColor():
   colorDict = []
   with open(colorFile, newline='', encoding='UTF-8-sig') as csvfile:
-    print('OPENED!!!')
     reader = csv.DictReader(csvfile, delimiter=',')
     for row in reader:
-      print(row['name'] + ': ' + row['l'] + ', ' + row['a'] + ', ' + row['b'])
       colorDict.append(row)
     return colorDict

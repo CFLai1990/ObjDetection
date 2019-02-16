@@ -40,13 +40,13 @@ class APIs:
         @self.socket.on('connect', namespace=self.namespace)
         def _callback():
             client_id = request.sid
-            print(client_id)
             self.wait4ready(client_id)
 
     def wait4ready(self, client_id):
         """Initialize after the connection is stable and ready"""
+        print(get_client_msg('__ready__', client_id))
         @self.socket.on(get_client_msg('__ready__', client_id), namespace=self.namespace)
-        def _init_socket(client_info):
+        def _callback(client_info):
             self.init_output(client_id)
             self.bind_events(client_id)
             # save the information of the client socket

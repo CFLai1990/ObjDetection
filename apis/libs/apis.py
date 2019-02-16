@@ -40,6 +40,7 @@ class APIs:
         @self.socket.on('connect', namespace=self.namespace)
         def _callback():
             client_id = request.sid
+            print(client_id)
             self.wait4ready(client_id)
 
     def wait4ready(self, client_id):

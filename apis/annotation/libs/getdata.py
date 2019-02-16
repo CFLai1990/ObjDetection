@@ -8,6 +8,6 @@ def getColor():
     print('OPENED!!!')
     reader = csv.DictReader(csvfile, delimiter=',')
     for row in reader:
-      print(row['l'] + ', '+ row['a'] + ', '+ row['b'] + ': '+ row['name'])
+      print(row.items())
       colorDict.append(row)
     return colorDict

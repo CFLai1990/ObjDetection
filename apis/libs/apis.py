@@ -44,12 +44,14 @@ class APIs:
 
     def wait4ready(self, client_id):
         """Initialize after the connection is stable and ready"""
-        print(get_client_msg('__ready__', client_id))
         @self.socket.on(get_client_msg('__ready__', client_id), namespace=self.namespace)
         def _callback(data):
+            print('1')
             self.init_output(client_id)
+            print('2')
             self.bind_events(client_id)
             # save the information of the client socket
+            print('3')
             self.clients[client_id] = {
                 'IP': request.remote_addr,
                 'info': data

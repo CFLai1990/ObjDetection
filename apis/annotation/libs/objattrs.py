@@ -51,6 +51,7 @@ class ObjAttrs:
                 else:
                     color_list[color_name]['high'].append(hsv_threshold)
             self.color_list = color_list
+            print(color_list)
 
     def infer_color(self, lab):
         """Get the name for one color"""

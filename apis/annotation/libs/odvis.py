@@ -419,6 +419,7 @@ def parse_results(
         result_generator.get_score(score.item())
         # Get the class name
         class_name = dataset.classes[classes[i]]
+        print('Started: ' + class_name)
         result_generator.get_class(class_name)
         # Get the bounding box
         result_generator.get_bbox(
@@ -444,5 +445,6 @@ def parse_results(
                 ctr = contour.reshape((-1, 2)).astype(float).tolist()
                 contours.append(ctr)
             result_generator.get_mask(contours=contours, attrs=mask_attrs)
+        print('Finished: ' + class_name)
         results.append(result_generator.pack())
     return results

@@ -116,23 +116,18 @@ class ObjAttrs:
     def get_mask_color(self, mask_img):
         """Count the colors inside the mask"""
         color_codes = self.color_codes
-        np.savetxt(OUTPUT_DIR + '/' + 'color_codes.txt', color_codes)
-        np.savetxt(OUTPUT_DIR + '/' + 'mask_img.txt', mask_img)
         masked = cv2.bitwise_and(color_codes, color_codes, mask=mask_img)
         unique, counts = np.unique(masked, return_counts=True)
         code_dict = dict(zip(unique, counts))
-        print(code_dict)
         pixel_num = float(0)
         for code, num in code_dict.items():
             if code != 0:
                 pixel_num += num
-        print(pixel_num)
         color_dict = {}
         for code in code_dict:
             if code != 0:
                 color_name = COLOR_CODE[code]
                 color_dict[color_name] = round(code_dict[code] / pixel_num, 4)
-        print('finished')
         return color_dict
 
     def clear_all(self):
@@ -143,7 +138,6 @@ class ObjAttrs:
         """Get the colors inside the mask"""
         # mask_img: the binary masked image
         color = self.get_mask_color(mask_img)
-        self.clear_all()
         return {
             'color': color,
         }

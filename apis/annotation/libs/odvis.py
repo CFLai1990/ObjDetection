@@ -427,17 +427,13 @@ def parse_results(
             (bbox[2] - bbox[0]).item(),
             (bbox[3] - bbox[1]).item())
         # Get the masks
-        print('Get the masks: ' + class_name)
         if segms is not None and len(segms) > i:
-            print('1')
             binary = masks[:, :, i]
             # Get the attributes
-            print('2')
             mask_attrs = attrs.get_mask(binary)
             # Get the contour
             # CHAIN_APPROX_NONE: detailed vertices
             # CHAIN_APPROX_SIMPLE: brief vertices
-            print('3')
             contour_list, hier = cv2.findContours(
                 binary.copy(),
                 cv2.RETR_CCOMP,
@@ -447,6 +443,6 @@ def parse_results(
                 ctr = contour.reshape((-1, 2)).astype(float).tolist()
                 contours.append(ctr)
             result_generator.get_mask(contours=contours, attrs=mask_attrs)
-        print('Finished: ' + class_name)
         results.append(result_generator.pack())
+    attrs.clear_all()
     return results

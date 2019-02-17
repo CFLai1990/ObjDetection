@@ -83,7 +83,7 @@ class ObjAttrs:
         codes = np.zeros((height, width), dtype=np.uint8)
         print('Infer image started: ' + str(width) + ' * ' + str(height))
         timer = time.time()
-        for color in self.color_list:
+        for color_name, color in self.color_list.items():
             print(color)
             threshold_num = len(color['low'])
             print('1')

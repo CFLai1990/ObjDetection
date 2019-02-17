@@ -118,8 +118,7 @@ class ObjAttrs:
         pixel_num = float(0)
         print(code_dict)
         for code, num in code_dict.items():
-            if code != 0:
-                pixel_num += num
+            pixel_num += num
         color_dict = {}
         for code in code_dict:
             color_name = COLOR_CODE[code]

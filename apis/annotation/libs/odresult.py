@@ -38,6 +38,7 @@ class ODResultGenerator:
         """Get the contour with its attributes"""
         self.masks = contours
         self.attrs = attrs
+        print(self.attrs)
 
     def pack(self):
         """Pack the final result"""

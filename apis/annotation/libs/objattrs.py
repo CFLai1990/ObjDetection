@@ -121,7 +121,6 @@ class ObjAttrs:
         unique, counts = np.unique(masked, return_counts=True)
         code_dict = dict(zip(unique, counts))
         pixel_num = float(0)
-        print('Mask color started')
         for code, num in code_dict.items():
             if code != 0:
                 pixel_num += num
@@ -130,7 +129,6 @@ class ObjAttrs:
             if code != 0:
                 color_name = COLOR_CODE[code]
                 color_dict[color_name] = round(code_dict[code] / pixel_num, 4)
-        print(color_dict)
         return color_dict
 
     def clear_all(self):

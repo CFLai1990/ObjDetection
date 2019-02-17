@@ -46,13 +46,13 @@ class ODResultGenerator:
         print(self.score)
         print(self.bbox)
         print(self.masks)
-        print(self.attrs.color)
+        print(self.attrs['color'])
         result = {
             'class': self.class_name,
             'score': self.score,
             'bbox': self.bbox,
             'mask': self.masks,
-            'color': self.attrs.color
+            'color': self.attrs['color']
         }
         print('Pack finished')
         print(result)

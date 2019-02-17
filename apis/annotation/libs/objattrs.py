@@ -112,30 +112,16 @@ class ObjAttrs:
 
     def get_mask_color(self, mask_img):
         """Count the colors inside the mask"""
-        height = mask_img.shape[0]
-        width = mask_img.shape[1]
-        code_dict = {}
-        print('1')
-        for row in range(height):
-            for col in range(width):
-                print('2')
-                if mask_img[row][col]:
-                    print('3')
-                    code = self.color_codes[row][col]
-                    if code_dict.get(code) is None:
-                        code_dict[code] = 1
-                    else:
-                        code_dict[code] = code_dict[code] + 1
-            pixel_num = float(0)
-            print('4')
-            for num in code_dict.values():
-                pixel_num += num
-            color_dict = {}
-            print('5')
-            for code in code_dict:
-                color_name = COLOR_CODE[code]
-                color_dict[color_name] = pixel_num / code_dict[code]
-            print('6')
+        unique, counts = np.unique(self.color_codes, return_counts=True)
+        code_dict = dict(zip(unique, counts))
+        print(code_dict)
+        pixel_num = float(0)
+        for num in code_dict.values():
+            pixel_num += num
+        color_dict = {}
+        for code in code_dict:
+            color_name = COLOR_CODE[code]
+            color_dict[color_name] = pixel_num / code_dict[code]
         return color_dict
 
     def clear_all(self):

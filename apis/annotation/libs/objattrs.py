@@ -94,17 +94,16 @@ class ObjAttrs:
                     mask_i = cv2.inRange(img, color['low'][i], color['high'][i])
                     mask = cv2.bitwise_or(mask, mask_i)
             if color['code'] != 0:
-                print('before')
                 masked_img = np.zeros(img.shape)
                 masked_img[:, :, 0] = mask
                 masked_img[:, :, 1] = mask
                 masked_img[:, :, 2] = mask
                 cv2.imwrite(OUTPUT_DIR + '/' + str(color['code']) + '.jpg', masked_img)
-                print('after')
             color_map = np.empty((height, width), dtype=np.uint8)
             color_map.fill(color['code'])
             color_map = cv2.bitwise_and(color_map, color_map, mask=mask)
             codes = codes + color_map
+        np.savetxt(OUTPUT_DIR + '/' + "colormap.txt", color_map, fmt="%d", delimiter=",")
         self.color_codes = codes
 
 

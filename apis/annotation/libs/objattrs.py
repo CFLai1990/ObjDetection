@@ -51,7 +51,6 @@ class ObjAttrs:
                 else:
                     color_list[color_name]['high'].append(hsv_threshold)
             self.color_list = color_list
-            print(color_list)
 
     def infer_color(self, lab):
         """Get the name for one color"""
@@ -113,8 +112,8 @@ class ObjAttrs:
 
     def get_mask_color(self, mask_img):
         """Count the colors inside the mask"""
-        dummy = cv2.bitwise_and(self.color_codes, mask_img)
-        unique, counts = np.unique(self.color_codes, return_counts=True)
+        masked = cv2.bitwise_and(self.color_codes, mask_img)
+        unique, counts = np.unique(masked, return_counts=True)
         code_dict = dict(zip(unique, counts))
         pixel_num = float(0)
         print(code_dict)

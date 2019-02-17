@@ -116,16 +116,15 @@ class ObjAttrs:
         unique, counts = np.unique(self.color_codes, return_counts=True)
         code_dict = dict(zip(unique, counts))
         pixel_num = float(0)
+        print(code_dict)
         for code, num in code_dict.items():
             if code != 0:
                 pixel_num += num
-        print(pixel_num)
         color_dict = {}
         for code in code_dict:
             color_name = COLOR_CODE[code]
-            print(code)
-            print(color_name)
-            color_dict[color_name] = pixel_num / code_dict[code]
+            print(code, color_name)
+            color_dict[color_name] = code_dict[code] / pixel_num
         print(color_dict)
         return color_dict
 

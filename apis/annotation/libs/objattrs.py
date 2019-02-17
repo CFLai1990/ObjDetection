@@ -117,19 +117,19 @@ class ObjAttrs:
         """Count the colors inside the mask"""
         color_codes = self.color_codes
         masked = cv2.bitwise_and(color_codes, color_codes, mask=mask_img)
-        np.savetxt(OUTPUT_DIR + '/' + "color_codes.txt", color_codes, fmt="%d", delimiter=",")
         np.savetxt(OUTPUT_DIR + '/' + "mask_img.txt", mask_img, fmt="%d", delimiter=",")
         unique, counts = np.unique(masked, return_counts=True)
         code_dict = dict(zip(unique, counts))
         pixel_num = float(0)
-        print(code_dict)
+        print('Mask color started')
         for code, num in code_dict.items():
-            pixel_num += num
+            if code != 0:
+                pixel_num += num
         color_dict = {}
         for code in code_dict:
-            color_name = COLOR_CODE[code]
-            print(code, color_name)
-            color_dict[color_name] = code_dict[code] / pixel_num
+            if code != 0:
+                color_name = COLOR_CODE[code]
+                color_dict[color_name] = round(code_dict[code] / pixel_num, 4)
         print(color_dict)
         return color_dict
 

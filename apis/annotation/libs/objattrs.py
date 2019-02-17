@@ -1,5 +1,6 @@
 """Detect the attributes inside each mask"""
 import time
+import os
 import csv
 import numpy as np
 import cv2
@@ -9,6 +10,8 @@ from colormath.color_objects import sRGBColor
 from colormath.color_conversions import convert_color
 
 from .__settings__ import COLOR_CODE, COLOR_MUNSELL, COLOR_HSV
+
+OUTPUT_DIR = os.path.abspath('./files/annotation')
 
 class ObjAttrs:
     """The class for attribute detection"""
@@ -90,6 +93,7 @@ class ObjAttrs:
                 for i in range(threshold_num):
                     mask_i = cv2.inRange(img, color['low'][i], color['high'][i])
                     mask = cv2.bitwise_or(mask, mask_i)
+            cv2.imwrite(OUTPUT_DIR + str(color['code']) + '.jpg', mask)
             color_map = np.empty((height, width), dtype=np.uint8)
             color_map.fill(color['code'])
             color_map = cv2.bitwise_and(color_map, color_map, mask=mask)

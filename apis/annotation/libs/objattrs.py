@@ -46,7 +46,7 @@ class ObjAttrs:
                         'code': COLOR_CODE.index(row['name'])
                     }
                 hsv_threshold = np.array([row['h'], row['s'], row['v']], dtype=np.uint8)
-                if row['threshold'] == 0:
+                if str(row['threshold']) == '0':
                     color_list[color_name]['low'].append(hsv_threshold)
                 else:
                     color_list[color_name]['high'].append(hsv_threshold)
@@ -97,6 +97,7 @@ class ObjAttrs:
             print('2')
             for row in range(height):
                 for col in range(width):
+                    print(mask[row][col])
                     if mask[row][col] == 1:
                         codes[row][col] = color['code']
             print('3')

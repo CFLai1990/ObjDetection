@@ -28,10 +28,10 @@ class ObjAttrs:
             for row in reader:
                 color_lab = LabColor(lab_l=row['l'], lab_a=row['a'], lab_b=row['b'])
                 color_hsv = convert_color(color_lab, HSVColor)
-                print(color_hsv)
+                print(color_hsv.get_value_tuple())
                 color = {
                     'color': color_lab,
-                    'code': COLOR_CODE.index(row['name'])
+                    #'code': COLOR_CODE.index(row['name'])
                 }
                 color_list.append(color)
             self.color_list = color_list

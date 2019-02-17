@@ -96,9 +96,9 @@ class ObjAttrs:
             if color['code'] != 0:
                 print('before')
                 masked_img = np.zeros(img.shape)
+                masked_img[:, :, 0] = mask
                 masked_img[:, :, 1] = mask
                 masked_img[:, :, 2] = mask
-                masked_img[:, :, 3] = mask
                 cv2.imwrite(OUTPUT_DIR + '/' + str(color['code']) + '.jpg', masked_img)
                 print('after')
             color_map = np.empty((height, width), dtype=np.uint8)

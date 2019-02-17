@@ -22,6 +22,6 @@ COLOR_CODE = [
     'yellow',
     'green',
     'blue',
-    'purple'
+    'purple',
     'pink',
 ]

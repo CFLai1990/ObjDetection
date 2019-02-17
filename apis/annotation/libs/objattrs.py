@@ -93,17 +93,10 @@ class ObjAttrs:
                 for i in range(threshold_num):
                     mask_i = cv2.inRange(img, color['low'][i], color['high'][i])
                     mask = cv2.bitwise_or(mask, mask_i)
-            if color['code'] != 0:
-                masked_img = np.zeros(img.shape)
-                masked_img[:, :, 0] = mask
-                masked_img[:, :, 1] = mask
-                masked_img[:, :, 2] = mask
-                cv2.imwrite(OUTPUT_DIR + '/' + str(color['code']) + '.jpg', masked_img)
             color_map = np.empty((height, width), dtype=np.uint8)
             color_map.fill(color['code'])
             color_map = cv2.bitwise_and(color_map, color_map, mask=mask)
             codes = codes + color_map
-        np.savetxt(OUTPUT_DIR + '/' + "colormap.txt", color_map, fmt="%d", delimiter=",")
         self.color_codes = codes
 
 
@@ -124,6 +117,8 @@ class ObjAttrs:
         """Count the colors inside the mask"""
         color_codes = self.color_codes
         masked = cv2.bitwise_and(color_codes, color_codes, mask=mask_img)
+        np.savetxt(OUTPUT_DIR + '/' + "color_codes.txt", color_codes, fmt="%d", delimiter=",")
+        np.savetxt(OUTPUT_DIR + '/' + "mask_img.txt", mask_img, fmt="%d", delimiter=",")
         unique, counts = np.unique(masked, return_counts=True)
         code_dict = dict(zip(unique, counts))
         pixel_num = float(0)

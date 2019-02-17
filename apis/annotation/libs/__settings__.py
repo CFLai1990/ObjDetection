@@ -9,7 +9,8 @@ DT = {
     'threshold_keypoint': 2.0,
 }
 
-COLOR_DICT = os.path.abspath('./apis/annotation/data/color_name.csv')
+COLOR_MUNSELL = os.path.abspath('./apis/annotation/data/color_name.csv')
+COLOR_HSV = os.path.abspath('./apis/annotation/data/color_threshold.csv')
 COLOR_CODE = [
     'red',
     'orange',
@@ -22,4 +23,5 @@ COLOR_CODE = [
     'gray',
     'black',
     'white',
+    'cyan'
 ]

@@ -8,28 +8,48 @@ from colormath.color_diff import delta_e_cie2000 as color_diff
 from colormath.color_objects import sRGBColor
 from colormath.color_conversions import convert_color
 
-from .__settings__ import COLOR_CODE, COLOR_DICT
+from .__settings__ import COLOR_CODE, COLOR_MUNSELL, COLOR_HSV
 
 class ObjAttrs:
     """The class for attribute detection"""
     def __init__(self):
-        self.init_colors()
+        self.color_list = None
+        #self.init_munsell()
+        self.init_hsv()
         self.color_codes = None
 
-    def init_colors(self):
+    def init_munsell(self):
         """Initialize the 330 Munsell colors"""
         color_list = []
-        with open(COLOR_DICT, newline='', encoding='UTF-8-sig') as csvfile:
+        with open(COLOR_MUNSELL, newline='', encoding='UTF-8-sig') as csvfile:
             reader = csv.DictReader(csvfile, delimiter=',')
             for row in reader:
                 color_lab = LabColor(lab_l=row['l'], lab_a=row['a'], lab_b=row['b'])
-                color_rgb = convert_color(color_lab, sRGBColor).get_upscaled_value_tuple()
-                print(color_rgb)
                 color = {
                     'color': color_lab,
                     'code': COLOR_CODE.index(row['name'])
                 }
                 color_list.append(color)
+            self.color_list = color_list
+
+    def init_hsv(self):
+        """Initialize the hsv color thresholds"""
+        color_list = {}
+        with open(COLOR_HSV, newline='', encoding='UTF-8-sig') as csvfile:
+            reader = csv.DictReader(csvfile, delimiter=',')
+            for row in reader:
+                color_name = row['name']
+                if color_list.get(color_name) is None:
+                    color_list[color_name] = {
+                        'low': [],
+                        'high': [],
+                        'code': COLOR_CODE.index(row['name'])
+                    }
+                hsv_threshold = np.array([row['h'], row['s'], row['v']], dtype=np.uint8)
+                if row['threshold'] == 0:
+                    color_list[color_name]['low'].append(hsv_threshold)
+                else:
+                    color_list[color_name]['high'].append(hsv_threshold)
             self.color_list = color_list
 
     def infer_color(self, lab):
@@ -43,11 +63,11 @@ class ObjAttrs:
                 code = ms_color['code']
         return code
 
-    def infer_pixel_color(self, img):
+    def infer_pixel_munsell(self, img):
         """Get the color name for each pixel"""
         height = img.shape[0]
         width = img.shape[1]
-        codes = np.ones((width, height), dtype=np.int16)
+        codes = np.ones((height, width), dtype=np.int16)
         print('Infer image started: ' + str(width) + ' * ' + str(height))
         timer = time.time()
         for row in range(height):
@@ -56,12 +76,42 @@ class ObjAttrs:
         print('Infer image ended: {:.3f}s'.format(time.time() - timer))
         self.color_codes = codes
 
-    def infer(self, img):
+    def infer_pixel_hsv(self, img):
+        """Get the color name for each pixel"""
+        height = img.shape[0]
+        width = img.shape[1]
+        codes = np.zeros((height, width), dtype=np.uint8)
+        print('Infer image started: ' + str(width) + ' * ' + str(height))
+        timer = time.time()
+        for color in self.color_list:
+            threshold_num = len(color['low'])
+            if threshold_num == 1:
+                mask = cv2.inRange(img, color['low'][0], color['high'][0])
+            else:
+                mask = np.zeros((width, height), dtype=np.uint8)
+                for i in range(threshold_num):
+                    mask_i = cv2.inRange(img, color['low'][i], color['high'][i])
+                    mask = cv2.bitwise_or(mask, mask_i)
+            for row in range(height):
+                for col in range(width):
+                    if mask[row][col] == 1:
+                        codes[row][col] = color['code']
+        print('Infer image ended: {:.3f}s'.format(time.time() - timer))
+        self.color_codes = codes
+
+
+    def infer(self, img, mode='hsv'):
         """Get the color names for the whole image"""
-        # Turn the image from BGR to LAB
-        img_lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
-        # Classify the color of each pixel
-        self.infer_pixel_color(img_lab)
+        if mode == 'munsell':
+            # Turn the image from BGR to LAB
+            img_lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+            # Classify the color of each pixel
+            self.infer_pixel_munsell(img_lab)
+        else:
+            # Turn the image from BGR to HSV
+            img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+            # Classify the color of each pixel
+            self.infer_pixel_hsv(img_hsv)
 
     def get_mask_color(self, mask_img):
         """Count the colors inside the mask"""

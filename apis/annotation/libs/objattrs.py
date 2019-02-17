@@ -112,16 +112,19 @@ class ObjAttrs:
 
     def get_mask_color(self, mask_img):
         """Count the colors inside the mask"""
+        dummy = cv2.bitwise_and(self.color_codes, mask_img)
         unique, counts = np.unique(self.color_codes, return_counts=True)
         code_dict = dict(zip(unique, counts))
         print(code_dict)
         pixel_num = float(0)
-        for num in code_dict.values():
-            pixel_num += num
+        for code, num in code_dict.items():
+            if code != 0:
+                pixel_num += num
         color_dict = {}
         for code in code_dict:
             color_name = COLOR_CODE[code]
             color_dict[color_name] = pixel_num / code_dict[code]
+        print(color_dict)
         return color_dict
 
     def clear_all(self):

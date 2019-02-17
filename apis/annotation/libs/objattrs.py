@@ -94,7 +94,8 @@ class ObjAttrs:
                     mask_i = cv2.inRange(img, color['low'][i], color['high'][i])
                     mask = cv2.bitwise_or(mask, mask_i)
             print('Color ' + color_name + ': mask obtained')
-            color_map = np.array((height, width), dtype=np.uint8).fill(color['code'])
+            color_map = np.empty((height, width), dtype=np.uint8)
+            color_map.fill(color['code'])
             color_map = cv2.bitwise_and(color_map, mask)
             print('Color ' + color_name + ': ended')
             codes = codes + color_map

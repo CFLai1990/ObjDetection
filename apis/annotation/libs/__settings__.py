@@ -17,13 +17,11 @@ COLOR_CODE = [
     'gray',
     'white',
     'red',
+    'brown',
     'orange',
     'yellow',
     'green',
-    'cyan',
     'blue',
     'purple'
+    'pink',
 ]
-
-    # 'pink',
-    # 'brown',

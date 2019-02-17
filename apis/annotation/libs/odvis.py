@@ -419,7 +419,6 @@ def parse_results(
         result_generator.get_score(score.item())
         # Get the class name
         class_name = dataset.classes[classes[i]]
-        print('Started: ' + class_name)
         result_generator.get_class(class_name)
         # Get the bounding box
         result_generator.get_bbox(
@@ -430,12 +429,15 @@ def parse_results(
         # Get the masks
         print('Get the masks: ' + class_name)
         if segms is not None and len(segms) > i:
+            print('1')
             binary = masks[:, :, i]
             # Get the attributes
+            print('2')
             mask_attrs = attrs.get_mask(binary)
             # Get the contour
             # CHAIN_APPROX_NONE: detailed vertices
             # CHAIN_APPROX_SIMPLE: brief vertices
+            print('3')
             contour_list, hier = cv2.findContours(
                 binary.copy(),
                 cv2.RETR_CCOMP,

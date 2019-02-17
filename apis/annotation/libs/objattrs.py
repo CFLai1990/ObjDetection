@@ -119,15 +119,18 @@ class ObjAttrs:
         masked = cv2.bitwise_and(color_codes, color_codes, mask=mask_img)
         unique, counts = np.unique(masked, return_counts=True)
         code_dict = dict(zip(unique, counts))
+        print(code_dict)
         pixel_num = float(0)
         for code, num in code_dict.items():
             if code != 0:
                 pixel_num += num
+        print(pixel_num)
         color_dict = {}
         for code in code_dict:
             if code != 0:
                 color_name = COLOR_CODE[code]
                 color_dict[color_name] = round(code_dict[code] / pixel_num, 4)
+        print('finished')
         return color_dict
 
     def clear_all(self):

@@ -5,6 +5,8 @@ import numpy as np
 import cv2
 from colormath.color_objects import LabColor
 from colormath.color_diff import delta_e_cie2000 as color_diff
+from colormath.color_objects import sRGBColor
+from colormath.color_conversions import convert_color
 
 from .__settings__ import COLOR_CODE, COLOR_DICT
 
@@ -20,8 +22,11 @@ class ObjAttrs:
         with open(COLOR_DICT, newline='', encoding='UTF-8-sig') as csvfile:
             reader = csv.DictReader(csvfile, delimiter=',')
             for row in reader:
+                color_lab = LabColor(lab_l=row['l'], lab_a=row['a'], lab_b=row['b'])
+                color_rgb = convert_color(color_lab, sRGBColor).get_upscaled_value_tuple()
+                print(color_rgb)
                 color = {
-                    'color': LabColor(lab_l=row['l'], lab_a=row['a'], lab_b=row['b']),
+                    'color': color_lab,
                     'code': COLOR_CODE.index(row['name'])
                 }
                 color_list.append(color)

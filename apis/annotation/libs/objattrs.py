@@ -16,7 +16,7 @@ class ObjAttrs:
     """The class for attribute detection"""
     def __init__(self):
         self.color_list = None
-        self.init_munsell()
+        # self.init_munsell()
         self.init_hsv()
         self.color_codes = None
 

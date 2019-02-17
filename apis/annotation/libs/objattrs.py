@@ -92,7 +92,7 @@ class ObjAttrs:
                     mask = cv2.bitwise_or(mask, mask_i)
             color_map = np.empty((height, width), dtype=np.uint8)
             color_map.fill(color['code'])
-            color_map = cv2.bitwise_and(color_map, mask)
+            color_map = cv2.bitwise_and(color_map, color_map, mask=mask)
             codes = codes + color_map
         self.color_codes = codes
 
@@ -112,7 +112,8 @@ class ObjAttrs:
 
     def get_mask_color(self, mask_img):
         """Count the colors inside the mask"""
-        masked = cv2.bitwise_and(self.color_codes, mask_img)
+        color_codes = self.color_codes
+        masked = cv2.bitwise_and(color_codes, color_codes, mask=mask_img)
         unique, counts = np.unique(masked, return_counts=True)
         code_dict = dict(zip(unique, counts))
         pixel_num = float(0)

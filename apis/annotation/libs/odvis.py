@@ -427,6 +427,7 @@ def parse_results(
             (bbox[2] - bbox[0]).item(),
             (bbox[3] - bbox[1]).item())
         # Get the masks
+        print('Get the masks: ' + class_name)
         if segms is not None and len(segms) > i:
             binary = masks[:, :, i]
             # Get the attributes

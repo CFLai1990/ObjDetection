@@ -3,12 +3,12 @@
 class ODResultGenerator:
     """Pack the parameter results"""
     def __init__(self):
-        self.clear_all()
         self.score = None
         self.class_name = None
         self.bbox = None
         self.masks = None
         self.attrs = None
+        self.clear_all()
 
     def clear_all(self):
         """Initialize the results"""
@@ -38,7 +38,6 @@ class ODResultGenerator:
         """Get the contour with its attributes"""
         self.masks = contours
         self.attrs = attrs
-        print(self.attrs)
 
     def pack(self):
         """Pack the final result"""

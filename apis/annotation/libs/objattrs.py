@@ -81,10 +81,7 @@ class ObjAttrs:
         height = img.shape[0]
         width = img.shape[1]
         codes = np.zeros((height, width), dtype=np.uint8)
-        print('Infer image started: ' + str(width) + ' * ' + str(height))
-        timer = time.time()
-        for color_name, color in self.color_list.items():
-            print('Color ' + color_name + ': started')
+        for color in self.color_list.values():
             threshold_num = len(color['low'])
             if threshold_num == 1:
                 mask = cv2.inRange(img, color['low'][0], color['high'][0])
@@ -93,13 +90,10 @@ class ObjAttrs:
                 for i in range(threshold_num):
                     mask_i = cv2.inRange(img, color['low'][i], color['high'][i])
                     mask = cv2.bitwise_or(mask, mask_i)
-            print('Color ' + color_name + ': mask obtained')
             color_map = np.empty((height, width), dtype=np.uint8)
             color_map.fill(color['code'])
             color_map = cv2.bitwise_and(color_map, mask)
-            print('Color ' + color_name + ': ended')
             codes = codes + color_map
-        print('Infer image ended: {:.3f}s'.format(time.time() - timer))
         self.color_codes = codes
 
 
@@ -121,21 +115,27 @@ class ObjAttrs:
         height = mask_img.shape[0]
         width = mask_img.shape[1]
         code_dict = {}
+        print('1')
         for row in range(height):
             for col in range(width):
-                if mask_img[row][col] == 255:
+                print('2')
+                if mask_img[row][col]:
+                    print('3')
                     code = self.color_codes[row][col]
                     if code_dict.get(code) is None:
                         code_dict[code] = 1
                     else:
                         code_dict[code] = code_dict[code] + 1
             pixel_num = float(0)
+            print('4')
             for num in code_dict.values():
                 pixel_num += num
             color_dict = {}
+            print('5')
             for code in code_dict:
                 color_name = COLOR_CODE[code]
                 color_dict[color_name] = pixel_num / code_dict[code]
+            print('6')
         return color_dict
 
     def clear_all(self):

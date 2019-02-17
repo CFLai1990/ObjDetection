@@ -42,6 +42,11 @@ class ODResultGenerator:
     def pack(self):
         """Pack the final result"""
         print('Pack started')
+        print(self.class_name)
+        print(self.score)
+        print(self.bbox)
+        print(self.masks)
+        print(self.attrs.color)
         result = {
             'class': self.class_name,
             'score': self.score,

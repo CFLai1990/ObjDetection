@@ -27,7 +27,7 @@ class ObjAttrs:
             reader = csv.DictReader(csvfile, delimiter=',')
             for row in reader:
                 color_lab = LabColor(lab_l=row['l'], lab_a=row['a'], lab_b=row['b'])
-                color_hsv = convert_color(LabColor, HSVColor)
+                color_hsv = convert_color(color_lab, HSVColor)
                 print(color_hsv)
                 color = {
                     'color': color_lab,

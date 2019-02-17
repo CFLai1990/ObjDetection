@@ -115,14 +115,16 @@ class ObjAttrs:
         dummy = cv2.bitwise_and(self.color_codes, mask_img)
         unique, counts = np.unique(self.color_codes, return_counts=True)
         code_dict = dict(zip(unique, counts))
-        print(code_dict)
         pixel_num = float(0)
         for code, num in code_dict.items():
             if code != 0:
                 pixel_num += num
+        print(pixel_num)
         color_dict = {}
         for code in code_dict:
             color_name = COLOR_CODE[code]
+            print(code)
+            print(color_name)
             color_dict[color_name] = pixel_num / code_dict[code]
         print(color_dict)
         return color_dict

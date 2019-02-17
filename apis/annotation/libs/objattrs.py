@@ -93,6 +93,7 @@ class ObjAttrs:
                 for i in range(threshold_num):
                     mask_i = cv2.inRange(img, color['low'][i], color['high'][i])
                     print(mask.shape)
+                    print(img.shape)
                     print(mask_i.shape)
                     mask_new = cv2.bitwise_or(mask, mask_i)
                     mask = mask_new

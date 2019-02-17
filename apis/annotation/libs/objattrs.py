@@ -84,9 +84,7 @@ class ObjAttrs:
         print('Infer image started: ' + str(width) + ' * ' + str(height))
         timer = time.time()
         for color_name, color in self.color_list.items():
-            print(color)
             threshold_num = len(color['low'])
-            print('1')
             if threshold_num == 1:
                 mask = cv2.inRange(img, color['low'][0], color['high'][0])
             else:
@@ -94,13 +92,9 @@ class ObjAttrs:
                 for i in range(threshold_num):
                     mask_i = cv2.inRange(img, color['low'][i], color['high'][i])
                     mask = cv2.bitwise_or(mask, mask_i)
-            print('2')
-            for row in range(height):
-                for col in range(width):
-                    print(mask[row][col])
-                    if mask[row][col] == 1:
-                        codes[row][col] = color['code']
-            print('3')
+            color_map = np.array((height, width), dtype=np.uint8).fill(color['code'])
+            color_map = cv2.bitwise_and(color_map, mask)
+            codes = codes + color_map
         print('Infer image ended: {:.3f}s'.format(time.time() - timer))
         self.color_codes = codes
 

@@ -12,6 +12,9 @@ DT = {
 COLOR_MUNSELL = os.path.abspath('./apis/annotation/data/color_name.csv')
 COLOR_HSV = os.path.abspath('./apis/annotation/data/color_threshold.csv')
 COLOR_CODE = [
+    'black',
+    'gray',
+    'white',
     'red',
     'orange',
     'yellow',
@@ -20,8 +23,5 @@ COLOR_CODE = [
     'purple',
     'pink',
     'brown',
-    'gray',
-    'black',
-    'white',
     'cyan'
 ]

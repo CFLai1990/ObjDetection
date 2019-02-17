@@ -116,11 +116,10 @@ class ObjAttrs:
     def get_mask_color(self, mask_img):
         """Count the colors inside the mask"""
         color_codes = self.color_codes
-        print('1')
+        np.savetxt(OUTPUT_DIR + '/' + 'color_codes.txt', color_codes)
+        np.savetxt(OUTPUT_DIR + '/' + 'mask_img.txt', mask_img)
         masked = cv2.bitwise_and(color_codes, color_codes, mask=mask_img)
-        print('2')
         unique, counts = np.unique(masked, return_counts=True)
-        print('3')
         code_dict = dict(zip(unique, counts))
         print(code_dict)
         pixel_num = float(0)

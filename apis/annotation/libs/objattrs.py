@@ -89,14 +89,10 @@ class ObjAttrs:
             if threshold_num == 1:
                 mask = cv2.inRange(img, color['low'][0], color['high'][0])
             else:
-                mask = np.zeros((width, height), dtype=np.uint8)
+                mask = np.zeros((height, width), dtype=np.uint8)
                 for i in range(threshold_num):
                     mask_i = cv2.inRange(img, color['low'][i], color['high'][i])
-                    print(mask.shape)
-                    print(img.shape)
-                    print(mask_i.shape)
-                    mask_new = cv2.bitwise_or(mask, mask_i)
-                    mask = mask_new
+                    mask = cv2.bitwise_or(mask, mask_i)
             print('Color ' + color_name + ': mask obtained')
             color_map = np.empty((height, width), dtype=np.uint8)
             color_map.fill(color['code'])

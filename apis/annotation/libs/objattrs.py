@@ -136,13 +136,15 @@ class ObjAttrs:
         area = 0
         min_x = float('inf')
         min_y = float('inf')
-        max_x = 0
-        max_y = 0
+        max_x = -1
+        max_y = -1
         for contour in contour_list:
             area += cv2.contourArea(contour)
             left_x, left_y, rect_w, rect_h = cv2.boundingRect(contour)
             right_x = left_x + rect_w
             right_y = left_y + rect_h
+            if len(contour_list) > 1:
+                print(left_x, left_y, right_x, right_y)
             if left_x < min_x:
                 min_x = left_x
             if right_x > max_x:

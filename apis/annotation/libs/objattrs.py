@@ -134,41 +134,50 @@ class ObjAttrs:
     def get_mask_size(self, contour_list):
         """Get the size of the mask: area, x_range, y_range"""
         area = 0
-        min_x = float('inf')
-        min_y = float('inf')
-        max_x = -1
-        max_y = -1
+        areas = []
+        ctr_range = {
+            'x': [float('inf'), -1],
+            'y': [float('inf'), -1]
+        }
         for contour in contour_list:
-            area += cv2.contourArea(contour)
+            contour_area = cv2.contourArea(contour)
+            areas.append(contour_area)
+            area += contour_area
             left_x, left_y, rect_w, rect_h = cv2.boundingRect(contour)
             right_x = left_x + rect_w
             right_y = left_y + rect_h
             if len(contour_list) > 1:
                 print(left_x, left_y, right_x, right_y)
-            if left_x < min_x:
-                min_x = left_x
-            if right_x > max_x:
-                max_x = right_x
-            if left_y < min_y:
-                min_y = left_y
-            if right_y > max_y:
-                max_y = right_y
-        return {
+            if left_x < ctr_range['x'][0]:
+                ctr_range['x'][0] = left_x
+            if right_x > ctr_range['x'][1]:
+                ctr_range['x'][1] = right_x
+            if left_y < ctr_range['y'][0]:
+                ctr_range['y'][0] = left_y
+            if right_y > ctr_range['y'][1]:
+                ctr_range['y'][1] = right_y
+        return areas, {
             'area': area,
-            'x_range': [left_x, right_x],
-            'y_range': [left_y, right_y]
+            'x_range': ctr_range['x'],
+            'y_range': ctr_range['y']
         }
 
-    def get_mask_position(self, contour_list):
+    def get_mask_position(self, contour_list, areas, total_area):
         """Get the position of the (centroid of the) mask"""
-        for contour in contour_list:
+        ctr_centroid = {
+            'x': 0,
+            'y': 0,
+        }
+        for index, contour in enumerate(contour_list):
+            contour_area = areas[index]
             moment = cv2.moments(contour)
             centroid_x = int(moment['m10']/moment['m00'])
             centroid_y = int(moment['m01']/moment['m00'])
-        return {
-            'x': centroid_x,
-            'y': centroid_y
-        }
+            ctr_centroid['x'] += contour_area * centroid_x
+            ctr_centroid['y'] += contour_area * centroid_y
+        ctr_centroid['x'] = int(ctr_centroid['x'] / total_area)
+        ctr_centroid['y'] = int(ctr_centroid['y'] / total_area)
+        return ctr_centroid
 
     def clear_all(self):
         """Clear the temporary data"""
@@ -178,8 +187,8 @@ class ObjAttrs:
         """Get the colors inside the mask"""
         # mask_img: the binary masked image
         color = self.get_mask_color(mask_img)
-        size = self.get_mask_size(contour_list)
-        position = self.get_mask_position(contour_list)
+        areas, size = self.get_mask_size(contour_list)
+        position = self.get_mask_position(contour_list, areas, size['area'])
         return {
             'color': color,
             'size': size,

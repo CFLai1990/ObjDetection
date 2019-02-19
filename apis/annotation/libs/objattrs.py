@@ -133,13 +133,28 @@ class ObjAttrs:
 
     def get_mask_size(self, contour_list):
         """Get the size of the mask: area, x_range, y_range"""
+        area = 0
+        min_x = float('inf')
+        min_y = float('inf')
+        max_x = 0
+        max_y = 0
         for contour in contour_list:
-            area = cv2.contourArea(contour)
-            rect_x, rect_y, rect_w, rect_h = cv2.boundingRect(contour)
+            area += cv2.contourArea(contour)
+            left_x, left_y, rect_w, rect_h = cv2.boundingRect(contour)
+            right_x = left_x + rect_w
+            right_y = left_y + rect_h
+            if left_x < min_x:
+                min_x = left_x
+            if right_x > max_x:
+                max_x = right_x
+            if left_y < min_y:
+                min_y = left_y
+            if right_y > max_y:
+                max_y = right_y
         return {
             'area': area,
-            'x_range': [rect_x, rect_x + rect_w],
-            'y_range': [rect_y, rect_y + rect_h]
+            'x_range': [left_x, right_x],
+            'y_range': [left_y, right_y]
         }
 
     def get_mask_position(self, contour_list):

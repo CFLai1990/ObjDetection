@@ -131,14 +131,40 @@ class ObjAttrs:
                 color_dict[color_name] = round(code_dict[code] / pixel_num, 4)
         return color_dict
 
+    def get_mask_size(self, contour_list):
+        """Get the size of the mask: area, x_range, y_range"""
+        for contour in contour_list:
+            area = cv2.contourArea(contour)
+            rect_x, rect_y, rect_w, rect_h = cv2.boundingRect(contour)
+        return {
+            'area': area,
+            'x_range': [rect_x, rect_x + rect_w],
+            'y_range': [rect_y, rect_y + rect_h]
+        }
+
+    def get_mask_position(self, contour_list):
+        """Get the position of the (centroid of the) mask"""
+        for contour in contour_list:
+            moment = cv2.moments(contour)
+            centroid_x = int(moment['m10']/moment['m00'])
+            centroid_y = int(moment['m01']/moment['m00'])
+        return {
+            'x': centroid_x,
+            'y': centroid_y
+        }
+
     def clear_all(self):
         """Clear the temporary data"""
         self.color_codes = None
 
-    def get_mask(self, mask_img):
+    def get_mask(self, mask_img, contour_list):
         """Get the colors inside the mask"""
         # mask_img: the binary masked image
         color = self.get_mask_color(mask_img)
+        size = self.get_mask_size(contour_list)
+        position = self.get_mask_position(contour_list)
         return {
             'color': color,
+            'size': size,
+            'position': position
         }

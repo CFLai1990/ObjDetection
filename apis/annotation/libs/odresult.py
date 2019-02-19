@@ -46,7 +46,9 @@ class ODResultGenerator:
             'score': self.score,
             'bbox': self.bbox,
             'mask': self.masks,
-            'color': self.attrs['color']
+            'color': self.attrs['color'],
+            'size': self.attrs['size'],
+            'position': self.attrs['position']
         }
         return result
         

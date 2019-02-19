@@ -429,8 +429,6 @@ def parse_results(
         # Get the masks
         if segms is not None and len(segms) > i:
             binary = masks[:, :, i]
-            # Get the attributes
-            mask_attrs = attrs.get_mask(binary)
             # Get the contour
             # CHAIN_APPROX_NONE: detailed vertices
             # CHAIN_APPROX_SIMPLE: brief vertices
@@ -442,6 +440,8 @@ def parse_results(
             for contour in contour_list:
                 ctr = contour.reshape((-1, 2)).astype(float).tolist()
                 contours.append(ctr)
+            # Get the attributes
+            mask_attrs = attrs.get_mask(binary, contour_list)
             result_generator.get_mask(contours=contours, attrs=mask_attrs)
         results.append(result_generator.pack())
     attrs.clear_all()

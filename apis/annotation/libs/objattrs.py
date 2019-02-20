@@ -169,6 +169,7 @@ class ObjAttrs:
         print('started')
         for index, contour in enumerate(contour_list):
             contour_area = areas[index]
+            print(type(contour))
             moment = cv2.moments(contour)
             print('m10: '+ moment['m10'])
             print('m01: '+ moment['m01'])

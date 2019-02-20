@@ -198,12 +198,12 @@ class ObjAttrs:
         """Get the colors inside the mask"""
         # mask_img: the binary masked image
         color = self.get_mask_color(mask_img)
-        areas, size = self.get_mask_size(contour_list)
+        # areas, size = self.get_mask_size(contour_list)
         print('c')
-        position = self.get_mask_position(contour_list, areas, size['area'])
+        # position = self.get_mask_position(contour_list, areas, size['area'])
         print('d')
         return {
             'color': color,
-            'size': size,
-            'position': position
+            'size': 1,
+            'position': 2
         }

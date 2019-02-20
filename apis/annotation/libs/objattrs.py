@@ -170,9 +170,11 @@ class ObjAttrs:
             contour_area = areas[index]
             print('started')
             moment = cv2.moments(contour)
-            print('m10: '+ str(moment['m10']))
-            print('m01: '+ str(moment['m01']))
-            print('m00: '+ str(moment['m00']))
+            if moment['m10'] == 0:
+                ctr = contour.reshape((-1, 2)).astype(float).tolist()
+                for vertex in ctr:
+                    print('x: ' + str(vertex[0]))
+                    print('y: ' + str(vertex[1]))
             centroid_x = int(moment['m10']/moment['m00'])
             print('get x')
             centroid_y = int(moment['m01']/moment['m00'])

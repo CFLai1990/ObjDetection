@@ -168,7 +168,10 @@ class ObjAttrs:
             'x': 0,
             'y': 0,
         }
+        print('started')
         for index, contour in enumerate(contour_list):
+            print(index)
+            print(type(contour))
             contour_area = areas[index]
             moment = cv2.moments(contour)
             centroid_x = int(moment['m10']/moment['m00'])

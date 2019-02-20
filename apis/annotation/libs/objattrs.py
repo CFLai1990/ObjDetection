@@ -173,10 +173,15 @@ class ObjAttrs:
             moment = cv2.moments(contour)
             centroid_x = int(moment['m10']/moment['m00'])
             centroid_y = int(moment['m01']/moment['m00'])
+            print('x: ' + centroid_x)
+            print('y: ' + centroid_x)
+            print('area: ' + contour_area)
             ctr_centroid['x'] += contour_area * centroid_x
             ctr_centroid['y'] += contour_area * centroid_y
+        print('before')
         ctr_centroid['x'] = int(ctr_centroid['x'] / total_area)
         ctr_centroid['y'] = int(ctr_centroid['y'] / total_area)
+        print('after')
         return ctr_centroid
 
     def clear_all(self):

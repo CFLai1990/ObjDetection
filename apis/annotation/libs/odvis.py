@@ -436,12 +436,12 @@ def parse_results(
                 binary.copy(),
                 cv2.RETR_CCOMP,
                 cv2.CHAIN_APPROX_SIMPLE)
+            # Get the attributes
+            mask_attrs = attrs.get_mask(binary, contour_list)
             contours = []
             for contour in contour_list:
                 ctr = contour.reshape((-1, 2)).astype(float).tolist()
                 contours.append(ctr)
-            # Get the attributes
-            mask_attrs = attrs.get_mask(binary, contour_list)
             result_generator.get_mask(contours=contours, attrs=mask_attrs)
         results.append(result_generator.pack())
     attrs.clear_all()

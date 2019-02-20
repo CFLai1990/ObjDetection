@@ -133,16 +133,20 @@ class ObjAttrs:
 
     def get_mask_size(self, contour_list):
         """Get the size of the mask: area, x_range, y_range"""
-        area = 0
-        areas = []
+        total_area = 0
+        areas = [] # area of each sub-contour
+        invalid_ids = [] # find the invalid sub-contours, store their IDs
         ctr_range = {
             'x': [float('inf'), -1],
             'y': [float('inf'), -1]
         }
-        for contour in contour_list:
+        for index, contour in enumerate(contour_list):
             contour_area = cv2.contourArea(contour)
+            if contour_area == 0: # Invalid sub-contour: area=0
+                invalid_ids.insert(0, index)
+                continue
             areas.append(contour_area)
-            area += contour_area
+            total_area += contour_area
             left_x, left_y, rect_w, rect_h = cv2.boundingRect(contour)
             right_x = left_x + rect_w
             right_y = left_y + rect_h
@@ -154,8 +158,11 @@ class ObjAttrs:
                 ctr_range['y'][0] = left_y
             if right_y > ctr_range['y'][1]:
                 ctr_range['y'][1] = right_y
+        # Remove the invalid sub-contours
+        for index in invalid_ids:
+            del contour_list[index]
         return areas, {
-            'area': area,
+            'area': total_area,
             'x_range': ctr_range['x'],
             'y_range': ctr_range['y']
         }

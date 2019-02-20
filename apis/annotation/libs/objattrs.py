@@ -166,10 +166,9 @@ class ObjAttrs:
             'x': 0,
             'y': 0,
         }
-        print('started')
         for index, contour in enumerate(contour_list):
             contour_area = areas[index]
-            ctr = contour.reshape((-1, 2)).astype(float).tolist()
+            print('started')
             moment = cv2.moments(contour)
             print('m10: '+ str(moment['m10']))
             print('m01: '+ str(moment['m01']))

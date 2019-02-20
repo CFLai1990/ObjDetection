@@ -178,9 +178,9 @@ class ObjAttrs:
             print('get x')
             centroid_y = int(moment['m01']/moment['m00'])
             print('get y')
-            print('x: ' + centroid_x)
-            print('y: ' + centroid_x)
-            print('area: ' + contour_area)
+            print('x: ' + str(centroid_x))
+            print('y: ' + str(centroid_x))
+            print('area: ' + str(contour_area))
             ctr_centroid['x'] += contour_area * centroid_x
             ctr_centroid['y'] += contour_area * centroid_y
         print('before')

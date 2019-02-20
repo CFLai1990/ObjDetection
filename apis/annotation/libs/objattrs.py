@@ -139,7 +139,6 @@ class ObjAttrs:
             'x': [float('inf'), -1],
             'y': [float('inf'), -1]
         }
-        print('1')
         for contour in contour_list:
             contour_area = cv2.contourArea(contour)
             areas.append(contour_area)
@@ -155,7 +154,6 @@ class ObjAttrs:
                 ctr_range['y'][0] = left_y
             if right_y > ctr_range['y'][1]:
                 ctr_range['y'][1] = right_y
-        print('2')
         return areas, {
             'area': area,
             'x_range': ctr_range['x'],
@@ -170,10 +168,11 @@ class ObjAttrs:
         }
         print('started')
         for index, contour in enumerate(contour_list):
-            print(index)
-            print(type(contour))
             contour_area = areas[index]
+            print('1')
             moment = cv2.moments(contour)
+            print('2')
+            print(moment)
             centroid_x = int(moment['m10']/moment['m00'])
             centroid_y = int(moment['m01']/moment['m00'])
             print('x: ' + centroid_x)
@@ -194,9 +193,7 @@ class ObjAttrs:
     def get_mask(self, mask_img, contour_list):
         """Get the colors inside the mask"""
         # mask_img: the binary masked image
-        print('a')
         color = self.get_mask_color(mask_img)
-        print('b')
         areas, size = self.get_mask_size(contour_list)
         print('c')
         position = self.get_mask_position(contour_list, areas, size['area'])

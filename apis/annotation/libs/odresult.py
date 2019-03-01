@@ -8,6 +8,7 @@ class ODResultGenerator:
         self.bbox = None
         self.masks = None
         self.attrs = None
+        self.label = None
         self.clear_all()
 
     def clear_all(self):
@@ -16,6 +17,7 @@ class ODResultGenerator:
         self.get_class()
         self.get_bbox()
         self.get_mask()
+        self.get_label()
 
     def get_score(self, score=-1):
         """Get the score of object detection"""
@@ -39,11 +41,16 @@ class ODResultGenerator:
         self.masks = contours
         self.attrs = attrs
 
+    def get_label(self, label=None):
+        """Get the label of the entity"""
+        self.label = label
+
     def pack(self):
         """Pack the final result"""
         result = {
             'class': self.class_name,
             'score': self.score,
+            'label': self.label,
             'bbox': self.bbox,
             'mask': self.masks,
             'color': self.attrs['color'],

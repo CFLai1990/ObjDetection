@@ -8,7 +8,7 @@ class ODResultGenerator:
         self.bbox = None
         self.masks = None
         self.attrs = None
-        self.label = None
+        self.label = []
         self.clear_all()
 
     def clear_all(self):
@@ -43,7 +43,8 @@ class ODResultGenerator:
 
     def get_label(self, label=None):
         """Get the label of the entity"""
-        self.label = label
+        if label is not None:
+            self.label = label
 
     def pack(self):
         """Pack the final result"""

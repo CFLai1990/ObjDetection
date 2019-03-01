@@ -24,8 +24,9 @@ class ApiClass(API):
         self.logger.info('Image saved')
         # Return the fake data for demo images
         result = []
-        print(obj['name'])
-        result = PIE
+        if obj['name'] == 'demo_pie.png':
+            result = PIE
+        print(result)
         self.logger.info('Image detection finished')
         return result
 

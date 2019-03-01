@@ -4,8 +4,9 @@ import FSocket from './filesocket.js'
   'OD_Image': get the image with masks
   'OD_Mask': get the mask parameters
 */
+const MESSAGE = 'OD_Demo'
 // const MESSAGE = 'OD_Image'
-const MESSAGE = 'OD_Mask'
+// const MESSAGE = 'OD_Mask'
 const MACHINE = 'dl'
 // const VERSION = 'dev'
 const VERSION = 'public'

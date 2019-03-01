@@ -10,5 +10,6 @@ OUTPUT_DIR = os.path.abspath('./files/annotation')
 # message - apiName
 EVENT_DICT = {
     'OD_Image': 'odimg',
-    'OD_Mask': 'odmsk'
+    'OD_Mask': 'odmsk',
+    'OD_Demo': 'demo'
 }

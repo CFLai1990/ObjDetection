@@ -3,6 +3,7 @@
 PIE = [{
     "class": "pie",
     "score": 0.9,
+    "label": ["Samsung", "21%"],
     "color": {
         "blue": 1.0
     },
@@ -43,6 +44,7 @@ PIE = [{
 }, {
     "class": "pie",
     "score": 0.9,
+    "label": ["Apple", "14%"],
     "color": {
         "orange": 1.0
     },
@@ -78,6 +80,7 @@ PIE = [{
 }, {
     "class": "pie",
     "score": 0.9,
+    "label": ["Huawei", "10%"],
     "color": {
         "green": 1.0
     },
@@ -110,6 +113,7 @@ PIE = [{
 }, {
     "class": "pie",
     "score": 0.9,
+    "label": ["Others", "55%"],
     "color": {
         "gray": 1.0
     },

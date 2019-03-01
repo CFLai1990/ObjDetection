@@ -17,6 +17,9 @@ class ImgViewer {
       case 'OD_Mask':
         console.info('Before:', img)
         break
+      case 'OD_Demo':
+        console.info('Before:', img)
+        break
     }
   }
   getResult (img) {
@@ -25,6 +28,9 @@ class ImgViewer {
         $(`${this.id} .img`).attr('src', `data:${img.type};base64,${img.data}`)
         break
       case 'OD_Mask':
+        console.info('After:', img)
+        break
+      case 'OD_Demo':
         console.info('After:', img)
         break
     }

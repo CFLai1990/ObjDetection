@@ -102,8 +102,8 @@ if not app.debug:
 # if __name__ == '__main__':
 #     socketio.run(app)
 
-VERSION = 'dev'
-# VERSION = 'public'
+# VERSION = 'dev'
+VERSION = 'public'
 
 # Or specify port manually:
 if __name__ == '__main__':

@@ -31,6 +31,10 @@ class FileOperations:
         """Get the name of the file"""
         return  os.path.basename(path)
 
+    def exists(self, path):
+        """Examine if a file exists"""
+        return os.path.exists(path)
+
     def mkdir(self, dir_name):
         """Create a sub-directory"""
         path = self.get_path(dir_name)

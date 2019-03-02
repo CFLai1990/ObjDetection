@@ -14,7 +14,10 @@ class NLPData:
         if self.data is not None:
             for entity in self.data:
                 if entity.get("label") is not None:
-                    labels.extend(entity["label"])
+                    entity_labels = entity["label"]
+                    for label in entity_labels:
+                        if label not in labels:
+                            labels.append(label)
         return labels
 
     def get_result(self):

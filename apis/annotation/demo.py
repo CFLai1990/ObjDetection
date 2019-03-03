@@ -1,7 +1,7 @@
 """demo: take the image, return the masks"""
 import base64
 from .__settings__ import API
-from .libs import NLPData, PIE
+from .libs import NLPData, PIE_DATA, PIE_AUX, BAR_DATA, BAR_AUX
 
 class ApiClass(API):
     """API Class"""
@@ -26,9 +26,13 @@ class ApiClass(API):
         data = []
         auxiliary = []
         if obj['name'] == 'demo_pie.png':
-            data = PIE
+            data = PIE_DATA
+            auxiliary = PIE_AUX
+        if obj['name'] == 'demo_bar.png':
+            data = BAR_DATA
+            auxiliary = BAR_AUX
         # Get the data for the NLP module
-        nlp_parser = NLPData(data)
+        nlp_parser = NLPData(data, auxiliary)
         tonlp = nlp_parser.get_result()
         # Pack the final result
         result = {

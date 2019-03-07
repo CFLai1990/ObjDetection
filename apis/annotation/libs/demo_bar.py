@@ -430,7 +430,7 @@ BAR_AUX = [
     {
         "class": "legend",
         "score": 0.9,
-        "label": ["Samsung"],
+        "label": "Samsung",
         "color": {
             "blue": 1.0
         },
@@ -461,7 +461,7 @@ BAR_AUX = [
     }, {
         "class": "legend",
         "score": 0.9,
-        "label": ["Apple"],
+        "label": "Apple",
         "color": {
             "orange": 1.0
         },
@@ -492,7 +492,7 @@ BAR_AUX = [
     }, {
         "class": "legend",
         "score": 0.9,
-        "label": ["Huawei"],
+        "label": "Huawei",
         "color": {
             "green": 1.0
         },
@@ -523,7 +523,7 @@ BAR_AUX = [
     }, {
         "class": "axis",
         "score": 0.9,
-        "label": ["Sales (In Millions)"],
+        "label": "Sales (In Millions)",
         "axis_data": {
             "direction": 90,
             "ticks": [
@@ -678,7 +678,7 @@ BAR_AUX = [
     }, {
         "class": "axis",
         "score": 0.9,
-        "label": ["Year"],
+        "label": "Year",
         "axis_data": {
             "direction": 0,
             "ticks": [

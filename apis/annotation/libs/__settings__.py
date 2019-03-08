@@ -1,8 +1,8 @@
 """apis.annotation.libs: __settings__"""
 import os
 
-# MODEL = 'natural'
-MODEL = 'vis'
+MODEL = 'natural'
+# MODEL = 'vis'
 
 DT_MODEL = {
     'natural': {

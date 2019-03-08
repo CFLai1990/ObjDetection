@@ -66,7 +66,6 @@ class ObjDetection:
         self.class_dict = dummy_datasets.get_coco_dataset()
         self.obj_attrs = ObjAttrs()
 
-
     def infer(self, img_path):
         """Execute object detection for the image"""
         # Read the image using opencv, the result is stored in GBR

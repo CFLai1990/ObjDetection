@@ -11,7 +11,8 @@ DT_MODEL = {
     },
     'vis': {
         'config':'/home/chufan.lai/packages/Detectron/configs/getting_started/tutorial_1gpu_e2e_faster_rcnn_R-50-FPN.yaml',
-        'weights': '/tmp/detectron-output/train/coco_2014_train/generalized_rcnn/model_final.pkl',
+        # 'weights': '/tmp/detectron-output/train/coco_2014_train/generalized_rcnn/model_final.pkl',
+        'weights': '/export3/users/can.liu/annotation/model/train/coco_2014_train/generalized_rcnn/model_final.pkl',
     }
 }
 

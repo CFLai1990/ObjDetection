@@ -56,6 +56,7 @@ def draw_image(image_name, output_name, items):
 # print(items)
 
 def get_format_axis(items, direction, transform_):
+    print(items)
     axis = {}
     axis["class"] = "axis"
     axis["score"] = 0.9

@@ -177,8 +177,8 @@ def get_axis(image_name=None):
         line_sum = np.sum(img, axis=1)
         colume_sum = np.sum(img, axis=0)
 
-        x_axis_height = np.argmin(line_sum)
-        y_axis_width = np.argmin(colume_sum)
+        x_axis_height = int(np.argmin(line_sum))
+        y_axis_width = int(np.argmin(colume_sum))
         print(type(x_axis_height))
         print(type(y_axis_width))
         print(type(width))

@@ -89,7 +89,7 @@ def get_format_axis(items, direction, transform_):
         }
         format_item["position"] = position
         print("---")
-        print("text: ", item_text)
+        print("text: ", item.get("text"))
         print("bbox: ", bbox)
         print("position: ", position)
         print("---")

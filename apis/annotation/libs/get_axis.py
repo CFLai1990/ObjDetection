@@ -94,6 +94,9 @@ def classify_texts(direction, f_items, ticks, labels):
         tick_class = classes.get(1)
         label_class = classes.get(0)
     # Pack the results
+    print("step 4")
+    print("tick_class: ", tick_class)
+    print("label_class: ", label_class)
     for tick_i in tick_class:
         ticks.append(f_items[tick_i])
     for label_i in label_class:

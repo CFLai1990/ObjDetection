@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 
 def understand_data(data):
     lines = data.split("\n")
+    print(data)
     items = []
     # print(lines)
     head = lines[0].split("\t")
@@ -16,10 +17,6 @@ def understand_data(data):
             continue
         item = {}
         attributes = line.split("\t")
-        # print(f"the head length is {len(head)}")
-        # print(f"the attributes length is {len(attributes)}")
-        # print(head)
-        # print(attributes)
         if len(head) != len(attributes):
             continue
         # assert len(head) == len(attributes), "Oops, the head number is not equal to the attributes number of this item"

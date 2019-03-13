@@ -123,12 +123,14 @@ def get_format_axis(items, direction, transform_):
 
     return axis
 
-
-
 def get_axis(image_name="0.png"):
+    print('1')
     image = Image.open(image_name)
+    print('2')
     img_gray = image.convert("L")
+    print('3')
     img = np.asarray(img_gray)
+    print('4')
     # np.sum(img)
     # print(np.sum(img, axis = 1))
     # print(img.shape)
@@ -155,12 +157,14 @@ def get_axis(image_name="0.png"):
     # print(x_items)
     # print(y_items)
 
+    print('5')
     data = []
     # data["x_axis"] = x_items
     # data["y_axis"] = y_items
 
     data.append(get_format_axis(x_items, 0, (0, x_axis_height)))
     data.append(get_format_axis(y_items, 90, (0, 0)))
+    print('6')
 
 
     return data

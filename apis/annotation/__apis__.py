@@ -1,6 +1,6 @@
 """The annotation APIs"""
 from .__settings__ import APIs, NAMESPACE, PACKAGE, OUTPUT_DIR, EVENT_DICT
-from .libs import ObjDetection
+from .libs import ObjDetection, AuxDetection
 
 class THISAPIs(APIs):
     'The wrapper for all annotation APIs'
@@ -14,6 +14,7 @@ class THISAPIs(APIs):
             'output_dir': OUTPUT_DIR
         })
         self.api_parms({
-            'detector': ObjDetection()
+            'obj_detector': ObjDetection(),
+            'aux_detector': AuxDetection()
         })
         self.start()

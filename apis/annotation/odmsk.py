@@ -7,7 +7,8 @@ class ApiClass(API):
     """API Class"""
     def __init__(self, parameters):
         API.__init__(self, parameters)
-        self.obj_detector = parameters['detector']
+        self.obj_detector = parameters['obj_detector']
+        self.aux_detector = parameters['aux_detector']
 
     def save_image(self, obj):
         """Save the original image"""
@@ -24,7 +25,7 @@ class ApiClass(API):
         self.logger.info('Image saved')
         # Object detection
         data = self.obj_detector.infer_parameters(img_path)
-        auxiliary = []
+        auxiliary = self.aux_detector.infer_parameters(img_path, data)
         # Get the data for the NLP module
         nlp_parser = NLPData(data)
         tonlp = nlp_parser.get_result()

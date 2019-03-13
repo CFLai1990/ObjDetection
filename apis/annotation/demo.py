@@ -7,7 +7,7 @@ class ApiClass(API):
     """API Class"""
     def __init__(self, parameters):
         API.__init__(self, parameters)
-        self.obj_detector = parameters['detector']
+        self.obj_detector = parameters['obj_detector']
 
     def save_image(self, obj):
         """Save the original image"""

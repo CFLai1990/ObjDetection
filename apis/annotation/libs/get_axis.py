@@ -154,22 +154,25 @@ def get_axis(image_name="0.png"):
     # print("x axis")
     # print(pt.image_to_string(x_axis))
     x_axis_data = pt.image_to_data(x_axis)
-    x_items = understand_data(x_axis_data)
-    y_axis_data = pt.image_to_data(y_axis)
-    y_items = understand_data(y_axis_data)
     print('9')
+    x_items = understand_data(x_axis_data)
+    print('10')
+    y_axis_data = pt.image_to_data(y_axis)
+    print('11')
+    y_items = understand_data(y_axis_data)
+    print('12')
 
     # print(x_items)
     # print(y_items)
 
-    print('10')
+    print('13')
     data = []
     # data["x_axis"] = x_items
     # data["y_axis"] = y_items
 
     data.append(get_format_axis(x_items, 0, (0, x_axis_height)))
     data.append(get_format_axis(y_items, 90, (0, 0)))
-    print('11')
+    print('14')
 
 
     return data

@@ -56,7 +56,6 @@ def draw_image(image_name, output_name, items):
 # print(items)
 
 def get_format_axis(items, direction, transform_):
-    print(items)
     axis = {}
     axis["class"] = "axis"
     axis["score"] = 0.9
@@ -72,6 +71,7 @@ def get_format_axis(items, direction, transform_):
 
     ticks = []
     for item in items:
+        print(item.get("text"))
         format_item = {}
         format_item["text"] = item["text"].replace("-", "")
         bbox = {}

@@ -64,6 +64,8 @@ def classify_texts(direction, f_items, ticks, labels):
     print("step 1")
     for f_item in f_items:
         pos = f_item.get("position")
+        print("item_pos: ", pos)
+        print("vec_pos: ", vertical_vector)
         proj_pos = [pos.get("x") * vertical_vector.get("x") + pos.get("y") * vertical_vector.get("y")]
         proj_positions.append(proj_pos)
     proj_data = np.array(proj_positions)

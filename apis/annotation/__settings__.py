@@ -6,7 +6,7 @@ from ..libs import API, APIs
 NAMESPACE = '/api/annotation'
 PACKAGE = 'apis.annotation'
 OUTPUT_DIR = os.path.abspath('./files/annotation')
-INFER_SIGN = False
+INFER_SIGN = True
 
 # message - apiName
 EVENT_DICT = {

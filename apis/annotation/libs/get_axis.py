@@ -74,6 +74,7 @@ def classify_texts(direction, f_items, ticks, labels):
     estimator = KMeans(n_clusters=2)
     estimator.fit(proj_data)
     label_pred = estimator.labels_
+    print("labels: ", label_pred)
     classes = {}
     for i in range(len(f_items)):
         label_i = label_pred[i]
@@ -84,7 +85,7 @@ def classify_texts(direction, f_items, ticks, labels):
             class_i.append(i)
     # Assume that there are more ticks texts than the label texts
     print("step 3")
-    print(classes)
+    print("classes: ", classes)
     tick_class = None
     label_class = None
     if len(classes.get(0)) > len(classes.get(1)):

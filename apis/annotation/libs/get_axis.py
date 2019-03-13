@@ -153,6 +153,7 @@ def get_axis(image_name="0.png"):
     print('8')
     # print("x axis")
     # print(pt.image_to_string(x_axis))
+    print('x_axis type: ', type(x_axis))
     x_axis_data = pt.image_to_data(x_axis)
     print('9')
     x_items = understand_data(x_axis_data)

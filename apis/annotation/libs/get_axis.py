@@ -1,3 +1,5 @@
+"""The module for detecting axes"""
+import math
 import csv
 import cv2
 from PIL import Image, ImageDraw
@@ -5,6 +7,7 @@ from pytesseract import pytesseract as pt
 import json
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
 
 def understand_data(data):
     lines = data.split("\n")
@@ -47,27 +50,65 @@ def draw_image(image_name, output_name, items):
     del draw
     img.save(output_name)
 
+def classify_texts(direction, f_items, ticks, labels):
+    """The function for classifying ticks and labels"""
+    proj_positions = []
+    vertical_direction = (direction + 90) / 180 * math.pi
+    vec_len = 10
+    vertical_vector = {
+        "x": vec_len * math.cos(vertical_direction),
+        "y": vec_len * math.sin(vertical_direction)
+    }
+    # Project to the vertical direction
+    for f_item in f_items:
+        pos = f_item.get("position")
+        proj_pos = [pos.get("x") * vertical_vector.get("x") + pos.get("y") * vertical_vector.get("y")]
+        proj_positions.append(proj_pos)
+    proj_data = np.array(proj_positions)
+    # Classify based on the projected positions
+    estimator = KMeans(n_clusters=2)
+    estimator.fit(proj_data)
+    label_pred = estimator.labels_
+    classes = {}
+    for i in range(len(f_items)):
+        label_i = label_pred[i]
+        class_i = classes.get(label_i)
+        if class_i is None:
+            classes[label_i] = [i]
+        else:
+            class_i.append(i)
+    # Assume that there are more ticks texts than the label texts
+    tick_class = None
+    label_class = None
+    if len(classes.get(0)) > len(classes.get(1)):
+        tick_class = classes.get(0)
+        label_class = classes.get(1)
+    else:
+        tick_class = classes.get(1)
+        label_class = classes.get(0)
+    # Pack the results
+    for tick_i in tick_class:
+        ticks.append(f_items[tick_i])
+    for label_i in label_class:
+        label = label + f_items[label_i]["text"]
 
-# open_image()
-# print(items)
-
-def get_format_axis(items, direction, transform_):
+def get_format_axis(items, axis_info):
     axis = {}
-    axis["class"] = "axis"
-    axis["score"] = 0.9
-    axis["label"] = None
-    min_x = 99999
-    min_y = 99999
-    max_x = 0
-    max_y = 0
-
-    # print(transform_)
-    x_trans = transform_[0]
-    y_trans = transform_[1]
-    print("x_trans: ", x_trans)
-    print("y_trans: ", y_trans)
+    axis_direction = axis_info["direction"]
+    axis_bbox = {
+        "x": axis_info.get("x"),
+        "y": axis_info.get("y"),
+        "width": axis_info.get("width"),
+        "height": axis_info.get("height")
+    }
+    axis_range = {
+        "x": [axis_info.get("x"), axis_info.get("x") + axis_info.get("width")],
+        "y": [axis_info.get("y"), axis_info.get("y") + axis_info.get("height")]
+    }
 
     ticks = []
+    label = ''
+    format_items = []
     for item in items:
         item_text = item.get("text")
         if item_text in ("-", ""):
@@ -77,8 +118,8 @@ def get_format_axis(items, direction, transform_):
             item_text = item_text[:-1]
         format_item["text"] = item_text
         bbox = {
-            "x": item["left"] + x_trans,
-            "y": item["top"] + y_trans,
+            "x": item["left"] + axis_info.get("x"),
+            "y": item["top"] + axis_info.get("y"),
             "width": item.get("width"),
             "height": item.get("height")
         }
@@ -88,49 +129,35 @@ def get_format_axis(items, direction, transform_):
             "y": bbox["y"] + bbox["height"] / 2
         }
         format_item["position"] = position
-        print("---")
-        print("text: ", item.get("text"))
-        print("bbox: ", bbox)
-        print("position: ", position)
-        print("---")
         if format_item["text"] != "":
-            ticks.append(format_item)
-            if max_x < bbox["x"] + bbox["width"]:
-                max_x = bbox["x"] + bbox["width"]
-            if max_y < bbox["y"] + bbox["height"]:
-                max_y = bbox["y"] + bbox["height"]
-            if min_x > bbox["x"]:
-                min_x = bbox["x"]
-            if min_y > bbox["y"]:
-                min_y = bbox["y"]
-    axis_data = {}
-    axis_data["ticks"] = ticks
-    axis_data["direction"] = direction
-    axis["axis_data"] = axis_data
-    axis["color"] = {"white": 0.8, "black": 0.2}
-    axis["bbox"] = {
-        "x": min_x,
-        "y": min_y,
-        "width": max_x - min_x,
-        "height": max_y - min_y
+            format_items.append(format_items)
+    # Classify if the texts belong to the ticks or the label
+    classify_texts(axis_direction, format_items, ticks, label)
+    axis["label"] = label
+    axis["axis_data"] = {
+        "ticks": ticks,
+        "direction": axis_direction
     }
+    # make up the common object-detection data
+    axis["class"] = "axis"
+    axis["score"] = 0.9
+    axis["color"] = {"white": 0.8, "black": 0.2}
+    axis["bbox"] = axis_bbox
     axis["mask"] = [[
-        [min_x, min_y],
-        [min_x, max_y],
-        [max_x, max_y],
-        [max_x, min_y]
+        [axis_range["x"][0], axis_range["y"][0]],
+        [axis_range["x"][0], axis_range["y"][1]],
+        [axis_range["x"][1], axis_range["y"][1]],
+        [axis_range["x"][1], axis_range["y"][0]]
     ]]
     axis["position"] = {
-        "x": (max_x + min_x) / 2,
-        "y": (max_y + min_y) / 2
+        "x": (axis_range["x"][0] + axis_range["x"][1]) / 2,
+        "y": (axis_range["y"][0] + axis_range["y"][1]) / 2
     }
-    # print(max_x, min_x, max_y, min_y)
     axis["size"] = {
-        "area": (max_y - min_y) * (max_x - min_x),
-        "x_range": [min_x, max_x],
-        "y_range": [min_y, max_y]
+        "area": axis_bbox.get("width") * axis_bbox.get("height"),
+        "x_range": axis_range.get("x"),
+        "y_range": axis_range.get("y")
     }
-
     return axis
 
 def get_axis(image_name=None):
@@ -141,9 +168,6 @@ def get_axis(image_name=None):
     if image:
         img_gray = image.convert("L")
         img = np.asarray(img_gray)
-        # np.sum(img)
-        # print(np.sum(img, axis = 1))
-        # print(img.shape)
 
         height = img.shape[0]
         width = img.shape[1]
@@ -154,80 +178,30 @@ def get_axis(image_name=None):
         x_axis_height = np.argmin(line_sum)
         y_axis_width = np.argmin(colume_sum)
 
-        x_axis_pos = {
+        x_axis_info = {
             "x": 0,
-            "y": x_axis_height
+            "y": x_axis_height,
+            "width": width,
+            "height": height - x_axis_height,
+            "direction": 0
         }
-        y_axis_pos = {
+        y_axis_info = {
             "x": 0,
-            "y": 0
+            "y": 0,
+            "width": width - y_axis_width,
+            "height": height,
+            "direction": 90
         }
-
-        # print(0, x_axis_height, width, height)
-        x_axis = image.crop((x_axis_pos["x"], x_axis_pos["y"], width - 1, height - 1))
-        y_axis = image.crop((y_axis_pos["x"], y_axis_pos["y"], y_axis_width, height - 1))
-        # print("x axis")
-        # print(pt.image_to_string(x_axis))
-        x_axis_data = pt.image_to_data(x_axis)
-        x_items = understand_data(x_axis_data)
-        y_axis_data = pt.image_to_data(y_axis)
-        y_items = understand_data(y_axis_data)
-
-        # print(x_items)
-        # print(y_items)
-
-        # data["x_axis"] = x_items
-        # data["y_axis"] = y_items
-
-        data.append(get_format_axis(x_items, 0, (x_axis_pos["x"], x_axis_pos["y"])))
-        data.append(get_format_axis(y_items, 90, (y_axis_pos["x"], y_axis_pos["y"])))
+        # Pack the x-axis
+        if x_axis_info.get("width") and x_axis_info.get("width") != 0 and x_axis_info.get("height") and x_axis_info.get("height") != 0:
+            x_axis = image.crop((x_axis_info["x"], x_axis_info["y"], width - 1, height - 1))
+            x_axis_data = pt.image_to_data(x_axis)
+            x_items = understand_data(x_axis_data)
+            data.append(get_format_axis(x_items, x_axis_info))
+        # Pack the y-axis
+        if y_axis_info.get("width") and y_axis_info.get("width") != 0 and y_axis_info.get("height") and y_axis_info.get("height") != 0:
+            y_axis = image.crop((y_axis_info["x"], y_axis_info["y"], y_axis_width, height - 1))
+            y_axis_data = pt.image_to_data(y_axis)
+            y_items = understand_data(y_axis_data)
+            data.append(get_format_axis(y_items, y_axis_info))
     return data
-
-
-    # print("\ny axis")
-    # print(pt.image_to_string(y_axis))
-    # print("total")
-    # print(pt.image_to_string(image))
-
-
-    # if False:
-    #     plt.plot(line_sum, [i for i in range(height)])
-    # else:
-    #     plt.plot( [i for i in range(width)], colume_sum)
-    # plt.show()
-
-    # print(img)
-
-def png2whitejpg(image_name = "2.png"):
-    image = Image.open(image_name)
-    image_numpy = np.asarray(image)
-
-
-    # img.save("0_gray.jpg")
-
-
-# png2whitejpg()
-# change_2gray("example.png")
-
-# data = get_axis("example.png")
-# with open("hahah", "w") as f:
-#         json.dump(data, f, indent=2)
-
-# open_image("example.png", 'example_out.png')
-
-
-# To read the coordinates
-# boxes = []
-# with open('output.box', 'rb') as f:
-#     reader = csv.reader(f, delimiter = ' ')
-#     for row in reader:
-#         if(len(row)==6):
-#             boxes.append(row)
-
-# # Draw the bounding box
-# img = cv2.imread('1.png')
-# h, w, _ = img.shape
-# for b in boxes:
-#     img = cv2.rectangle(img,(int(b[1]),h-int(b[2])),(int(b[3]),h-int(b[4])),(255,0,0),2)
-
-# cv2.imshow('output',img)

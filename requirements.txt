@@ -8,6 +8,7 @@ WTForms
 coverage
 colormath
 pytesseract
+scikit-learn
 # ecdsa
 # paramiko
 # pycrypto

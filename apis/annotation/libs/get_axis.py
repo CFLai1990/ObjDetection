@@ -1,11 +1,9 @@
 """The module for detecting axes"""
 import math
-import csv
-import cv2
-from PIL import Image, ImageDraw
-from pytesseract import pytesseract as pt
 import json
+from PIL import Image, ImageDraw
 import numpy as np
+from pytesseract import pytesseract as pt
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 

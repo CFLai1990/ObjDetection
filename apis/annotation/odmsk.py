@@ -1,4 +1,5 @@
 """odmsk: take the image, return the masks"""
+import json
 import base64
 from .__settings__ import API, INFER_SIGN
 from .libs import NLPData
@@ -27,7 +28,7 @@ class ApiClass(API):
         if INFER_SIGN:
             data = self.obj_detector.infer_parameters(img_path)
         else:
-            data = []
+            data = None
         auxiliary = self.aux_detector.infer_parameters(img_path, data)
         # Get the data for the NLP module
         nlp_parser = NLPData(data, auxiliary)
@@ -44,5 +45,7 @@ class ApiClass(API):
     def execute(self, data):
         """Main function"""
         result = self.od_mask(data)
+        file = open('/home/chufan.lai/test.json','w',encoding='utf-8')
+        json.dumps(result, file)
         self.emit2client(result)
         self.logger.info('Result sent')

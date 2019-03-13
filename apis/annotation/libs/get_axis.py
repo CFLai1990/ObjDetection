@@ -131,6 +131,8 @@ def get_format_axis(items, axis_info):
         format_item["position"] = position
         if format_item["text"] != "":
             format_items.append(format_item)
+    print(type(item["left"]))
+    print(type(item["top"]))
     # Classify if the texts belong to the ticks or the label
     classify_texts(axis_direction, format_items, ticks, label)
     axis["label"] = label
@@ -177,6 +179,10 @@ def get_axis(image_name=None):
 
         x_axis_height = np.argmin(line_sum)
         y_axis_width = np.argmin(colume_sum)
+        print(type(x_axis_height))
+        print(type(y_axis_width))
+        print(type(width))
+        print(type(height))
 
         x_axis_info = {
             "x": 0,

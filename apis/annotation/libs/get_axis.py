@@ -50,7 +50,7 @@ def draw_image(image_name, output_name, items):
     del draw
     img.save(output_name)
 
-def classify_texts(direction, f_items, ticks, labels):
+def classify_texts(direction, f_items, ticks, label):
     """The function for classifying ticks and labels"""
     print("step 0")
     proj_positions = []
@@ -101,9 +101,8 @@ def classify_texts(direction, f_items, ticks, labels):
     for tick_i in tick_class:
         ticks.append(f_items[tick_i])
     for label_i in label_class:
-        print(f_items[label_i])
-        print("label: ", label)
         label = label + f_items[label_i]["text"]
+        print(label)
     print("step 5")
 
 def get_format_axis(items, axis_info):

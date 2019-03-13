@@ -137,34 +137,39 @@ def get_axis(image_name="0.png"):
 
     height = img.shape[0]
     width = img.shape[1]
+    print('5')
 
     line_sum = np.sum(img, axis=1)
     colume_sum = np.sum(img, axis=0)
+    print('6')
 
     x_axis_height = np.argmin(line_sum)
     y_axis_width = np.argmin(colume_sum)
+    print('7')
 
     # print(0, x_axis_height, width, height)
     x_axis = image.crop((0, x_axis_height, width, height))
     y_axis = image.crop((0, 0, y_axis_width, height))
+    print('8')
     # print("x axis")
     # print(pt.image_to_string(x_axis))
     x_axis_data = pt.image_to_data(x_axis)
     x_items = understand_data(x_axis_data)
     y_axis_data = pt.image_to_data(y_axis)
     y_items = understand_data(y_axis_data)
+    print('9')
 
     # print(x_items)
     # print(y_items)
 
-    print('5')
+    print('10')
     data = []
     # data["x_axis"] = x_items
     # data["y_axis"] = y_items
 
     data.append(get_format_axis(x_items, 0, (0, x_axis_height)))
     data.append(get_format_axis(y_items, 90, (0, 0)))
-    print('6')
+    print('11')
 
 
     return data

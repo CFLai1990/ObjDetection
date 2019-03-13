@@ -135,6 +135,7 @@ def get_axis(image_name="0.png"):
     # print(np.sum(img, axis = 1))
     # print(img.shape)
 
+    print("image shape: ", [width, height])
     height = img.shape[0]
     width = img.shape[1]
     print('5')
@@ -148,6 +149,8 @@ def get_axis(image_name="0.png"):
     print('7')
 
     # print(0, x_axis_height, width, height)
+    print("x_axis range: ", [0, x_axis_height, width, height])
+    print("y_axis range: ", [0, 0, y_axis_width, height])
     x_axis = image.crop((0, x_axis_height, width, height))
     y_axis = image.crop((0, 0, y_axis_width, height))
     print('8')

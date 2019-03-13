@@ -135,9 +135,9 @@ def get_axis(image_name="0.png"):
     # print(np.sum(img, axis = 1))
     # print(img.shape)
 
-    print("image shape: ", [width, height])
     height = img.shape[0]
     width = img.shape[1]
+    print("image shape: ", [width, height])
     print('5')
 
     line_sum = np.sum(img, axis=1)

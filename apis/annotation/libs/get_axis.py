@@ -129,57 +129,39 @@ def get_axis(image_name=None):
     if image_name:
         image = Image.open(image_name)
     if image:
-        print('2')
         img_gray = image.convert("L")
-        print('3')
         img = np.asarray(img_gray)
-        print('4')
         # np.sum(img)
         # print(np.sum(img, axis = 1))
         # print(img.shape)
 
         height = img.shape[0]
         width = img.shape[1]
-        print("image shape: ", [width, height])
-        print('5')
 
         line_sum = np.sum(img, axis=1)
         colume_sum = np.sum(img, axis=0)
-        print('6')
 
         x_axis_height = np.argmin(line_sum)
         y_axis_width = np.argmin(colume_sum)
-        print('7')
 
         # print(0, x_axis_height, width, height)
-        print("x_axis range: ", [0, x_axis_height, width, height])
-        print("y_axis range: ", [0, 0, y_axis_width, height])
         x_axis = image.crop((0, x_axis_height, width - 1, height - 1))
         y_axis = image.crop((0, 0, y_axis_width, height - 1))
-        print('8')
         # print("x axis")
         # print(pt.image_to_string(x_axis))
-        print('image type: ', type(image))
-        print('x_axis type: ', type(x_axis))
         x_axis_data = pt.image_to_data(x_axis)
-        print('9')
         x_items = understand_data(x_axis_data)
-        print('10')
         y_axis_data = pt.image_to_data(y_axis)
-        print('11')
         y_items = understand_data(y_axis_data)
-        print('12')
 
         # print(x_items)
         # print(y_items)
 
-        print('13')
         # data["x_axis"] = x_items
         # data["y_axis"] = y_items
 
         data.append(get_format_axis(x_items, 0, (0, x_axis_height)))
         data.append(get_format_axis(y_items, 90, (0, 0)))
-        print('14')
     return data
 
 

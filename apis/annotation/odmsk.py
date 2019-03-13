@@ -1,6 +1,6 @@
 """odmsk: take the image, return the masks"""
 import base64
-from .__settings__ import API
+from .__settings__ import API, INFER_SIGN
 from .libs import NLPData
 
 class ApiClass(API):
@@ -24,7 +24,10 @@ class ApiClass(API):
         img_path = self.save_image(obj)
         self.logger.info('Image saved')
         # Object detection
-        data = self.obj_detector.infer_parameters(img_path)
+        if INFER_SIGN:
+            data = self.obj_detector.infer_parameters(img_path)
+        else:
+            data = None
         auxiliary = self.aux_detector.infer_parameters(img_path, data)
         # Get the data for the NLP module
         nlp_parser = NLPData(data)

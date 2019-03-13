@@ -27,10 +27,10 @@ class ApiClass(API):
         if INFER_SIGN:
             data = self.obj_detector.infer_parameters(img_path)
         else:
-            data = None
+            data = []
         auxiliary = self.aux_detector.infer_parameters(img_path, data)
         # Get the data for the NLP module
-        nlp_parser = NLPData(data)
+        nlp_parser = NLPData(data, auxiliary)
         tonlp = nlp_parser.get_result()
         # Pack the final result
         result = {

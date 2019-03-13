@@ -93,6 +93,7 @@ def classify_texts(direction, f_items, ticks, labels):
         label = label + f_items[label_i]["text"]
 
 def get_format_axis(items, axis_info):
+    print('1')
     axis = {}
     axis_direction = axis_info["direction"]
     axis_bbox = {
@@ -105,7 +106,7 @@ def get_format_axis(items, axis_info):
         "x": [axis_info.get("x"), axis_info.get("x") + axis_info.get("width")],
         "y": [axis_info.get("y"), axis_info.get("y") + axis_info.get("height")]
     }
-
+    print('2')
     ticks = []
     label = ''
     format_items = []
@@ -131,6 +132,7 @@ def get_format_axis(items, axis_info):
         format_item["position"] = position
         if format_item["text"] != "":
             format_items.append(format_items)
+    print('3')
     # Classify if the texts belong to the ticks or the label
     classify_texts(axis_direction, format_items, ticks, label)
     axis["label"] = label
@@ -138,6 +140,7 @@ def get_format_axis(items, axis_info):
         "ticks": ticks,
         "direction": axis_direction
     }
+    print('4')
     # make up the common object-detection data
     axis["class"] = "axis"
     axis["score"] = 0.9
@@ -158,6 +161,7 @@ def get_format_axis(items, axis_info):
         "x_range": axis_range.get("x"),
         "y_range": axis_range.get("y")
     }
+    print('5')
     return axis
 
 def get_axis(image_name=None):

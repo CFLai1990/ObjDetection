@@ -52,7 +52,6 @@ def draw_image(image_name, output_name, items):
 
 def classify_texts(direction, f_items, ticks, label):
     """The function for classifying ticks and labels"""
-    print("step 0")
     proj_positions = []
     vertical_direction = (direction + 90) / 180 * math.pi
     vec_len = 10
@@ -61,20 +60,15 @@ def classify_texts(direction, f_items, ticks, label):
         "y": vec_len * math.sin(vertical_direction)
     }
     # Project to the vertical direction
-    print("step 1")
     for f_item in f_items:
         pos = f_item.get("position")
-        print("item_pos: ", pos)
-        print("vec_pos: ", vertical_vector)
         proj_pos = [pos.get("x") * vertical_vector.get("x") + pos.get("y") * vertical_vector.get("y")]
         proj_positions.append(proj_pos)
     proj_data = np.array(proj_positions)
     # Classify based on the projected positions
-    print("step 2")
     estimator = KMeans(n_clusters=2)
     estimator.fit(proj_data)
     label_pred = estimator.labels_
-    print("labels: ", label_pred)
     classes = {}
     for i in range(len(f_items)):
         label_i = label_pred[i]
@@ -84,8 +78,6 @@ def classify_texts(direction, f_items, ticks, label):
         else:
             class_i.append(i)
     # Assume that there are more ticks texts than the label texts
-    print("step 3")
-    print("classes: ", classes)
     tick_class = None
     label_class = None
     if len(classes.get(0)) > len(classes.get(1)):
@@ -95,18 +87,15 @@ def classify_texts(direction, f_items, ticks, label):
         tick_class = classes.get(1)
         label_class = classes.get(0)
     # Pack the results
-    print("step 4")
-    print("tick_class: ", tick_class)
-    print("label_class: ", label_class)
     for tick_i in tick_class:
         ticks.append(f_items[tick_i])
     for label_i in label_class:
-        label = label + f_items[label_i]["text"]
-        print(label)
-    print("step 5")
+        if label is None:
+            label = f_items[label_i]["text"]
+        else:
+            label = label + " " + f_items[label_i]["text"]
 
 def get_format_axis(items, axis_info):
-    print('1')
     axis = {}
     axis_direction = axis_info["direction"]
     axis_bbox = {
@@ -119,9 +108,8 @@ def get_format_axis(items, axis_info):
         "x": [axis_info.get("x"), axis_info.get("x") + axis_info.get("width")],
         "y": [axis_info.get("y"), axis_info.get("y") + axis_info.get("height")]
     }
-    print('2')
     ticks = []
-    label = ''
+    label = None
     format_items = []
     for item in items:
         item_text = item.get("text")
@@ -145,7 +133,6 @@ def get_format_axis(items, axis_info):
         format_item["position"] = position
         if format_item["text"] != "":
             format_items.append(format_item)
-    print('3')
     # Classify if the texts belong to the ticks or the label
     classify_texts(axis_direction, format_items, ticks, label)
     axis["label"] = label
@@ -153,7 +140,6 @@ def get_format_axis(items, axis_info):
         "ticks": ticks,
         "direction": axis_direction
     }
-    print('4')
     # make up the common object-detection data
     axis["class"] = "axis"
     axis["score"] = 0.9
@@ -174,7 +160,6 @@ def get_format_axis(items, axis_info):
         "x_range": axis_range.get("x"),
         "y_range": axis_range.get("y")
     }
-    print('5')
     return axis
 
 def get_axis(image_name=None):

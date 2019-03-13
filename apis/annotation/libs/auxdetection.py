@@ -26,6 +26,8 @@ class AuxDetection:
     def get_axes(self, img_path, data_entities):
         """Get the axis in the vis image"""
         self.axes = get_axis(img_path)
+        print(type(self.axes))
         if self.axes:
             for axis in self.axes:
+                print(axis)
                 self.aux.append(axis)

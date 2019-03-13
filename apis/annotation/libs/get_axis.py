@@ -77,8 +77,8 @@ def get_format_axis(items, direction, transform_):
             item_text = item_text[:-1]
         format_item["text"] = item_text
         bbox = {
-            "x": int(item["left"] + x_trans),
-            "y": int(item["top"] + y_trans),
+            "x": item["left"] + x_trans,
+            "y": item["top"] + y_trans,
             "width": item.get("width"),
             "height": item.get("height")
         }
@@ -90,6 +90,7 @@ def get_format_axis(items, direction, transform_):
         format_item["position"] = position
         print("---")
         print("text: ", item_text)
+        print("bbox: ", bbox)
         print("position: ", position)
         print("---")
         if format_item["text"] != "":

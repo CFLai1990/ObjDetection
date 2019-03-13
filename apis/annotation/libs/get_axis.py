@@ -52,6 +52,7 @@ def draw_image(image_name, output_name, items):
 
 def classify_texts(direction, f_items, ticks, labels):
     """The function for classifying ticks and labels"""
+    print("step 0")
     proj_positions = []
     vertical_direction = (direction + 90) / 180 * math.pi
     vec_len = 10
@@ -60,12 +61,14 @@ def classify_texts(direction, f_items, ticks, labels):
         "y": vec_len * math.sin(vertical_direction)
     }
     # Project to the vertical direction
+    print("step 1")
     for f_item in f_items:
         pos = f_item.get("position")
         proj_pos = [pos.get("x") * vertical_vector.get("x") + pos.get("y") * vertical_vector.get("y")]
         proj_positions.append(proj_pos)
     proj_data = np.array(proj_positions)
     # Classify based on the projected positions
+    print("step 2")
     estimator = KMeans(n_clusters=2)
     estimator.fit(proj_data)
     label_pred = estimator.labels_
@@ -78,6 +81,7 @@ def classify_texts(direction, f_items, ticks, labels):
         else:
             class_i.append(i)
     # Assume that there are more ticks texts than the label texts
+    print("step 3")
     tick_class = None
     label_class = None
     if len(classes.get(0)) > len(classes.get(1)):

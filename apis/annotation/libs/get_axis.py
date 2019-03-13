@@ -53,7 +53,6 @@ def draw_image(image_name, output_name, items):
 def classify_texts(direction, f_items, ticks, labels):
     """The function for classifying ticks and labels"""
     print("step 0")
-    print(f_items)
     proj_positions = []
     vertical_direction = (direction + 90) / 180 * math.pi
     vec_len = 10
@@ -85,6 +84,7 @@ def classify_texts(direction, f_items, ticks, labels):
             class_i.append(i)
     # Assume that there are more ticks texts than the label texts
     print("step 3")
+    print(classes)
     tick_class = None
     label_class = None
     if len(classes.get(0)) > len(classes.get(1)):

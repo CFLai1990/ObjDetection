@@ -48,7 +48,7 @@ def draw_image(image_name, output_name, items):
     del draw
     img.save(output_name)
 
-def classify_texts(direction, f_items, ticks, label):
+def classify_texts(direction, f_items, ticks, labels):
     """The function for classifying ticks and labels"""
     proj_positions = []
     vertical_direction = (direction + 90) / 180 * math.pi
@@ -88,10 +88,7 @@ def classify_texts(direction, f_items, ticks, label):
     for tick_i in tick_class:
         ticks.append(f_items[tick_i])
     for label_i in label_class:
-        if label is None:
-            label = f_items[label_i]["text"]
-        else:
-            label = label + " " + f_items[label_i]["text"]
+        labels.append(f_items[label_i]["text"])
 
 def get_format_axis(items, axis_info):
     axis = {}
@@ -107,7 +104,7 @@ def get_format_axis(items, axis_info):
         "y": [axis_info.get("y"), axis_info.get("y") + axis_info.get("height")]
     }
     ticks = []
-    label = None
+    labels = []
     format_items = []
     for item in items:
         item_text = item.get("text")
@@ -131,11 +128,9 @@ def get_format_axis(items, axis_info):
         format_item["position"] = position
         if format_item["text"] != "":
             format_items.append(format_item)
-    print(type(item["left"]))
-    print(type(item["top"]))
     # Classify if the texts belong to the ticks or the label
-    classify_texts(axis_direction, format_items, ticks, label)
-    axis["label"] = label
+    classify_texts(axis_direction, format_items, ticks, labels)
+    axis["label"] = " ".join(labels)
     axis["axis_data"] = {
         "ticks": ticks,
         "direction": axis_direction
@@ -179,10 +174,6 @@ def get_axis(image_name=None):
 
         x_axis_height = int(np.argmin(line_sum))
         y_axis_width = int(np.argmin(colume_sum))
-        print(type(x_axis_height))
-        print(type(y_axis_width))
-        print(type(width))
-        print(type(height))
 
         x_axis_info = {
             "x": 0,

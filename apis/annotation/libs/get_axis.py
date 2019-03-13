@@ -53,6 +53,7 @@ def draw_image(image_name, output_name, items):
 def classify_texts(direction, f_items, ticks, labels):
     """The function for classifying ticks and labels"""
     print("step 0")
+    print(f_items)
     proj_positions = []
     vertical_direction = (direction + 90) / 180 * math.pi
     vec_len = 10

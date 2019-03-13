@@ -125,9 +125,10 @@ def get_format_axis(items, direction, transform_):
 
 def get_axis(image_name=None):
     data = []
+    image = None
     if image_name:
-        print('1')
         image = Image.open(image_name)
+    if image:
         print('2')
         img_gray = image.convert("L")
         print('3')
@@ -151,7 +152,6 @@ def get_axis(image_name=None):
         print('7')
 
         # print(0, x_axis_height, width, height)
-        image_data = pt.image_to_data(image)
         print("x_axis range: ", [0, x_axis_height, width, height])
         print("y_axis range: ", [0, 0, y_axis_width, height])
         x_axis = image.crop((0, x_axis_height, width - 1, height - 1))

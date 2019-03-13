@@ -110,4 +110,4 @@ if __name__ == '__main__':
     ODapis = APIs(app.logger, socketio)
     portNum = 2021 if VERSION == 'dev' else 2020
     port = int(os.environ.get('PORT', portNum))
-    socketio.run(app, debug = False, host='0.0.0.0', port=port)
+    socketio.run(app, debug = True, host='0.0.0.0', port=port)

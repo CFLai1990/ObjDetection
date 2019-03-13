@@ -71,18 +71,31 @@ def get_format_axis(items, direction, transform_):
 
     ticks = []
     for item in items:
-        print(item.get("text"))
+        item_text = item.get("text")
+        if item_text in ("-", ""):
+            continue
         format_item = {}
-        format_item["text"] = item["text"].replace("-", "")
-        bbox = {}
-        bbox["x"] = int(item["left"] + x_trans)
-        bbox["y"] = int(item["top"] + y_trans)
-        bbox["width"] = item["width"]
-        bbox["height"] = item["height"]
+        if item_text[-1] == "-":
+            item_text = item_text[:-1]
+        print("---")
+        print("text: ", item_text)
+        print("left: ", item.get("left"))
+        print("top: ", item.get("top"))
+        print("width: ", item.get("width"))
+        print("height: ", item.get("height"))
+        print("---")
+        format_item["text"] = item_text
+        bbox = {
+            "x": int(item["left"] + x_trans),
+            "y": int(item["top"] + y_trans),
+            "width": item.get("width"),
+            "height": item.get("height")
+        }
         format_item["bbox"] = bbox
-        position = {}
-        position["x"] = (bbox["x"] + bbox["width"]) / 2
-        position["y"] = (bbox["y"] + bbox["height"]) / 2
+        position = {
+            "x": (bbox["x"] + bbox["width"]) / 2,
+            "y": (bbox["y"] + bbox["height"]) / 2
+        }
         format_item["position"] = position
         if format_item["text"] != "":
             ticks.append(format_item)

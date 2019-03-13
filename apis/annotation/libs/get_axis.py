@@ -100,10 +100,10 @@ def classify_texts(direction, f_items, ticks, labels):
     print("label_class: ", label_class)
     for tick_i in tick_class:
         ticks.append(f_items[tick_i])
-        print(ticks)
     for label_i in label_class:
+        print(f_items[label_i])
+        print("label: ", label)
         label = label + f_items[label_i]["text"]
-        print(label)
     print("step 5")
 
 def get_format_axis(items, axis_info):

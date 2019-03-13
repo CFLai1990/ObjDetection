@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 
 def understand_data(data):
     lines = data.split("\n")
-    print(data)
     items = []
     # print(lines)
     head = lines[0].split("\t")
@@ -65,6 +64,8 @@ def get_format_axis(items, direction, transform_):
     # print(transform_)
     x_trans = transform_[0]
     y_trans = transform_[1]
+    print("x_trans: ", x_trans)
+    print("y_trans: ", y_trans)
 
     ticks = []
     for item in items:

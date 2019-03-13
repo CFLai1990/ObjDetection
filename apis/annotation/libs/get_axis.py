@@ -138,7 +138,7 @@ def get_format_axis(items, axis_info):
         }
         format_item["position"] = position
         if format_item["text"] != "":
-            format_items.append(format_items)
+            format_items.append(format_item)
     print('3')
     # Classify if the texts belong to the ticks or the label
     classify_texts(axis_direction, format_items, ticks, label)

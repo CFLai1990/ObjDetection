@@ -59,7 +59,7 @@ def get_format_axis(items, direction, transform_):
     axis = {}
     axis["class"] = "axis"
     axis["score"] = 0.9
-    axis["label"] = "value (In Million)"
+    axis["label"] = None
     min_x = 99999
     min_y = 99999
     max_x = 0
@@ -86,8 +86,8 @@ def get_format_axis(items, direction, transform_):
         }
         format_item["bbox"] = bbox
         position = {
-            "x": (bbox["x"] + bbox["width"]) / 2,
-            "y": (bbox["y"] + bbox["height"]) / 2
+            "x": bbox["x"] + bbox["width"] / 2,
+            "y": bbox["y"] + bbox["height"] / 2
         }
         format_item["position"] = position
         print("---")
@@ -155,9 +155,18 @@ def get_axis(image_name=None):
         x_axis_height = np.argmin(line_sum)
         y_axis_width = np.argmin(colume_sum)
 
+        x_axis_pos = {
+            "x": 0,
+            "y": x_axis_height
+        }
+        y_axis_pos = {
+            "x": 0,
+            "y": 0
+        }
+
         # print(0, x_axis_height, width, height)
-        x_axis = image.crop((0, x_axis_height, width - 1, height - 1))
-        y_axis = image.crop((0, 0, y_axis_width, height - 1))
+        x_axis = image.crop((x_axis_pos["x"], x_axis_pos["y"], width - 1, height - 1))
+        y_axis = image.crop((y_axis_pos["x"], y_axis_pos["y"], y_axis_width, height - 1))
         # print("x axis")
         # print(pt.image_to_string(x_axis))
         x_axis_data = pt.image_to_data(x_axis)
@@ -171,8 +180,8 @@ def get_axis(image_name=None):
         # data["x_axis"] = x_items
         # data["y_axis"] = y_items
 
-        data.append(get_format_axis(x_items, 0, (0, x_axis_height)))
-        data.append(get_format_axis(y_items, 90, (0, 0)))
+        data.append(get_format_axis(x_items, 0, (x_axis_pos["x"], x_axis_pos["y"])))
+        data.append(get_format_axis(y_items, 90, (y_axis_pos["x"], y_axis_pos["y"])))
     return data
 
 

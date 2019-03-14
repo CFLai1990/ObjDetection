@@ -1,8 +1,8 @@
 """apis.annotation.libs: __settings__"""
 import os
 
-MODEL = 'natural'
-# MODEL = 'vis'
+# MODEL = 'natural'
+MODEL = 'vis'
 
 DT_MODEL = {
     'natural': {
@@ -10,9 +10,8 @@ DT_MODEL = {
         'weights': '/home/chufan.lai/packages/detectron_models/demo/model_final.pkl',
     },
     'vis': {
-        'config':'/home/chufan.lai/packages/Detectron/configs/test_config.yaml',
-        'weights': '/tmp/detectron-output/train/coco_2014_train/generalized_rcnn/model_final.pkl',
-        # 'weights': '/export3/users/can.liu/annotation/model/20190312/train/coco_2014_train/generalized_rcnn/model_iter94999.pkl',
+        'config':'/home/chufan.lai/packages/OD_Images/dtconfigs/e2e_mask_rcnn_R-50-FPN_1x.yaml',
+        'weights': '/home/chufan.lai/packages/detectron_models/test/train/cflai_train/generalized_rcnn/model_iter4999.pkl',
     }
 }
 

@@ -29,6 +29,7 @@ class AuxDetection:
         direction = None
         bbox = data_entity.get("bbox") or {}
         if bbox:
+            print("bbox: ", bbox)
             axis_x = bbox.get("x")
             axis_y = bbox.get("y")
             axis_width = bbox.get("width")

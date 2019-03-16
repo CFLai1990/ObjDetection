@@ -149,6 +149,7 @@ def get_axis_texts(img_path, axis_entities):
         return data
     # Parse the texts of the axes
     if img_path:
+        print("image path: ", img_path)
         image = Image.open(img_path)
     if image:
         for axis_entity in axis_entities:
@@ -160,8 +161,12 @@ def get_axis_texts(img_path, axis_entities):
                 axis_height = axis_bbox.get("height")
                 if axis_x and axis_y and axis_width and axis_height:
                     if axis_x >= 0 and axis_y >= 0 and axis_width > 0 and axis_height > 0:
+                        print("before crop")
                         axis_image = image.crop((axis_x, axis_y, axis_width, axis_height))
+                        print("after crop")
                         axis_texts = pt.image_to_data(axis_image)
+                        print("after ocr detection")
                         axis_texts = understand_data(axis_texts)
+                        print("after ocr parsing")
                         data.append(get_format_axis(axis_texts, axis_entity))
     return data

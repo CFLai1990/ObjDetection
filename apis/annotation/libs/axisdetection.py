@@ -158,8 +158,8 @@ def get_axes_texts(img_path, axis_entities):
                         print("axis range: ", axis_x, ", ", axis_y, ", ", axis_x + axis_width, ", ", axis_y + axis_height)
                         axis_img = image.crop((axis_x, axis_y, axis_x + axis_width, axis_y + axis_height))
                         axis_img_gray = np.asarray(image.convert("L"))
-                        line_sum = np.sum(axis_img_gray, axis=1)
-                        column_sum = np.sum(axis_img_gray, axis=0)
+                        line_sum = np.sum(axis_img_gray, axis=1) / axis_img_gray.shape[1]
+                        column_sum = np.sum(axis_img_gray, axis=0) / axis_img_gray.shape[0]
                         print("line_sum: ", line_sum)
                         print("column_sum: ", column_sum)
                         axis_texts = pt.image_to_data(axis_img, lang=TS_LANG)

@@ -92,6 +92,9 @@ def get_format_axis(items, axis_bbox, axis_direction):
     ticks = []
     labels = []
     format_items = []
+    print(items)
+    print(axis_bbox)
+    print(axis_direction)
     for item in items:
         item_text = item.get("text")
         if item_text in ("-", ""):

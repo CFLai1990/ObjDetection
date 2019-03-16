@@ -117,10 +117,8 @@ def get_format_axis(items, axis_bbox, axis_direction):
         format_item["position"] = position
         if format_item["text"] != "":
             format_items.append(format_item)
-    print("classify begins")
     # Classify if the texts belong to the ticks or the label
     classify_texts(axis_direction, format_items, ticks, labels)
-    print("classify ends")
     axis["label"] = " ".join(labels)
     axis["axis_data"] = {
         "ticks": ticks,
@@ -148,13 +146,18 @@ def get_format_axis(items, axis_bbox, axis_direction):
     }
     return axis
 
-def get_axis_partial(axis_img_gray, axis_id):
+def partition_axis(axis_img_gray, axis_id):
     """Partition the axis image into three parts: line, tick_texts and title"""
     line_img = None
     tick_text_img = None
     title_img = None
     axis_array = np.array(axis_img_gray, dtype=np.uint8)
-    # np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '.txt', axis_array)
+    row_avg = round(np.sum(axis_array, axis=1) / axis_array.shape[1])
+    col_avg = round(np.sum(axis_array, axis=0) / axis_array.shape[0])
+    print("row average: ", row_avg)
+    print("column average: ", col_avg)
+    np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_row.txt', row_avg)
+    np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_col.txt', col_avg)
     axis_img_gray.save('/home/chufan.lai/axis_' + str(axis_id) + '.png')
     return line_img, tick_text_img, title_img
 
@@ -196,9 +199,7 @@ def get_axes_texts(img_path, axis_entities):
                         # Step 2: enhance the contrast
                         axis_img_gray = contrast_enhance(axis_img).convert("L")
                         # Step 3: partition the image
-                        line_img, tick_text_img, title_img = get_axis_partial(axis_img_gray, axis_id)
-                        # line_sum = np.sum(axis_img_gray, axis=1) / axis_img_gray.shape[1]
-                        # column_sum = np.sum(axis_img_gray, axis=0) / axis_img_gray.shape[0]
+                        line_img, tick_text_img, title_img = partition_axis(axis_img_gray, axis_id)
                         print("partition finished")
                         axis_texts = pt.image_to_data(axis_img_gray, lang=TS_LANG)
                         print("ocr finished")

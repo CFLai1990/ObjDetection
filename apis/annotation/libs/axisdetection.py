@@ -152,8 +152,8 @@ def partition_axis(axis_img_gray, axis_id):
     tick_text_img = None
     title_img = None
     axis_array = np.array(axis_img_gray, dtype=np.uint8)
-    row_avg = round(np.sum(axis_array, axis=1) / axis_array.shape[1])
-    col_avg = round(np.sum(axis_array, axis=0) / axis_array.shape[0])
+    row_avg = (np.sum(axis_array, axis=1) / axis_array.shape[1]).astype(np.uint8)
+    col_avg = (np.sum(axis_array, axis=0) / axis_array.shape[0]).astype(np.uint8)
     print("row average: ", row_avg)
     print("column average: ", col_avg)
     np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_row.txt', row_avg)

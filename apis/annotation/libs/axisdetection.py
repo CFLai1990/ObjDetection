@@ -140,11 +140,11 @@ def get_axis_partial(axis_img_gray, axis_id):
     tick_text_img = None
     title_img = None
     print("1")
-    axis_array = np.array(axis_img_gray, 'int')
+    axis_array = np.array(axis_img_gray, dtype=np.uint8)
     print("2")
     # Get the background color
     counts = np.bincount(axis_array)
-    print("3")
+    print(counts)
     bg_value = np.argmax(counts)
     print("background color: ", bg_value)
     # Turn the background to white, and the other things to black

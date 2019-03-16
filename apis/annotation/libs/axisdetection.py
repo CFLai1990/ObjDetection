@@ -134,11 +134,14 @@ def get_format_axis(items, axis_bbox, axis_direction):
     }
     return axis
 
-def get_axis_partial(axis_img_gray):
+def get_axis_partial(axis_img_gray, axis_id):
     """Partition the axis image into three parts: line, tick_texts and title"""
     line_img = None
     tick_text_img = None
     title_img = None
+    axis_img_gray.save('/home/chufan.lai/axis_' + str(axis_id) + '.png')
+    axis_array = np.array(axis_img_gray)
+    np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '.txt', axis_array)
     return line_img, tick_text_img, title_img
 
 def get_axes_texts(img_path, axis_entities):
@@ -165,8 +168,7 @@ def get_axes_texts(img_path, axis_entities):
                     if axis_x >= 0 and axis_y >= 0 and axis_width > 0 and axis_height > 0:
                         print("axis range: ", axis_x, ", ", axis_y, ", ", axis_x + axis_width, ", ", axis_y + axis_height)
                         axis_img_gray = image.crop((axis_x, axis_y, axis_x + axis_width, axis_y + axis_height)).convert("L")
-                        axis_img_gray.save('/home/chufan.lai/axis_' + str(axis_id) + '.png')
-                        line_img, tick_text_img, title_img = get_axis_partial(axis_img_gray)
+                        line_img, tick_text_img, title_img = get_axis_partial(axis_img_gray, axis_id)
                         # line_sum = np.sum(axis_img_gray, axis=1) / axis_img_gray.shape[1]
                         # column_sum = np.sum(axis_img_gray, axis=0) / axis_img_gray.shape[0]
                         axis_texts = pt.image_to_data(axis_img_gray, lang=TS_LANG)

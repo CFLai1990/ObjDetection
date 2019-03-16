@@ -194,9 +194,13 @@ def get_axes_texts(img_path, axis_entities):
                         line_img, tick_text_img, title_img = get_axis_partial(axis_img_gray, axis_id)
                         # line_sum = np.sum(axis_img_gray, axis=1) / axis_img_gray.shape[1]
                         # column_sum = np.sum(axis_img_gray, axis=0) / axis_img_gray.shape[0]
+                        print("partition finished")
                         axis_texts = pt.image_to_data(axis_img_gray, lang=TS_LANG)
+                        print("ocr finished")
                         axis_texts = understand_data(axis_texts)
+                        print("ocr parsing finished")
                         formated_axis = get_format_axis(axis_texts, axis_bbox, axis_direction)
+                        print("result packing finished")
                         data.append(formated_axis)
                         axis_id = axis_id + 1
     return data

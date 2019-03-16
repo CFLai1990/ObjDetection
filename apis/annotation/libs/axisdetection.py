@@ -72,19 +72,12 @@ def classify_texts(direction, f_items, ticks, labels):
     for label_i in label_class:
         labels.append(f_items[label_i]["text"])
 
-def get_format_axis(items, axis_info):
+def get_format_axis(items, axis_bbox, axis_direction):
     """Pack the textual information of the axis"""
     axis = {}
-    axis_direction = axis_info["direction"]
-    axis_bbox = {
-        "x": axis_info.get("x"),
-        "y": axis_info.get("y"),
-        "width": axis_info.get("width"),
-        "height": axis_info.get("height")
-    }
     axis_range = {
-        "x": [axis_info.get("x"), axis_info.get("x") + axis_info.get("width")],
-        "y": [axis_info.get("y"), axis_info.get("y") + axis_info.get("height")]
+        "x": [axis_bbox.get("x"), axis_bbox.get("x") + axis_bbox.get("width")],
+        "y": [axis_bbox.get("y"), axis_bbox.get("y") + axis_bbox.get("height")]
     }
     ticks = []
     labels = []
@@ -98,8 +91,8 @@ def get_format_axis(items, axis_info):
             item_text = item_text[:-1]
         format_item["text"] = item_text
         bbox = {
-            "x": item["left"] + axis_info.get("x"),
-            "y": item["top"] + axis_info.get("y"),
+            "x": item["left"] + axis_bbox.get("x"),
+            "y": item["top"] + axis_bbox.get("y"),
             "width": item.get("width"),
             "height": item.get("height")
         }
@@ -154,6 +147,7 @@ def get_axis_texts(img_path, axis_entities):
     if image:
         for axis_entity in axis_entities:
             axis_bbox = axis_entity.get("bbox")
+            axis_direction = axis_entity.get("direction")
             if axis_bbox:
                 axis_x = axis_bbox.get("x")
                 axis_y = axis_bbox.get("y")
@@ -168,5 +162,6 @@ def get_axis_texts(img_path, axis_entities):
                         print("after ocr detection")
                         axis_texts = understand_data(axis_texts)
                         print("after ocr parsing")
-                        data.append(get_format_axis(axis_texts, axis_entity))
+                        formated_axis = get_format_axis(axis_texts, axis_bbox, axis_direction)
+                        data.append(formated_axis)
     return data

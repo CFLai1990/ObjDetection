@@ -158,11 +158,13 @@ def get_axes_texts(img_path, axis_entities):
                     if axis_x >= 0 and axis_y >= 0 and axis_width > 0 and axis_height > 0:
                         print("axis range: ", axis_x, ", ", axis_y, ", ", axis_x + axis_width, ", ", axis_y + axis_height)
                         axis_img = image.crop((axis_x, axis_y, axis_x + axis_width, axis_y + axis_height))
-                        axis_img_gray = image.convert("L")
+                        axis_img_gray = axis_img.convert("L")
                         axis_img_gray.save('/home/chufan.lai/test_' + str(axis_id) + '.png')
                         axis_img_gray = np.asarray(axis_img_gray)
-                        # line_sum = np.sum(axis_img_gray, axis=1) / axis_img_gray.shape[1]
-                        # column_sum = np.sum(axis_img_gray, axis=0) / axis_img_gray.shape[0]
+                        line_sum = np.sum(axis_img_gray, axis=1) / axis_img_gray.shape[1]
+                        column_sum = np.sum(axis_img_gray, axis=0) / axis_img_gray.shape[0]
+                        print("line_sum: ", line_sum)
+                        print("column_sum: ", column_sum)
                         axis_texts = pt.image_to_data(axis_img, lang=TS_LANG)
                         axis_texts = understand_data(axis_texts)
                         formated_axis = get_format_axis(axis_texts, axis_bbox, axis_direction)

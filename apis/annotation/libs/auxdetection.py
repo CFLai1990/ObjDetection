@@ -57,16 +57,17 @@ class AuxDetection:
         """Get the axis in the vis image"""
         # Get the data entities with classname "axis"
         axes_entities = []
-        print(data_entities)
+        axes_indices = []
         if data_entities:
             for entity_id, data_entity in enumerate(data_entities):
                 entity_class = data_entity.get("class")
-                print("class: ", entity_class)
                 if entity_class and entity_class == "axis":
-                    print("Found one!")
-                    data_entities.pop(entity_id)
-                    axis_entity = self.get_axis_info(data_entity)
-                    axes_entities.append(axis_entity)
+                    axes_indices.append(entity_id)
+            axes_indices.reverse()
+            for axis_id in axes_indices:
+                axis_entity = data_entities.pop(axis_id)
+                axis_entity = self.get_axis_info(axis_entity)
+                axes_entities.append(axis_entity)
         print(axes_entities)
         self.axes = get_axis_texts(img_path, axes_entities)
         if self.axes:

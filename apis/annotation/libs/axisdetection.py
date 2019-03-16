@@ -1,13 +1,12 @@
 """The module for detecting axes"""
 import math
-import json
-from PIL import Image, ImageDraw
+from PIL import Image
 import numpy as np
 from pytesseract import pytesseract as pt
-import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 
 def understand_data(data):
+    """Parse the pytesseract data"""
     lines = data.split("\n")
     items = []
     # print(lines)
@@ -30,23 +29,6 @@ def understand_data(data):
             item["conf"] = int(item["conf"])
             items.append(item)
     return items
-
-def open_image(image_name = "0.png", output_image = "0-out.png"):
-    output_name = image_name[:-4] + "_out.png"
-    data = pt.image_to_data(Image.open(image_name))
-    items = understand_data(data)
-    # print(items)
-    with open("output.json", "w") as f:
-        json.dump(items, f, indent=2)
-    draw_image(image_name, output_name, items)
-
-def draw_image(image_name, output_name, items):
-    img = Image.open(image_name)
-    draw = ImageDraw.Draw(img)
-    for item in items:
-        draw.rectangle([item["left"], item['top'], item["left"] + item["width"], item["top"] + item["height"]], fill=None, outline="red")
-    del draw
-    img.save(output_name)
 
 def classify_texts(direction, f_items, ticks, labels):
     """The function for classifying ticks and labels"""
@@ -91,6 +73,7 @@ def classify_texts(direction, f_items, ticks, labels):
         labels.append(f_items[label_i]["text"])
 
 def get_format_axis(items, axis_info):
+    """Pack the textual information of the axis"""
     axis = {}
     axis_direction = axis_info["direction"]
     axis_bbox = {
@@ -157,48 +140,27 @@ def get_format_axis(items, axis_info):
     }
     return axis
 
-def get_axis(image_name=None):
+def get_axis_texts(image_name, axis_entities):
+    """The function for getting the texts in the axis"""
     data = []
     image = None
+    # No axes in the image
+    if not axis_entities:
+        return data
+    # Parse the texts of the axes
     if image_name:
         image = Image.open(image_name)
     if image:
-        img_gray = image.convert("L")
-        img = np.asarray(img_gray)
-
-        height = img.shape[0]
-        width = img.shape[1]
-
-        line_sum = np.sum(img, axis=1)
-        colume_sum = np.sum(img, axis=0)
-
-        x_axis_height = int(np.argmin(line_sum))
-        y_axis_width = int(np.argmin(colume_sum))
-
-        x_axis_info = {
-            "x": 0,
-            "y": x_axis_height,
-            "width": width,
-            "height": height - x_axis_height,
-            "direction": 0
-        }
-        y_axis_info = {
-            "x": 0,
-            "y": 0,
-            "width": width - y_axis_width,
-            "height": height,
-            "direction": 90
-        }
-        # Pack the x-axis
-        if x_axis_info.get("width") and x_axis_info.get("width") != 0 and x_axis_info.get("height") and x_axis_info.get("height") != 0:
-            x_axis = image.crop((x_axis_info["x"], x_axis_info["y"], width - 1, height - 1))
-            x_axis_data = pt.image_to_data(x_axis)
-            x_items = understand_data(x_axis_data)
-            data.append(get_format_axis(x_items, x_axis_info))
-        # Pack the y-axis
-        if y_axis_info.get("width") and y_axis_info.get("width") != 0 and y_axis_info.get("height") and y_axis_info.get("height") != 0:
-            y_axis = image.crop((y_axis_info["x"], y_axis_info["y"], y_axis_width, height - 1))
-            y_axis_data = pt.image_to_data(y_axis)
-            y_items = understand_data(y_axis_data)
-            data.append(get_format_axis(y_items, y_axis_info))
+        for axis_entity in axis_entities:
+            axis_bbox = axis_entity.get("bbox")
+            axis_x = axis_bbox.get("x")
+            axis_y = axis_bbox.get("y")
+            axis_width = axis_bbox.get("width")
+            axis_height = axis_bbox.get("height")
+            if axis_x and axis_y and axis_width and axis_height:
+                if axis_x >= 0 and axis_y >= 0 and axis_width > 0 and axis_height > 0:
+                    axis_image = image.crop((axis_x, axis_y, axis_width, axis_height))
+                    axis_texts = pt.image_to_data(axis_image)
+                    axis_texts = understand_data(axis_texts)
+                    data.append(get_format_axis(axis_texts, axis_entity))
     return data

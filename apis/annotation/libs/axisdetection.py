@@ -149,9 +149,9 @@ def get_axis_partial(axis_img_gray, axis_id):
         axis_array[axis_array == bg_value] = 255
     else:
         axis_array[axis_array != bg_value] = 255
-    test_img = Image.fromarray(axis_array.convert('RGB'))
-    test_img.save('/home/chufan.lai/axis_' + str(axis_id) + '.png')
     np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '.txt', axis_array)
+    test_img = Image.fromarray(axis_array.astype('uint8').convert('RGB'))
+    test_img.save('/home/chufan.lai/axis_' + str(axis_id) + '.jpg')
     return line_img, tick_text_img, title_img
 
 def get_axes_texts(img_path, axis_entities):

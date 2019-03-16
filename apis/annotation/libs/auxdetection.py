@@ -1,6 +1,6 @@
 """Auxiliary Detection"""
 import logging
-from .axisdetection import get_axis_texts
+from .axisdetection import get_axes_texts
 
 class AuxDetection:
     """Auxiliary Entity Detection Class"""
@@ -12,6 +12,7 @@ class AuxDetection:
 
     def infer_parameters(self, img_path, data_entities):
         """Get the auxiliary data in the vis image"""
+        self.aux = []
         self.get_legends(img_path, data_entities)
         self.get_axes(img_path, data_entities)
         return self.aux
@@ -68,8 +69,7 @@ class AuxDetection:
                 axis_entity = data_entities.pop(axis_id)
                 axis_entity = self.get_axis_info(axis_entity)
                 axes_entities.append(axis_entity)
-        print(axes_entities)
-        self.axes = get_axis_texts(img_path, axes_entities)
+        self.axes = get_axes_texts(img_path, axes_entities)
         if self.axes:
             for axis in self.axes:
                 self.aux.append(axis)

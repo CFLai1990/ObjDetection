@@ -1,6 +1,7 @@
 """apis.annotation.libs: __settings__"""
 import os
 
+# Detectron settings
 # MODEL = 'natural'
 MODEL = 'vis'
 
@@ -15,13 +16,15 @@ DT_MODEL = {
     }
 }
 
-#Detectron settings
 DT = {
     'config': DT_MODEL[MODEL]['config'],
     'weights': DT_MODEL[MODEL]['weights'],
     'threshold_detection': 0.7,
     'threshold_keypoint': 2.0,
 }
+
+# Tessearct settings
+TS_LANG = 'eng'
 
 COLOR_MUNSELL = os.path.abspath('./apis/annotation/data/color_name.csv')
 COLOR_HSV = os.path.abspath('./apis/annotation/data/color_threshold.csv')

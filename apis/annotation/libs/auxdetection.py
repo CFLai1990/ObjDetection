@@ -42,6 +42,12 @@ class AuxDetection:
                     direction = 0
                     if axis_width < axis_height:
                         direction = 90
+            bbox = {
+                "x": axis_x,
+                "y": axis_y,
+                "width": axis_width,
+                "height": axis_height
+            }
         return {
             "bbox": bbox,
             "direction": direction

@@ -139,8 +139,18 @@ def get_axis_partial(axis_img_gray, axis_id):
     line_img = None
     tick_text_img = None
     title_img = None
-    axis_img_gray.save('/home/chufan.lai/axis_' + str(axis_id) + '.png')
-    axis_array = np.array(axis_img_gray)
+    axis_array = np.array(axis_img_gray, dtype=np.uint8)
+    # Get the background color
+    counts = np.bincount(axis_array)
+    bg_value = np.argmax(counts)
+    # Turn the background to white, and the other things to black
+    if bg_value != 0:
+        axis_array[axis_array != bg_value] = 0
+        axis_array[axis_array == bg_value] = 255
+    else:
+        axis_array[axis_array != bg_value] = 255
+    test_img = Image.fromarray(axis_array.convert('RGB'))
+    test_img.save('/home/chufan.lai/axis_' + str(axis_id) + '.png')
     np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '.txt', axis_array)
     return line_img, tick_text_img, title_img
 

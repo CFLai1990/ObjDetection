@@ -145,6 +145,7 @@ def get_axes_texts(img_path, axis_entities):
     if img_path:
         image = Image.open(img_path)
     if image:
+        axis_id = 0
         for axis_entity in axis_entities:
             axis_bbox = axis_entity.get("bbox")
             axis_direction = axis_entity.get("direction")
@@ -160,10 +161,10 @@ def get_axes_texts(img_path, axis_entities):
                         axis_img_gray = np.asarray(image.convert("L"))
                         line_sum = np.sum(axis_img_gray, axis=1) / axis_img_gray.shape[1]
                         column_sum = np.sum(axis_img_gray, axis=0) / axis_img_gray.shape[0]
-                        print("line_sum: ", line_sum)
-                        print("column_sum: ", column_sum)
+                        axis_img_gray.save('/home/chufan.lai/test_' + str(axis_id) + '.png')
                         axis_texts = pt.image_to_data(axis_img, lang=TS_LANG)
                         axis_texts = understand_data(axis_texts)
                         formated_axis = get_format_axis(axis_texts, axis_bbox, axis_direction)
                         data.append(formated_axis)
+                        axis_id = axis_id + 1
     return data

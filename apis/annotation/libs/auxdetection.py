@@ -49,6 +49,7 @@ class AuxDetection:
                     data_entities.pop(entity_id)
                     axis_entity = self.get_axis_info(data_entity)
                     axes_entities.append(axis_entity)
+        print(axes_entities)
         self.axes = get_axis_texts(img_path, axes_entities)
         if self.axes:
             for axis in self.axes:

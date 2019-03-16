@@ -155,6 +155,7 @@ def get_axes_texts(img_path, axis_entities):
                 axis_height = axis_bbox.get("height")
                 if axis_x and axis_y and axis_width and axis_height:
                     if axis_x >= 0 and axis_y >= 0 and axis_width > 0 and axis_height > 0:
+                        print("axis range: ", axis_x, ", ", axis_y, ", ", axis_x + axis_width, ", ", axis_y + axis_height)
                         axis_image = image.crop((axis_x, axis_y, axis_x + axis_width, axis_y + axis_height))
                         axis_texts = pt.image_to_data(axis_image, lang=TS_LANG)
                         axis_texts = understand_data(axis_texts)

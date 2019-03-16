@@ -1,10 +1,19 @@
 """The module for detecting axes"""
 import math
 from PIL import Image
+import cv2
 import numpy as np
 from pytesseract import pytesseract as pt
 from sklearn.cluster import KMeans
 from .__settings__ import TS_LANG
+
+def PIL2CV(img_PIL):
+    """Convert a PIL image to a CV2 image"""
+    return cv2.cvtColor(np.asarray(img_PIL), cv2.COLOR_RGB2BGR)
+
+def CV2PIL(img_CV):
+    """Convert a CV2 image to a PIL image"""
+    return Image.fromarray(cv2.cvtColor(img_CV, cv2.COLOR_BGR2RGB))
 
 def understand_data(data):
     """Parse the pytesseract data"""
@@ -139,23 +148,21 @@ def get_axis_partial(axis_img_gray, axis_id):
     line_img = None
     tick_text_img = None
     title_img = None
-    print("1")
     axis_array = np.array(axis_img_gray, dtype=np.uint8)
-    print("2")
-    # Get the background color
-    counts = np.bincount(axis_array.flatten())
-    bg_value = np.argmax(counts)
-    # Turn the background to white, and the other things to black
-    if bg_value != 0:
-        axis_array[axis_array != bg_value] = 0
-        axis_array[axis_array == bg_value] = 255
-    else:
-        axis_array[axis_array != bg_value] = 255
-    print("replace finished")
-    np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '.txt', axis_array)
-    test_img = Image.fromarray(axis_array)
-    test_img.save('/home/chufan.lai/axis_' + str(axis_id) + '.png')
+    # np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '.txt', axis_array)
+    axis_img_gray.save('/home/chufan.lai/axis_' + str(axis_id) + '.png')
     return line_img, tick_text_img, title_img
+
+def contrast_enhance(axis_img_PIL):
+    """Enhance the contrast of the axis image"""
+    img = PIL2CV(axis_img_PIL)
+    lab= cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+    l, a, b = cv2.split(lab)
+    clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8,8))
+    cl = clahe.apply(l)
+    limg = cv2.merge((cl,a,b))
+    final_img = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
+    return CV2PIL(final_img)
 
 def get_axes_texts(img_path, axis_entities):
     """The function for getting the texts in the axis"""
@@ -179,8 +186,11 @@ def get_axes_texts(img_path, axis_entities):
                 axis_height = axis_bbox.get("height")
                 if axis_x and axis_y and axis_width and axis_height:
                     if axis_x >= 0 and axis_y >= 0 and axis_width > 0 and axis_height > 0:
-                        print("axis range: ", axis_x, ", ", axis_y, ", ", axis_x + axis_width, ", ", axis_y + axis_height)
-                        axis_img_gray = image.crop((axis_x, axis_y, axis_x + axis_width, axis_y + axis_height)).convert("L")
+                        # Step 1: crop the axis image
+                        axis_img = image.crop((axis_x, axis_y, axis_x + axis_width, axis_y + axis_height))
+                        # Step 2: enhance the contrast
+                        axis_img_gray = contrast_enhance(axis_img).convert("L")
+                        # Step 3: partition the image
                         line_img, tick_text_img, title_img = get_axis_partial(axis_img_gray, axis_id)
                         # line_sum = np.sum(axis_img_gray, axis=1) / axis_img_gray.shape[1]
                         # column_sum = np.sum(axis_img_gray, axis=0) / axis_img_gray.shape[0]

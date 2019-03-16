@@ -59,7 +59,9 @@ class AuxDetection:
         axes_entities = []
         if data_entities:
             for entity_id, data_entity in enumerate(data_entities):
-                if data_entity.get("class") == "axis":
+                entity_class = data_entity.get("class")
+                if entity_class and entity_class == "axis":
+                    print("Found one!")
                     data_entities.pop(entity_id)
                     axis_entity = self.get_axis_info(data_entity)
                     axes_entities.append(axis_entity)

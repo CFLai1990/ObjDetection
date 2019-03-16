@@ -156,7 +156,7 @@ def get_axis_texts(img_path, axis_entities):
                 if axis_x and axis_y and axis_width and axis_height:
                     if axis_x >= 0 and axis_y >= 0 and axis_width > 0 and axis_height > 0:
                         print("before crop")
-                        axis_image = image.crop((axis_x, axis_y, axis_width, axis_height))
+                        axis_image = image.crop((axis_x, axis_y, axis_x + axis_width, axis_y + axis_height))
                         print("after crop")
                         axis_texts = pt.image_to_data(axis_image)
                         print("after ocr detection")

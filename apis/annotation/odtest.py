@@ -1,12 +1,14 @@
-"""odimg: take the image, return the masked image"""
+"""odmsk: take the image, return the masks"""
 import base64
-from .__settings__ import API
+from .__settings__ import API, INFER_SIGN
+from .libs import NLPData
 
 class ApiClass(API):
     """API Class"""
     def __init__(self, parameters):
         API.__init__(self, parameters)
         self.obj_detector = parameters['obj_detector']
+        self.aux_detector = parameters['aux_detector']
 
     def save_image(self, obj):
         """Save the original image"""
@@ -33,27 +35,44 @@ class ApiClass(API):
         output_dir = self.file_op.get_root()
         return ext_type, img_type, output_dir
 
-    def od_image(self, obj):
-        """Run object detection, return the masked image"""
+    def od_mask(self, obj):
+        """Run object detection, return the parameters"""
         # Save the original image
         img_path = self.save_image(obj)
         self.logger.info('Image saved')
         # Parse the information of the image
         ext_type, img_type, output_dir = self.parse_info(obj)
         # Object detection
-        output_path = self.obj_detector.infer_image(img_path, img_type, output_dir)
-        self.logger.info('Image detection finished')
+        if INFER_SIGN:
+            output_path, data = self.obj_detector.infer_image_with_parameters(img_path, img_type, output_dir)
+        else:
+            output_path = None
+            data = None
+        auxiliary = self.aux_detector.infer_parameters(img_path, data)
         # Load the processed image
         output_name, img_data = self.load_image(output_path)
-        result = {
+        # Get the data for the NLP module
+        nlp_parser = NLPData(data, auxiliary)
+        tonlp = nlp_parser.get_result()
+        # Pack the final result
+        result_image = {
             'name': output_name,
             'type': ext_type,
             'data': img_data,
         }
-        return result
+        result_data = {
+            'data': data,
+            'auxiliary': auxiliary,
+            'tonlp': tonlp
+        }
+        self.logger.info('Image detection finished')
+        return {
+            "image": result_image,
+            "data": result_data
+        }
 
     def execute(self, data):
         """Main function"""
-        result = self.od_image(data)
+        result = self.od_mask(data)
         self.emit2client(result)
         self.logger.info('Result sent')

@@ -20,18 +20,27 @@ class ImgViewer {
       case 'OD_Demo':
         console.info('Before:', img)
         break
+      case 'OD_Test':
+        console.info('Before:', img)
+        break
     }
   }
-  getResult (img) {
+  getResult (data) {
     switch (this.message) {
       case 'OD_Image':
-        $(`${this.id} .img`).attr('src', `data:${img.type};base64,${img.data}`)
+        $(`${this.id} .img`).attr('src', `data:${data.type};base64,${data.data}`)
         break
       case 'OD_Mask':
-        console.info('After:', img)
+        console.info('After:', data)
         break
       case 'OD_Demo':
-        console.info('After:', img)
+        console.info('After:', data)
+        break
+      case 'OD_Test':
+        let img = data.image
+        $(`${this.id} .img`).attr('src', `data:${img.type};base64,${img.data}`)
+        let parameters = data.data
+        console.info('After:', parameters)
         break
     }
   }

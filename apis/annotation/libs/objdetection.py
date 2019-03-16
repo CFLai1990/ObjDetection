@@ -27,10 +27,11 @@ from detectron.utils.timer import Timer
 import detectron.core.test_engine as infer_engine
 import detectron.datasets.dummy_datasets as dummy_datasets
 import detectron.utils.c2 as c2_utils
+from .vis_dataset import get_vis_dict
 from .odvis import vis_one_image, parse_results
 from .objattrs import ObjAttrs
 
-from .__settings__ import DT
+from .__settings__ import MODEL, DT
 
 c2_utils.import_detectron_ops()
 
@@ -63,7 +64,10 @@ class ObjDetection:
         # Acquire classes from the COCO dataset
         # It returns a AttrDict object stored with 'classes: value'
         # Each value is a dictionary that looks like this: 0:'__background__', 1:'person', ...
-        self.class_dict = dummy_datasets.get_coco_dataset()
+        if MODEL == "natural":
+            self.class_dict = dummy_datasets.get_coco_dataset()
+        elif MODEL == "vis":
+            self.class_dict = get_vis_dict()
         self.obj_attrs = ObjAttrs()
 
     def infer(self, img_path):
@@ -132,4 +136,39 @@ class ObjDetection:
             out_when_no_box=True
         )
         return parameters
+
+    def infer_image_with_parameters(self, img_path, img_type, ouput_dir):
+        """Infer and return both the masked image and the parameters"""
+        # get the image name without suffix
+        img_name = os.path.basename(img_path).replace('.' + img_type, '')
+        # the path of the output file
+        output_path = os.path.join(ouput_dir, '{}'.format(img_name + '_dt.png'))
+        self.logger.info('Processing %s -> %s', img_path, output_path)
+        # Run object detection
+        img = self.infer(img_path)
+        # Render the masks
+        vis_one_image(
+            img[:, :, ::-1],    # BGR -> RGB for visualization
+            output_path,
+            self.result['boxes'],
+            self.result['segms'],
+            self.result['keyps'],
+            dataset=self.class_dict,
+            box_alpha=0.3,
+            show_class=True,
+            thresh=self.setting['threshold_detection'],
+            kp_thresh=self.setting['threshold_keypoint'],
+            out_when_no_box=True
+        )
+        parameters = parse_results(
+            self.result['boxes'],
+            self.result['segms'],
+            self.result['keyps'],
+            image=img,
+            attrs=self.obj_attrs,
+            dataset=self.class_dict,
+            thresh=self.setting['threshold_detection'],
+            out_when_no_box=True
+        )
+        return output_path, parameters
         

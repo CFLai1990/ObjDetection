@@ -12,5 +12,6 @@ INFER_SIGN = True
 EVENT_DICT = {
     'OD_Image': 'odimg',
     'OD_Mask': 'odmsk',
+    'OD_Test': 'odtest',
     'OD_Demo': 'demo'
 }

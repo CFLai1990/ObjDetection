@@ -15,6 +15,23 @@ def CV2PIL(img_CV):
     """Convert a CV2 image to a PIL image"""
     return Image.fromarray(cv2.cvtColor(img_CV, cv2.COLOR_BGR2RGB))
 
+def entropy(labels, base=None):
+    """ Computes entropy of label distribution. """
+    n_labels = len(labels)
+    if n_labels <= 1:
+        return 0
+    value, counts = np.unique(labels, return_counts=True)
+    probs = counts / n_labels
+    n_classes = np.count_nonzero(probs)
+    if n_classes <= 1:
+        return 0
+    ent = 0.
+  # Compute entropy
+    base = math.e if base is None else base
+    for i in probs:
+        ent -= i * math.log(i, base)
+    return ent
+
 def understand_data(data):
     """Parse the pytesseract data"""
     lines = data.split("\n")
@@ -92,9 +109,6 @@ def get_format_axis(items, axis_bbox, axis_direction):
     ticks = []
     labels = []
     format_items = []
-    print(items)
-    print(axis_bbox)
-    print(axis_direction)
     for item in items:
         item_text = item.get("text")
         if item_text in ("-", ""):
@@ -152,12 +166,22 @@ def partition_axis(axis_img_gray, axis_id):
     tick_text_img = None
     title_img = None
     axis_array = np.array(axis_img_gray, dtype=np.uint8)
-    row_avg = (np.sum(axis_array, axis=1) / axis_array.shape[1]).astype(np.uint8)
-    col_avg = (np.sum(axis_array, axis=0) / axis_array.shape[0]).astype(np.uint8)
-    print("row average: ", row_avg)
-    print("column average: ", col_avg)
-    np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_row.txt', row_avg)
-    np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_col.txt', col_avg)
+    row_num = axis_array.shape[0]
+    col_num = axis_array.shape[1]
+    # row_avg = (np.sum(axis_array, axis=1) / axis_array.shape[1]).astype(np.uint8)
+    # col_avg = (np.sum(axis_array, axis=0) / axis_array.shape[0]).astype(np.uint8)
+    row_ent = np.zeros(row_num)
+    col_ent = np.zeros(col_num)
+    for i in range(row_num):
+        img_row = axis_array[i].tolist()
+        row_ent[i] = entropy(img_row)
+    for j in range(col_num):
+        img_col = axis_array[:, j].tolist()
+        col_ent[j] = entropy(img_col)
+    print("row average: ", row_ent)
+    print("column average: ", col_ent)
+    np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_row.txt', row_ent)
+    np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_col.txt', col_ent)
     axis_img_gray.save('/home/chufan.lai/axis_' + str(axis_id) + '.png')
     return line_img, tick_text_img, title_img
 

@@ -141,6 +141,7 @@ def get_axis_partial(axis_img_gray, axis_id):
     title_img = None
     print("1")
     axis_array = np.array(axis_img_gray, dtype=np.uint8)
+    np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '.txt', axis_array)
     print("2")
     # Get the background color
     counts = np.bincount(axis_array)

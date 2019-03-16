@@ -70,7 +70,8 @@ class AuxDetection:
                 axis_entity = data_entities.pop(axis_id)
                 axis_entity = self.get_axis_info(axis_entity)
                 axes_entities.append(axis_entity)
-        self.axes = get_axes_texts(img_path, axes_entities)
+        self.axes = []
+        # self.axes = get_axes_texts(img_path, axes_entities)
         if self.axes:
             for axis in self.axes:
                 self.aux.append(axis)

@@ -45,6 +45,7 @@ def classify_texts(direction, f_items, ticks, labels):
         pos = f_item.get("position")
         proj_pos = [pos.get("x") * vertical_vector.get("x") + pos.get("y") * vertical_vector.get("y")]
         proj_positions.append(proj_pos)
+    print("projected positions: ", proj_positions)
     proj_data = np.array(proj_positions)
     # Classify based on the projected positions
     estimator = KMeans(n_clusters=2)

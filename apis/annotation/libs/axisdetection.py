@@ -140,7 +140,7 @@ def get_format_axis(items, axis_info):
     }
     return axis
 
-def get_axis_texts(image_name, axis_entities):
+def get_axis_texts(img_path, axis_entities):
     """The function for getting the texts in the axis"""
     data = []
     image = None
@@ -148,19 +148,20 @@ def get_axis_texts(image_name, axis_entities):
     if not axis_entities:
         return data
     # Parse the texts of the axes
-    if image_name:
-        image = Image.open(image_name)
+    if img_path:
+        image = Image.open(img_path)
     if image:
         for axis_entity in axis_entities:
             axis_bbox = axis_entity.get("bbox")
-            axis_x = axis_bbox.get("x")
-            axis_y = axis_bbox.get("y")
-            axis_width = axis_bbox.get("width")
-            axis_height = axis_bbox.get("height")
-            if axis_x and axis_y and axis_width and axis_height:
-                if axis_x >= 0 and axis_y >= 0 and axis_width > 0 and axis_height > 0:
-                    axis_image = image.crop((axis_x, axis_y, axis_width, axis_height))
-                    axis_texts = pt.image_to_data(axis_image)
-                    axis_texts = understand_data(axis_texts)
-                    data.append(get_format_axis(axis_texts, axis_entity))
+            if axis_bbox:
+                axis_x = axis_bbox.get("x")
+                axis_y = axis_bbox.get("y")
+                axis_width = axis_bbox.get("width")
+                axis_height = axis_bbox.get("height")
+                if axis_x and axis_y and axis_width and axis_height:
+                    if axis_x >= 0 and axis_y >= 0 and axis_width > 0 and axis_height > 0:
+                        axis_image = image.crop((axis_x, axis_y, axis_width, axis_height))
+                        axis_texts = pt.image_to_data(axis_image)
+                        axis_texts = understand_data(axis_texts)
+                        data.append(get_format_axis(axis_texts, axis_entity))
     return data

@@ -26,14 +26,22 @@ class AuxDetection:
     def get_axis_info(self, data_entity):
         """Get the direction of an axis"""
         direction = None
-        bbox = data_entity.get("bbox")
+        bbox = data_entity.get("bbox") or {}
         if bbox:
+            axis_x = bbox.get("x")
+            axis_y = bbox.get("y")
             axis_width = bbox.get("width")
             axis_height = bbox.get("height")
-            if axis_width and axis_height and axis_width > 0 and axis_height > 0:
-                direction = 0
-                if axis_width < axis_height:
-                    direction = 90
+            if axis_x and isinstance(axis_x, float) and axis_y and isinstance(axis_y, float):
+                axis_x = round(axis_x)
+                axis_y = round(axis_y)
+            if axis_width and isinstance(axis_width, float) and axis_height and isinstance(axis_height, float):
+                axis_width = round(axis_width)
+                axis_height = round(axis_height)
+                if axis_width >= 0 and axis_height >= 0:
+                    direction = 0
+                    if axis_width < axis_height:
+                        direction = 90
         return {
             "bbox": bbox,
             "direction": direction

@@ -254,13 +254,17 @@ def partition_axis(axis_img, axis_id, axis_direction):
     tick_array = None
     title_array = None
     # Initialize
+    print("Step 1")
     axis_array = cv2.cvtColor(axis_img, cv2.COLOR_BGR2GRAY).astype(np.uint8)
     row_num = axis_array.shape[0]
     col_num = axis_array.shape[1]
     # Simplify the gray scales
+    print(row_num, col_num)
+    print("Step 2")
     axis_array_simp = (axis_array / GRAY_SCALE_LEVEL).astype(np.uint8)
     axis_array_simp = axis_array_simp * GRAY_SCALE_LEVEL
     # Calculate the entropy of the simplified image
+    print("Step 3")
     row_ent = np.zeros(row_num)
     col_ent = np.zeros(col_num)
     for i in range(row_num):
@@ -269,12 +273,14 @@ def partition_axis(axis_img, axis_id, axis_direction):
     for j in range(col_num):
         img_col = axis_array_simp[:, j].tolist()
         col_ent[j] = entropy(img_col)
+    print("Step 4")
     if TESTING['sign']:
         cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '.png', \
             axis_array_simp, \
             [int(cv2.IMWRITE_PNG_COMPRESSION),0])
         np.savetxt(TESTING['dir'] + '/axis_' + str(axis_id) + '_row.txt', row_ent)
         np.savetxt(TESTING['dir'] + '/axis_' + str(axis_id) + '_col.txt', col_ent)
+    print("Step 5")
     # Step 1: transform the image into a gray one
     axis_array = cv2.cvtColor(axis_array, cv2.COLOR_GRAY2BGR)
     if axis_direction == 0:
@@ -321,6 +327,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
             if title_end < col_num - MARGIN:
                 title_end = title_end + MARGIN
             title_array = axis_array[0:(row_num-1), title_start:title_end]
+    print("Step 6")
     if TESTING['sign']:
         if line_array:
             cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_line.png', \
@@ -352,29 +359,22 @@ def get_axes_texts(img, axis_entities):
     # No axes in the image
     if img is None or axis_entities is None:
         return data
-    print('1')
     axis_id = 0
     for axis_entity in axis_entities:
-        print('2')
         axis_bbox = axis_entity.get("bbox")
         axis_direction = axis_entity.get("direction")
         if axis_bbox:
-            print('3')
             axis_x = axis_bbox.get("x")
             axis_y = axis_bbox.get("y")
             axis_width = axis_bbox.get("width")
             axis_height = axis_bbox.get("height")
-            print('4')
             if axis_x and axis_y and axis_width and axis_height:
                 if axis_x >= 0 and axis_y >= 0 and axis_width > 0 and axis_height > 0:
                     # Step 1: crop the axis image
-                    print("Step 1")
                     axis_img = img[axis_y:(axis_y + axis_height), axis_x:(axis_x + axis_width)]
                     # Step 2: enhance the contrast
-                    print("Step 2")
                     axis_img_enhanced = contrast_enhance(axis_img)
                     # Step 3: partition the image
-                    print("Step 3")
                     line_img, tick_img, title_img = partition_axis(axis_img_enhanced, axis_id, axis_direction)
                     tick_info = {}
                     title_info = {}

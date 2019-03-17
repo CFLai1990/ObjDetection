@@ -350,10 +350,7 @@ def get_axes_texts(img, axis_entities):
     """The function for getting the texts in the axis"""
     data = []
     # No axes in the image
-    print('0')
-    print(img)
-    print(axis_entities)
-    if not (img and axis_entities):
+    if img is None or axis_entities is None:
         return data
     print('1')
     axis_id = 0

@@ -248,22 +248,19 @@ def divide_by_threshold(array, threshold, min_count=1):
                 title_range = range_values[0]
     return line_range, tick_range, title_range
 
-def partition_axis(axis_img_gray, axis_id, axis_direction):
+def partition_axis(axis_img, axis_id, axis_direction):
     """Partition the axis image into three parts: line, tick_texts and title"""
-    line_img = None
-    tick_img = None
-    title_img = None
+    line_array = None
+    tick_array = None
+    title_array = None
     # Initialize
-    print('1')
-    axis_array = np.array(axis_img_gray, dtype=np.uint8)
+    axis_array = cv2.cvtColor(axis_img, cv2.COLOR_BGR2GRAY).astype(np.uint8)
     row_num = axis_array.shape[0]
     col_num = axis_array.shape[1]
     # Simplify the gray scales
-    print('2')
     axis_array_simp = (axis_array / GRAY_SCALE_LEVEL).astype(np.uint8)
     axis_array_simp = axis_array_simp * GRAY_SCALE_LEVEL
     # Calculate the entropy of the simplified image
-    print('3')
     row_ent = np.zeros(row_num)
     col_ent = np.zeros(col_num)
     for i in range(row_num):
@@ -272,20 +269,20 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
     for j in range(col_num):
         img_col = axis_array_simp[:, j].tolist()
         col_ent[j] = entropy(img_col)
-    print('4')
     if TESTING['sign']:
-        test_img = Image.fromarray(axis_array_simp)
-        print('5')
-        test_img.save(TESTING['dir'] + '/axis_' + str(axis_id) + '.png')
-        print('6')
+        cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '.png', \
+            axis_array_simp, \
+            [int(cv2.IMWRITE_PNG_COMPRESSION),0])
         np.savetxt(TESTING['dir'] + '/axis_' + str(axis_id) + '_row.txt', row_ent)
         np.savetxt(TESTING['dir'] + '/axis_' + str(axis_id) + '_col.txt', col_ent)
-    print("??????????????????")
-    # Divide the image
+    # Step 1: transform the image into a gray one
+    axis_array = cv2.cvtColor(axis_array, cv2.COLOR_GRAY2BGR)
     if axis_direction == 0:
+        # Step 2: divide the axis image
         line_range, tick_range, title_range = divide_by_threshold(row_ent, 0, 3)
+        # Step 3: crop the axis image
         if line_range:
-            line_img = axis_img_gray.crop((0, line_range["start"], col_num - 1, line_range["end"]))
+            line_array = axis_array[line_range["start"]:line_range["end"], 0:(col_num-1)]
         if tick_range:
             tick_start = tick_range["start"]
             tick_end = tick_range["end"]
@@ -293,8 +290,7 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
                 tick_start = tick_start - MARGIN
             if tick_end < row_num - MARGIN:
                 tick_end = tick_end + MARGIN
-            print("dir_0: ", tick_start, ", ", tick_end)
-            tick_img = axis_img_gray.crop((0, tick_start, col_num - 1, tick_end))
+            tick_array = axis_array[tick_start:tick_end, 0:(col_num-1)]
         if title_range:
             title_start = title_range["start"]
             title_end = title_range["end"]
@@ -302,72 +298,53 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
                 title_start = title_start - MARGIN
             if title_end < row_num - MARGIN:
                 title_end = title_end + MARGIN
-            print("dir_0: ", title_start, ", ", title_end)
-            title_img = axis_img_gray.crop((0, title_start, col_num - 1, title_end))
+            title_array = axis_array[title_start:title_end, 0:(col_num-1)]
     elif axis_direction == 90:
+        # Step 2: divide the axis image
         line_range, tick_range, title_range = divide_by_threshold(col_ent, 0, 3)
-        print(line_range, tick_range, title_range)
+        # Step 3: crop the axis image
         if line_range:
-            line_img = axis_img_gray.crop((line_range["start"], 0, line_range["end"], row_num - 1))
-        print("line_img ready")
+            line_array = axis_array[0:(row_num-1), line_range["start"]:line_range["end"]]
         if tick_range:
             tick_start = tick_range["start"]
             tick_end = tick_range["end"]
-            print(type(tick_start))
-            print(type(tick_end))
-            print(MARGIN)
-            print(type(MARGIN))
-            print("-----------------------------")
-            print("dir_90: ", tick_start, ", ", tick_end)
-            print("-----------------------------")
-            print("-----------------------------")
-            print("-----------------------------")
             if tick_start > MARGIN:
-                print('-1')
                 tick_start = tick_start - MARGIN
-                print('-2')
             if tick_end < col_num - MARGIN:
-                print('-3')
                 tick_end = tick_end + MARGIN
-                print('-4')
-            print("dir_90: ", tick_start, ", ", tick_end)
-            tick_img = axis_img_gray.crop((tick_start, 0, tick_end, row_num - 1))
-        print("tick_img ready")
+            tick_array = axis_array[0:(row_num-1), tick_start:tick_end]
         if title_range:
             title_start = title_range["start"]
             title_end = title_range["end"]
-            print("dir_90: ", title_start, ", ", title_end)
-            print(type(title_start), type(title_end), type(MARGIN))
             if title_start > MARGIN:
-                print('-1')
                 title_start = title_start - MARGIN
-                print('-2')
             if title_end < col_num - MARGIN:
-                print('-3')
                 title_end = title_end + MARGIN
-                print('-4')
-            print("dir_90: ", title_start, ", ", title_end)
-            title_img = axis_img_gray.crop((title_start, 0, title_end, row_num - 1))
-        print("title_img ready")
+            title_array = axis_array[0:(row_num-1), title_start:title_end]
     if TESTING['sign']:
-        if line_img:
-            line_img.save(TESTING['dir'] + '/axis_' + str(axis_id) + '_line.png')
-        if tick_img:
-            tick_img.save(TESTING['dir'] + '/axis_' + str(axis_id) + '_tick.png')
-        if title_img:
-            title_img.save(TESTING['dir'] + '/axis_' + str(axis_id) + '_title.png')
-    return line_img, tick_img, title_img
+        if line_array:
+            cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_line.png', \
+                line_array, \
+                [int(cv2.IMWRITE_PNG_COMPRESSION),0])
+        if tick_array:
+            cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_tick.png', \
+                tick_array, \
+                [int(cv2.IMWRITE_PNG_COMPRESSION),0])
+        if title_array:
+            cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_title.png', \
+                title_array, \
+                [int(cv2.IMWRITE_PNG_COMPRESSION),0])
+    return line_array, tick_array, title_array
 
-def contrast_enhance(axis_img_PIL):
+def contrast_enhance(axis_img):
     """Enhance the contrast of the axis image"""
-    img = PIL2CV(axis_img_PIL)
-    lab= cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+    lab= cv2.cvtColor(axis_img, cv2.COLOR_BGR2LAB)
     l, a, b = cv2.split(lab)
     clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8,8))
     cl = clahe.apply(l)
     limg = cv2.merge((cl,a,b))
-    final_img = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
-    return CV2PIL(final_img)
+    enhanced_img = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
+    return enhanced_img
 
 def get_axes_texts(img_path, axis_entities):
     """The function for getting the texts in the axis"""
@@ -378,8 +355,9 @@ def get_axes_texts(img_path, axis_entities):
         return data
     # Parse the texts of the axes
     if img_path:
-        image = Image.open(img_path)
-    if image:
+        img = cv2.imread(img_path)
+        # image = Image.open(img_path)
+    if img:
         axis_id = 0
         for axis_entity in axis_entities:
             axis_bbox = axis_entity.get("bbox")
@@ -392,24 +370,26 @@ def get_axes_texts(img_path, axis_entities):
                 if axis_x and axis_y and axis_width and axis_height:
                     if axis_x >= 0 and axis_y >= 0 and axis_width > 0 and axis_height > 0:
                         # Step 1: crop the axis image
-                        axis_img = image.crop((axis_x, axis_y, axis_x + axis_width, axis_y + axis_height))
+                        axis_img = img[axis_y:(axis_y + axis_height), axis_x:(axis_x + axis_width)]
                         # Step 2: enhance the contrast
-                        axis_img_gray = contrast_enhance(axis_img).convert("L")
+                        axis_img_enhanced = contrast_enhance(axis_img)
                         # Step 3: partition the image
-                        line_img, tick_img, title_img = partition_axis(axis_img_gray, axis_id, axis_direction)
+                        line_img, tick_img, title_img = partition_axis(axis_img_enhanced, axis_id, axis_direction)
                         tick_info = {}
                         title_info = {}
                         if tick_img:
-                            tick_texts = pt.image_to_data(tick_img)
+                            tick_img_pil = CV2PIL(tick_img)
+                            tick_texts = pt.image_to_data(tick_img_pil)
                             print("tick_texts (before): ", tick_texts)
                             tick_texts = understand_data(tick_texts)
                             print("tick_texts (after): ", tick_texts)
                         if title_img:
-                            title_texts = pt.image_to_data(title_img)
+                            title_img_pil = CV2PIL(title_img)
+                            title_texts = pt.image_to_data(title_img_pil)
                             print("title_texts (before): ", title_texts)
                             title_texts = understand_data(title_texts)
                             print("tick_texts (after): ", tick_texts)
-                        # axis_texts = pt.image_to_data(axis_img_gray, lang=TS_LANG)
+                        # axis_texts = pt.image_to_data(axis_img, lang=TS_LANG)
                         # axis_texts = understand_data(axis_texts)
                         # formated_axis = get_format_axis(axis_texts, axis_bbox, axis_direction)
                         # data.append(formated_axis)

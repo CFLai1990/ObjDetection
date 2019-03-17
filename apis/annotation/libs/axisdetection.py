@@ -388,18 +388,23 @@ def get_axes_texts(img, axis_entities):
                         # Step 2: enhance the contrast
                         axis_img_enhanced = contrast_enhance(axis_img)
                         # Step 3: partition the image
-                        line_img, tick_img, title_img = partition_axis(axis_img_enhanced, axis_id, axis_direction)
+                        line_img, tick_img, title_img = partition_axis(axis_img_enhanced, \
+                            axis_id, axis_direction)
                         print("finished")
                         tick_info = {}
                         title_info = {}
                         if tick_img is not None and isinstance(tick_img, np.ndarray):
                             tick_img_pil = CV2PIL(tick_img)
+                            tick_img_pil.save(TESTING['dir'] + '/axis_' + str(axis_id) + \
+                                '_test_tick.png')
                             tick_texts = pt.image_to_data(tick_img_pil)
                             print("tick_texts (before): ", tick_texts)
                             tick_texts = understand_data(tick_texts)
                             print("tick_texts (after): ", tick_texts)
                         if title_img is not None and isinstance(tick_img, np.ndarray):
                             title_img_pil = CV2PIL(title_img)
+                            title_img_pil.save(TESTING['dir'] + '/axis_' + str(axis_id) + \
+                                '_test_title.png')
                             title_texts = pt.image_to_data(title_img_pil)
                             print("title_texts (before): ", title_texts)
                             title_texts = understand_data(title_texts)

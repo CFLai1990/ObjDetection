@@ -284,6 +284,7 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
     # Divide the image
     if axis_direction == 0:
         line_range, tick_range, title_range = divide_by_threshold(row_ent, 0, 3)
+        print(line_range, tick_range, title_range)
         margin = 3
         if line_range:
             line_img = axis_img_gray.crop((0, line_range["start"], col_num - 1, line_range["end"]))

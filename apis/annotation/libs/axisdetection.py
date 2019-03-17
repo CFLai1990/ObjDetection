@@ -284,6 +284,7 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
     if axis_direction == 0:
         line_range, tick_range, title_range = divide_by_threshold(row_ent, 0, 3)
         margin = 3
+        print(type(margin))
         if line_range:
             line_img = axis_img_gray.crop((0, line_range["start"], col_num - 1, line_range["end"]))
         if tick_range:
@@ -315,6 +316,7 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
             tick_end = tick_range["end"]
             print(type(tick_start))
             print(type(tick_end))
+            print(margin)
             print(type(margin))
             print("-----------------------------")
             print("dir_90: ", tick_start, ", ", tick_end)

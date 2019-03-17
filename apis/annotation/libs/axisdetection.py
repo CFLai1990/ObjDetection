@@ -370,10 +370,13 @@ def get_axes_texts(img_path, axis_entities):
                 if axis_x and axis_y and axis_width and axis_height:
                     if axis_x >= 0 and axis_y >= 0 and axis_width > 0 and axis_height > 0:
                         # Step 1: crop the axis image
+                        print("Step 1")
                         axis_img = img[axis_y:(axis_y + axis_height), axis_x:(axis_x + axis_width)]
                         # Step 2: enhance the contrast
+                        print("Step 2")
                         axis_img_enhanced = contrast_enhance(axis_img)
                         # Step 3: partition the image
+                        print("Step 3")
                         line_img, tick_img, title_img = partition_axis(axis_img_enhanced, axis_id, axis_direction)
                         tick_info = {}
                         title_info = {}

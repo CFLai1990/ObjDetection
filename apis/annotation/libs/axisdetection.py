@@ -380,7 +380,7 @@ def get_axes_texts(img, axis_entities):
                             tick_img_pil = CV2PIL(tick_img)
                             tick_img_pil.save(TESTING['dir'] + '/axis_' + str(axis_id) + \
                                 '_test_tick.png')
-                            tick_texts = pt.image_to_data(tick_img_pil)
+                            tick_texts = pt.image_to_data(tick_img_pil, config='--psm 6')
                             print("tick_texts (before): ", tick_texts)
                             tick_texts = understand_data(tick_texts)
                             print("tick_texts (after): ", tick_texts)
@@ -388,7 +388,7 @@ def get_axes_texts(img, axis_entities):
                             title_img_pil = CV2PIL(title_img)
                             title_img_pil.save(TESTING['dir'] + '/axis_' + str(axis_id) + \
                                 '_test_title.png')
-                            title_texts = pt.image_to_string(title_img_pil)
+                            title_texts = pt.image_to_string(title_img_pil, config='--psm 6')
                             print("title_texts: ", title_texts)
                             # title_texts = understand_data(title_texts)
                             # print("tick_texts (after): ", tick_texts)

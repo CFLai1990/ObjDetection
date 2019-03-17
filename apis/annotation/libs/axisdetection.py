@@ -341,22 +341,18 @@ def partition_axis(axis_img, axis_id, axis_direction):
     print("title_array.shape: ", title_array.shape)
     print("Step 6")
     if TESTING['sign']:
-        try:
-            if line_array:
-                cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_line.png', \
-                    line_array, \
-                    [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
-            if tick_array:
-                cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_tick.png', \
-                    tick_array, \
-                    [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
-            if title_array:
-                cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_title.png', \
-                    title_array, \
-                    [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
-        except Exception as e:
-            print(repr(e))
-            traceback.print_exc()
+        if line_array is not None:
+            cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_line.png', \
+                line_array, \
+                [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
+        if tick_array is not None:
+            cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_tick.png', \
+                tick_array, \
+                [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
+        if title_array is not None:
+            cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_title.png', \
+                title_array, \
+                [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
     return line_array, tick_array, title_array
 
 def contrast_enhance(axis_img):

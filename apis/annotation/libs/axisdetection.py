@@ -354,7 +354,8 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_title.png', \
                     title_array, \
                     [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
-        except Exception, e:
+        except Exception as e:
+            print(repr(e))
             traceback.print_exc()
     return line_array, tick_array, title_array
 

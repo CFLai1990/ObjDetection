@@ -211,6 +211,7 @@ def divide_by_threshold(array, threshold, min_count=1):
     print("solid ranges: ", solid_ranges)
     print("Step 1 finished")
     # Step 2: Decide which range belongs to which category
+    print("Step 2 started")
     line_range = None
     tick_range = None
     title_range = None
@@ -218,6 +219,7 @@ def divide_by_threshold(array, threshold, min_count=1):
         return line_range, tick_range, title_range
     range_values = list(solid_ranges.values())
     range_count = len(range_values)
+    print("Case started")
     # Case 1: only the ticks
     if range_count == 1:
         tick_range = range_values[0]
@@ -232,6 +234,7 @@ def divide_by_threshold(array, threshold, min_count=1):
                 min_range_id = range_id
         if min_range_id >= 0:
             line_range = range_values.pop(min_range_id)
+        print("line range: ", line_range)
         # Find the range closest to the line
         if line_range:
             min_dist = float('Inf')
@@ -247,9 +250,11 @@ def divide_by_threshold(array, threshold, min_count=1):
                     min_dist_id = range_id
             if min_dist_id >= 0:
                 tick_range = range_values.pop(min_dist_id)
+            print("tick range: ", tick_range)
             # If there are still ranges left, it must be the title
             if range_values:
                 title_range = range_values[0]
+            print("title range: ", title_range)
     return line_range, tick_range, title_range
 
 def partition_axis(axis_img_gray, axis_id, axis_direction):

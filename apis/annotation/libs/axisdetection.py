@@ -359,15 +359,19 @@ def get_axes_texts(img_path, axis_entities):
         # image = Image.open(img_path)
     print(img)
     if img:
+        print('1')
         axis_id = 0
         for axis_entity in axis_entities:
+            print('2')
             axis_bbox = axis_entity.get("bbox")
             axis_direction = axis_entity.get("direction")
             if axis_bbox:
+                print('3')
                 axis_x = axis_bbox.get("x")
                 axis_y = axis_bbox.get("y")
                 axis_width = axis_bbox.get("width")
                 axis_height = axis_bbox.get("height")
+                print('4')
                 if axis_x and axis_y and axis_width and axis_height:
                     if axis_x >= 0 and axis_y >= 0 and axis_width > 0 and axis_height > 0:
                         # Step 1: crop the axis image

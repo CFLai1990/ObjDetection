@@ -277,23 +277,24 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
     # Divide the image
     if axis_direction == 0:
         line_range, tick_range, title_range = divide_by_threshold(row_ent, 0, 3)
+        margin = 3
         if line_range:
             line_img = axis_img_gray.crop((0, line_range["start"], col_num - 1, line_range["end"]))
         if tick_range:
             tick_start = tick_range["start"]
             tick_end = tick_range["end"]
-            if tick_start > 1:
-                tick_start = tick_start - 1
-            if tick_end < row_num - 1:
-                tick_end = tick_end + 1
+            if tick_start > margin:
+                tick_start = tick_start - margin
+            if tick_end < row_num - margin:
+                tick_end = tick_end + margin
             tick_img = axis_img_gray.crop((0, tick_start, col_num - 1, tick_end))
         if title_range:
             title_start = title_range["start"]
             title_end = title_range["end"]
-            if title_start > 1:
-                title_start = title_start - 1
-            if title_end < row_num - 1:
-                title_end = title_end + 1
+            if title_start > margin:
+                title_start = title_start - margin
+            if title_end < row_num - margin:
+                title_end = title_end + margin
             title_img = axis_img_gray.crop((0, title_start, col_num - 1, title_end))
     elif axis_direction == 90:
         line_range, tick_range, title_range = divide_by_threshold(col_ent, 0, 3)
@@ -302,18 +303,18 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
         if tick_range:
             tick_start = tick_range["start"]
             tick_end = tick_range["end"]
-            if tick_start > 1:
-                tick_start = tick_start - 1
-            if tick_end < col_num - 1:
-                tick_end = tick_end + 1
+            if tick_start > margin:
+                tick_start = tick_start - margin
+            if tick_end < col_num - margin:
+                tick_end = tick_end + margin
             tick_img = axis_img_gray.crop((tick_start, 0, tick_end, row_num - 1))
         if title_range:
             title_start = title_range["start"]
             title_end = title_range["end"]
-            if title_start > 1:
-                title_start = title_start - 1
-            if title_end < col_num - 1:
-                title_end = title_end + 1
+            if title_start > 2:
+                title_start = title_start - 2
+            if title_end < col_num - 2:
+                title_end = title_end + 2
             title_img = axis_img_gray.crop((title_start, 0, title_end, row_num - 1))
     if TESTING['sign']:
         if line_img:

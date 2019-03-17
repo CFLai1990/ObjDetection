@@ -230,7 +230,7 @@ def divide_by_threshold(array, threshold, min_count=1):
         # Assume the line to be the smallest range
         for range_id, range_value in enumerate(range_values):
             if range_value["length"] < min_range_len:
-                min_range_len = len(range_value)
+                min_range_len = range_value["length"]
                 min_range_id = range_id
         if min_range_id >= 0:
             line_range = range_values.pop(min_range_id)

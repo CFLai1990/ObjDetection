@@ -384,9 +384,10 @@ def get_axes_texts(img, axis_entities):
                                 title_img_pil.save(TESTING['dir'] + '/axis_' + str(axis_id) + \
                                     '_test_title.png')
                             title_texts = pt.image_to_string(title_img_pil, config='--psm 6')
-                        formated_axis = get_format_axis(tick_texts, title_texts, \
-                            axis_bbox, axis_direction)
-                        data.append(formated_axis)
+                        if tick_texts is not None:
+                            formated_axis = get_format_axis(tick_texts, title_texts, \
+                                axis_bbox, axis_direction)
+                            data.append(formated_axis)
     except Exception as e:
         print(repr(e))
         traceback.print_exc()

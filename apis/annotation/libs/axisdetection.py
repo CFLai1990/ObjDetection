@@ -274,8 +274,11 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
         col_ent[j] = entropy(img_col)
     print('4')
     if TESTING['sign']:
+        np.savetxt(TESTING['dir'] + '/axis_' + str(axis_id) + '_test.txt', axis_array_simp)
         test_img = Image.fromarray(axis_array_simp)
+        print('5')
         test_img.save(TESTING['dir'] + '/axis_' + str(axis_id) + '.png')
+        print('6')
         np.savetxt(TESTING['dir'] + '/axis_' + str(axis_id) + '_row.txt', row_ent)
         np.savetxt(TESTING['dir'] + '/axis_' + str(axis_id) + '_col.txt', col_ent)
     # Divide the image

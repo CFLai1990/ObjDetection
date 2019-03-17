@@ -187,7 +187,8 @@ def partition_axis(axis_img_gray, axis_id):
     print("column average: ", col_ent)
     np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_row.txt', row_ent)
     np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_col.txt', col_ent)
-    axis_img_gray.save('/home/chufan.lai/axis_' + str(axis_id) + '.png')
+    test_img = Image.fromarray(axis_array)
+    test_img.save('/home/chufan.lai/axis_' + str(axis_id) + '.png')
     return line_img, tick_text_img, title_img
 
 def contrast_enhance(axis_img_PIL):

@@ -357,6 +357,7 @@ def get_axes_texts(img_path, axis_entities):
     if img_path:
         img = cv2.imread(img_path)
         # image = Image.open(img_path)
+    print(img)
     if img:
         axis_id = 0
         for axis_entity in axis_entities:

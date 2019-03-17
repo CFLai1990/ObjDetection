@@ -311,24 +311,29 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
         print(line_range, tick_range, title_range)
         if line_range:
             line_img = axis_img_gray.crop((line_range["start"], 0, line_range["end"], row_num - 1))
+        print("line_img ready")
         if tick_range:
             tick_start = tick_range["start"]
             tick_end = tick_range["end"]
+            print("dir_90: ", tick_start, ", ", tick_end)
             if tick_start > margin:
                 tick_start = tick_start - margin
             if tick_end < col_num - margin:
                 tick_end = tick_end + margin
             print("dir_90: ", tick_start, ", ", tick_end)
             tick_img = axis_img_gray.crop((tick_start, 0, tick_end, row_num - 1))
+        print("tick_img ready")
         if title_range:
             title_start = title_range["start"]
             title_end = title_range["end"]
+            print("dir_90: ", title_start, ", ", title_end)
             if title_start > margin:
                 title_start = title_start - margin
             if title_end < col_num - margin:
                 title_end = title_end + margin
             print("dir_90: ", title_start, ", ", title_end)
             title_img = axis_img_gray.crop((title_start, 0, title_end, row_num - 1))
+        print("title_img ready")
     if TESTING['sign']:
         if line_img:
             line_img.save(TESTING['dir'] + '/axis_' + str(axis_id) + '_line.png')

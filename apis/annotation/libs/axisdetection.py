@@ -255,17 +255,13 @@ def partition_axis(axis_img, axis_id, axis_direction):
     tick_array = None
     title_array = None
     # Initialize
-    print("Step 1")
     axis_array = cv2.cvtColor(axis_img, cv2.COLOR_BGR2GRAY).astype(np.uint8)
     row_num = axis_array.shape[0]
     col_num = axis_array.shape[1]
     # Simplify the gray scales
-    print(row_num, col_num)
-    print("Step 2")
     axis_array_simp = (axis_array / GRAY_SCALE_LEVEL).astype(np.uint8)
     axis_array_simp = axis_array_simp * GRAY_SCALE_LEVEL
     # Calculate the entropy of the simplified image
-    print("Step 3")
     row_ent = np.zeros(row_num)
     col_ent = np.zeros(col_num)
     for i in range(row_num):
@@ -274,16 +270,12 @@ def partition_axis(axis_img, axis_id, axis_direction):
     for j in range(col_num):
         img_col = axis_array_simp[:, j].tolist()
         col_ent[j] = entropy(img_col)
-    print("Step 4")
     if TESTING['sign']:
         cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '.png', \
             axis_array_simp, \
             [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
         np.savetxt(TESTING['dir'] + '/axis_' + str(axis_id) + '_row.txt', row_ent)
         np.savetxt(TESTING['dir'] + '/axis_' + str(axis_id) + '_col.txt', col_ent)
-    print("Step 5")
-    print("axis_array.shape: ", axis_array.shape)
-    print("axis_array_simp.shape: ", axis_array_simp.shape)
     # Step 1: transform the image into a gray one
     axis_array = cv2.cvtColor(axis_array, cv2.COLOR_GRAY2BGR)
     if axis_direction == 0:
@@ -291,7 +283,6 @@ def partition_axis(axis_img, axis_id, axis_direction):
         line_range, tick_range, title_range = divide_by_threshold(row_ent, 0, 3)
         # Step 3: crop the axis image
         if line_range:
-            print("line: ", line_range["start"], line_range["end"], 0, col_num)
             line_array = axis_array[line_range["start"]:line_range["end"], 0:col_num]
         if tick_range:
             tick_start = tick_range["start"]
@@ -300,7 +291,6 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 tick_start = tick_start - MARGIN
             if tick_end <= row_num - MARGIN:
                 tick_end = tick_end + MARGIN
-            print("tick: ", tick_start, tick_end, 0, col_num)
             tick_array = axis_array[tick_start:tick_end, 0:col_num]
         if title_range:
             title_start = title_range["start"]
@@ -309,14 +299,12 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 title_start = title_start - MARGIN
             if title_end <= row_num - MARGIN:
                 title_end = title_end + MARGIN
-            print("title: ", title_start, title_end, 0, col_num)
             title_array = axis_array[title_start:title_end, 0:col_num]
     elif axis_direction == 90:
         # Step 2: divide the axis image
         line_range, tick_range, title_range = divide_by_threshold(col_ent, 0, 3)
         # Step 3: crop the axis image
         if line_range:
-            print("line: ", 0, row_num, line_range["start"], line_range["end"])
             line_array = axis_array[0:row_num, line_range["start"]:line_range["end"]]
         if tick_range:
             tick_start = tick_range["start"]
@@ -325,7 +313,6 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 tick_start = tick_start - MARGIN
             if tick_end <= col_num - MARGIN:
                 tick_end = tick_end + MARGIN
-            print("tick: ", 0, row_num, tick_start, tick_end)
             tick_array = axis_array[0:row_num, tick_start:tick_end]
         if title_range:
             title_start = title_range["start"]
@@ -334,12 +321,9 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 title_start = title_start - MARGIN
             if title_end <= col_num - MARGIN:
                 title_end = title_end + MARGIN
-            print("title: ", 0, row_num, title_start, title_end)
             title_array = axis_array[0:row_num, title_start:title_end]
-    print("line_array.shape: ", line_array.shape)
-    print("tick_array.shape: ", tick_array.shape)
-    print("title_array.shape: ", title_array.shape)
-    print("Step 6")
+            # Assume the title should be rotated clockwise for 90 degrees
+            title_array = np.rot90(title_array, 3)
     if TESTING['sign']:
         if line_array is not None:
             cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_line.png', \
@@ -390,7 +374,6 @@ def get_axes_texts(img, axis_entities):
                         # Step 3: partition the image
                         line_img, tick_img, title_img = partition_axis(axis_img_enhanced, \
                             axis_id, axis_direction)
-                        print("finished")
                         tick_info = {}
                         title_info = {}
                         if tick_img is not None and isinstance(tick_img, np.ndarray):

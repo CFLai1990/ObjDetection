@@ -1,4 +1,5 @@
 """Auxiliary Detection"""
+import cv2
 import logging
 from .axisdetection import get_axes_texts
 
@@ -13,11 +14,13 @@ class AuxDetection:
     def infer_parameters(self, img_path, data_entities):
         """Get the auxiliary data in the vis image"""
         self.aux = []
-        self.get_legends(img_path, data_entities)
-        self.get_axes(img_path, data_entities)
+        img = cv2.imread(img_path)
+        if img is not None:
+            self.get_legends(img, data_entities)
+            self.get_axes(img, data_entities)
         return self.aux
 
-    def get_legends(self, img_path, data_entities):
+    def get_legends(self, img, data_entities):
         """Get the color legends in the vis image"""
         self.legends = []
         if self.legends:
@@ -54,7 +57,7 @@ class AuxDetection:
             "direction": direction
         }
 
-    def get_axes(self, img_path, data_entities):
+    def get_axes(self, img, data_entities):
         """Get the axis in the vis image"""
         # Get the data entities with classname "axis"
         axes_entities = []
@@ -69,7 +72,7 @@ class AuxDetection:
                 axis_entity = data_entities.pop(axis_id)
                 axis_entity = self.get_axis_info(axis_entity)
                 axes_entities.append(axis_entity)
-        self.axes = get_axes_texts(img_path, axes_entities)
+        self.axes = get_axes_texts(img, axes_entities)
         if self.axes:
             for axis in self.axes:
                 self.aux.append(axis)

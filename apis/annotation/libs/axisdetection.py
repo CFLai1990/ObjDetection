@@ -346,60 +346,53 @@ def contrast_enhance(axis_img):
     enhanced_img = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
     return enhanced_img
 
-def get_axes_texts(img_path, axis_entities):
+def get_axes_texts(img, axis_entities):
     """The function for getting the texts in the axis"""
     data = []
-    image = None
     # No axes in the image
-    if not axis_entities:
+    if not (img and axis_entities):
         return data
-    # Parse the texts of the axes
-    if img_path:
-        img = cv2.imread(img_path)
-        # image = Image.open(img_path)
-    print(img)
-    if img:
-        print('1')
-        axis_id = 0
-        for axis_entity in axis_entities:
-            print('2')
-            axis_bbox = axis_entity.get("bbox")
-            axis_direction = axis_entity.get("direction")
-            if axis_bbox:
-                print('3')
-                axis_x = axis_bbox.get("x")
-                axis_y = axis_bbox.get("y")
-                axis_width = axis_bbox.get("width")
-                axis_height = axis_bbox.get("height")
-                print('4')
-                if axis_x and axis_y and axis_width and axis_height:
-                    if axis_x >= 0 and axis_y >= 0 and axis_width > 0 and axis_height > 0:
-                        # Step 1: crop the axis image
-                        print("Step 1")
-                        axis_img = img[axis_y:(axis_y + axis_height), axis_x:(axis_x + axis_width)]
-                        # Step 2: enhance the contrast
-                        print("Step 2")
-                        axis_img_enhanced = contrast_enhance(axis_img)
-                        # Step 3: partition the image
-                        print("Step 3")
-                        line_img, tick_img, title_img = partition_axis(axis_img_enhanced, axis_id, axis_direction)
-                        tick_info = {}
-                        title_info = {}
-                        if tick_img:
-                            tick_img_pil = CV2PIL(tick_img)
-                            tick_texts = pt.image_to_data(tick_img_pil)
-                            print("tick_texts (before): ", tick_texts)
-                            tick_texts = understand_data(tick_texts)
-                            print("tick_texts (after): ", tick_texts)
-                        if title_img:
-                            title_img_pil = CV2PIL(title_img)
-                            title_texts = pt.image_to_data(title_img_pil)
-                            print("title_texts (before): ", title_texts)
-                            title_texts = understand_data(title_texts)
-                            print("tick_texts (after): ", tick_texts)
-                        # axis_texts = pt.image_to_data(axis_img, lang=TS_LANG)
-                        # axis_texts = understand_data(axis_texts)
-                        # formated_axis = get_format_axis(axis_texts, axis_bbox, axis_direction)
-                        # data.append(formated_axis)
-                        axis_id = axis_id + 1
+    print('1')
+    axis_id = 0
+    for axis_entity in axis_entities:
+        print('2')
+        axis_bbox = axis_entity.get("bbox")
+        axis_direction = axis_entity.get("direction")
+        if axis_bbox:
+            print('3')
+            axis_x = axis_bbox.get("x")
+            axis_y = axis_bbox.get("y")
+            axis_width = axis_bbox.get("width")
+            axis_height = axis_bbox.get("height")
+            print('4')
+            if axis_x and axis_y and axis_width and axis_height:
+                if axis_x >= 0 and axis_y >= 0 and axis_width > 0 and axis_height > 0:
+                    # Step 1: crop the axis image
+                    print("Step 1")
+                    axis_img = img[axis_y:(axis_y + axis_height), axis_x:(axis_x + axis_width)]
+                    # Step 2: enhance the contrast
+                    print("Step 2")
+                    axis_img_enhanced = contrast_enhance(axis_img)
+                    # Step 3: partition the image
+                    print("Step 3")
+                    line_img, tick_img, title_img = partition_axis(axis_img_enhanced, axis_id, axis_direction)
+                    tick_info = {}
+                    title_info = {}
+                    if tick_img:
+                        tick_img_pil = CV2PIL(tick_img)
+                        tick_texts = pt.image_to_data(tick_img_pil)
+                        print("tick_texts (before): ", tick_texts)
+                        tick_texts = understand_data(tick_texts)
+                        print("tick_texts (after): ", tick_texts)
+                    if title_img:
+                        title_img_pil = CV2PIL(title_img)
+                        title_texts = pt.image_to_data(title_img_pil)
+                        print("title_texts (before): ", title_texts)
+                        title_texts = understand_data(title_texts)
+                        print("tick_texts (after): ", tick_texts)
+                    # axis_texts = pt.image_to_data(axis_img, lang=TS_LANG)
+                    # axis_texts = understand_data(axis_texts)
+                    # formated_axis = get_format_axis(axis_texts, axis_bbox, axis_direction)
+                    # data.append(formated_axis)
+                    axis_id = axis_id + 1
     return data

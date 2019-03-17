@@ -283,50 +283,60 @@ def partition_axis(axis_img, axis_id, axis_direction):
     print("Step 5")
     # Step 1: transform the image into a gray one
     axis_array = cv2.cvtColor(axis_array, cv2.COLOR_GRAY2BGR)
+    print("axis_array: ", axis_array)
     if axis_direction == 0:
         # Step 2: divide the axis image
         line_range, tick_range, title_range = divide_by_threshold(row_ent, 0, 3)
         # Step 3: crop the axis image
         if line_range:
-            line_array = axis_array[line_range["start"]:line_range["end"], 0:(col_num-1)]
+            print("line: ", line_range["start"], line_range["end"], 0, col_num)
+            line_array = axis_array[line_range["start"]:line_range["end"], 0:col_num]
         if tick_range:
             tick_start = tick_range["start"]
             tick_end = tick_range["end"]
-            if tick_start > MARGIN:
+            if tick_start >= MARGIN:
                 tick_start = tick_start - MARGIN
-            if tick_end < row_num - MARGIN:
+            if tick_end <= row_num - MARGIN:
                 tick_end = tick_end + MARGIN
-            tick_array = axis_array[tick_start:tick_end, 0:(col_num-1)]
+            print("tick: ", tick_start, tick_end, 0, col_num)
+            tick_array = axis_array[tick_start:tick_end, 0:col_num]
         if title_range:
             title_start = title_range["start"]
             title_end = title_range["end"]
-            if title_start > MARGIN:
+            if title_start >= MARGIN:
                 title_start = title_start - MARGIN
-            if title_end < row_num - MARGIN:
+            if title_end <= row_num - MARGIN:
                 title_end = title_end + MARGIN
-            title_array = axis_array[title_start:title_end, 0:(col_num-1)]
+            print("title: ", title_start, title_end, 0, col_num)
+            title_array = axis_array[title_start:title_end, 0:col_num]
     elif axis_direction == 90:
         # Step 2: divide the axis image
         line_range, tick_range, title_range = divide_by_threshold(col_ent, 0, 3)
         # Step 3: crop the axis image
         if line_range:
-            line_array = axis_array[0:(row_num-1), line_range["start"]:line_range["end"]]
+            print("line: ", 0, row_num, line_range["start"], line_range["end"])
+            line_array = axis_array[0:row_num, line_range["start"]:line_range["end"]]
         if tick_range:
             tick_start = tick_range["start"]
             tick_end = tick_range["end"]
-            if tick_start > MARGIN:
+            if tick_start >= MARGIN:
                 tick_start = tick_start - MARGIN
-            if tick_end < col_num - MARGIN:
+            if tick_end <= col_num - MARGIN:
                 tick_end = tick_end + MARGIN
-            tick_array = axis_array[0:(row_num-1), tick_start:tick_end]
+            print("tick: ", 0, row_num, tick_start, tick_end)
+            tick_array = axis_array[0:row_num, tick_start:tick_end]
         if title_range:
             title_start = title_range["start"]
             title_end = title_range["end"]
-            if title_start > MARGIN:
+            if title_start >= MARGIN:
                 title_start = title_start - MARGIN
-            if title_end < col_num - MARGIN:
+            if title_end <= col_num - MARGIN:
                 title_end = title_end + MARGIN
-            title_array = axis_array[0:(row_num-1), title_start:title_end]
+            print("title: ", 0, row_num, title_start, title_end)
+            title_array = axis_array[0:row_num, title_start:title_end]
+    print("line_array: ", line_array.shape)
+    print("tick_array: ", tick_array.shape)
+    print("title_array: ", title_array.shape)
     print("Step 6")
     if TESTING['sign']:
         if line_array:
@@ -376,6 +386,7 @@ def get_axes_texts(img, axis_entities):
                     axis_img_enhanced = contrast_enhance(axis_img)
                     # Step 3: partition the image
                     line_img, tick_img, title_img = partition_axis(axis_img_enhanced, axis_id, axis_direction)
+                    print("finished")
                     tick_info = {}
                     title_info = {}
                     if tick_img:

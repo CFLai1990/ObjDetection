@@ -314,10 +314,15 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
             tick_start = tick_range["start"]
             tick_end = tick_range["end"]
             print("dir_90: ", tick_start, ", ", tick_end)
+            print(type(tick_start), type(tick_end), type(margin))
             if tick_start > margin:
+                print('-1')
                 tick_start = tick_start - margin
+                print('-2')
             if tick_end < col_num - margin:
+                print('-3')
                 tick_end = tick_end + margin
+                print('-4')
             print("dir_90: ", tick_start, ", ", tick_end)
             tick_img = axis_img_gray.crop((tick_start, 0, tick_end, row_num - 1))
         print("tick_img ready")

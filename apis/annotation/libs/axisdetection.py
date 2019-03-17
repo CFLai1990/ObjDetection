@@ -342,13 +342,13 @@ def get_axes_texts(img_path, axis_entities):
                         tick_info = {}
                         title_info = {}
                         if tick_img:
-                            tick_texts = pt.image_to_data(tick_img, lang=TS_LANG)
-                            tick_texts = understand_data(tick_texts)
+                            tick_texts = pt.image_to_data(tick_img)
                             print("tick_texts: ", tick_texts)
+                            tick_texts = understand_data(tick_texts)
                         if title_img:
-                            title_texts = pt.image_to_data(title_img, lang=TS_LANG)
-                            title_texts = understand_data(title_texts)
+                            title_texts = pt.image_to_data(title_img)
                             print("title_texts: ", title_texts)
+                            title_texts = understand_data(title_texts)
                         # print("partition finished")
                         # axis_texts = pt.image_to_data(axis_img_gray, lang=TS_LANG)
                         # print("ocr finished")

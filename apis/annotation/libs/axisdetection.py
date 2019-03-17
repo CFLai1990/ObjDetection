@@ -326,9 +326,13 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
             title_end = title_range["end"]
             print("dir_90: ", title_start, ", ", title_end)
             if title_start > margin:
+                print('-1')
                 title_start = title_start - margin
+                print('-2')
             if title_end < col_num - margin:
+                print('-3')
                 title_end = title_end + margin
+                print('-4')
             print("dir_90: ", title_start, ", ", title_end)
             title_img = axis_img_gray.crop((title_start, 0, title_end, row_num - 1))
         print("title_img ready")

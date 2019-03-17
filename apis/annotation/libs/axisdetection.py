@@ -367,6 +367,7 @@ def get_axes_texts(img_path, axis_entities):
                         # Step 2: enhance the contrast
                         axis_img_gray = contrast_enhance(axis_img).convert("L")
                         # Step 3: partition the image
+                        print("started")
                         line_img, tick_img, title_img = partition_axis(axis_img_gray, axis_id, axis_direction)
                         tick_info = {}
                         title_info = {}
@@ -378,6 +379,7 @@ def get_axes_texts(img_path, axis_entities):
                             title_texts = pt.image_to_data(title_img)
                             print("title_texts: ", title_texts)
                             title_texts = understand_data(title_texts)
+                        print("ended")
                         # print("partition finished")
                         # axis_texts = pt.image_to_data(axis_img_gray, lang=TS_LANG)
                         # print("ocr finished")

@@ -190,7 +190,7 @@ def divide_by_threshold(array, threshold, min_count=1):
     temp_range = {}
     for _id, _value in enumerate(array):
         is_empty = False
-        for empty_range in empty_ranges:
+        for empty_range in empty_ranges.values():
             if empty_range["start"] <= _id <= empty_range["end"]:
                 is_empty = True
                 break
@@ -204,7 +204,6 @@ def divide_by_threshold(array, threshold, min_count=1):
                 temp_range["length"] = 1
         else:
             temp_range = {}
-        print(_id, temp_range)
         if temp_range and temp_range["length"] > 1:
             range_head = temp_range["start"]
             if solid_ranges.get(range_head) is None:

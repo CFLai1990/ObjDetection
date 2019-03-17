@@ -7,7 +7,7 @@ from pytesseract import pytesseract as pt
 from sklearn.cluster import KMeans
 from .__settings__ import TS_LANG
 
-GRAY_SCALE_LEVEL = 64
+GRAY_SCALE_LEVEL = 128
 
 def PIL2CV(img_PIL):
     """Convert a PIL image to a CV2 image"""

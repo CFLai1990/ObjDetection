@@ -271,6 +271,10 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
     for j in range(col_num):
         img_col = axis_array[:, j].tolist()
         col_ent[j] = entropy(img_col)
+    test_img = Image.fromarray(axis_array)
+    test_img.save('/home/chufan.lai/axis_' + str(axis_id) + '.png')
+    np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_row.txt', row_ent)
+    np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_col.txt', col_ent)
     # Divide the image
     if axis_direction == 0:
         line_range, tick_range, title_range = divide_by_threshold(row_ent, 0, 3)
@@ -282,10 +286,6 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
         line_img = axis_img_gray.crop((line_range["start"], 0, line_range["end"], row_num - 1))
         tick_img = axis_img_gray.crop((tick_range["start"], 0, tick_range["end"], row_num - 1))
         title_img = axis_img_gray.crop((title_range["start"], 0, title_range["end"], row_num - 1))
-    np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_row.txt', row_ent)
-    np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_col.txt', col_ent)
-    test_img = Image.fromarray(axis_array)
-    test_img.save('/home/chufan.lai/axis_' + str(axis_id) + '.png')
     if line_img:
         line_img.save('/home/chufan.lai/axis_' + str(axis_id) + '_line.png')
     if tick_img:

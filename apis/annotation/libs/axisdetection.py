@@ -254,13 +254,16 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
     tick_img = None
     title_img = None
     # Initialize
+    print('1')
     axis_array = np.array(axis_img_gray, dtype=np.uint8)
     row_num = axis_array.shape[0]
     col_num = axis_array.shape[1]
     # Simplify the gray scales
+    print('2')
     axis_array_simp = (axis_array / GRAY_SCALE_LEVEL).astype(np.uint8)
     axis_array_simp = axis_array_simp * GRAY_SCALE_LEVEL
     # Calculate the entropy of the simplified image
+    print('3')
     row_ent = np.zeros(row_num)
     col_ent = np.zeros(col_num)
     for i in range(row_num):
@@ -269,6 +272,7 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
     for j in range(col_num):
         img_col = axis_array_simp[:, j].tolist()
         col_ent[j] = entropy(img_col)
+    print('4')
     if TESTING['sign']:
         test_img = Image.fromarray(axis_array_simp)
         test_img.save(TESTING['dir'] + '/axis_' + str(axis_id) + '.png')

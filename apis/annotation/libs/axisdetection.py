@@ -325,6 +325,7 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
             title_start = title_range["start"]
             title_end = title_range["end"]
             print("dir_90: ", title_start, ", ", title_end)
+            print(type(title_start), type(title_end), type(margin))
             if title_start > margin:
                 print('-1')
                 title_start = title_start - margin

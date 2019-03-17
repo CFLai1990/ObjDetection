@@ -214,6 +214,8 @@ def divide_by_threshold(array, threshold, min_count=1):
     line_range = None
     tick_range = None
     title_range = None
+    if not (empty_ranges and solid_ranges):
+        return line_range, tick_range, title_range
     range_values = list(solid_ranges.values())
     range_count = len(range_values)
     # Case 1: only the ticks
@@ -266,12 +268,12 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
     row_ent = np.zeros(row_num)
     col_ent = np.zeros(col_num)
     for i in range(row_num):
-        img_row = axis_array[i].tolist()
+        img_row = axis_array_simp[i].tolist()
         row_ent[i] = entropy(img_row)
     for j in range(col_num):
-        img_col = axis_array[:, j].tolist()
+        img_col = axis_array_simp[:, j].tolist()
         col_ent[j] = entropy(img_col)
-    test_img = Image.fromarray(axis_array)
+    test_img = Image.fromarray(axis_array_simp)
     test_img.save('/home/chufan.lai/axis_' + str(axis_id) + '.png')
     np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_row.txt', row_ent)
     np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_col.txt', col_ent)

@@ -392,13 +392,13 @@ def get_axes_texts(img, axis_entities):
                         print("finished")
                         tick_info = {}
                         title_info = {}
-                        if tick_img:
+                        if tick_img is not None and isinstance(tick_img, np.ndarray):
                             tick_img_pil = CV2PIL(tick_img)
                             tick_texts = pt.image_to_data(tick_img_pil)
                             print("tick_texts (before): ", tick_texts)
                             tick_texts = understand_data(tick_texts)
                             print("tick_texts (after): ", tick_texts)
-                        if title_img:
+                        if title_img is not None and isinstance(tick_img, np.ndarray):
                             title_img_pil = CV2PIL(title_img)
                             title_texts = pt.image_to_data(title_img_pil)
                             print("title_texts (before): ", title_texts)

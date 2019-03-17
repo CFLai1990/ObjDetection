@@ -287,6 +287,7 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
                 tick_start = tick_start - margin
             if tick_end < row_num - margin:
                 tick_end = tick_end + margin
+            print("dir_0: ", tick_start, ", ", tick_end)
             tick_img = axis_img_gray.crop((0, tick_start, col_num - 1, tick_end))
         if title_range:
             title_start = title_range["start"]
@@ -295,6 +296,7 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
                 title_start = title_start - margin
             if title_end < row_num - margin:
                 title_end = title_end + margin
+            print("dir_0: ", title_start, ", ", title_end)
             title_img = axis_img_gray.crop((0, title_start, col_num - 1, title_end))
     elif axis_direction == 90:
         line_range, tick_range, title_range = divide_by_threshold(col_ent, 0, 3)
@@ -307,14 +309,16 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
                 tick_start = tick_start - margin
             if tick_end < col_num - margin:
                 tick_end = tick_end + margin
+            print("dir_90: ", tick_start, ", ", tick_end)
             tick_img = axis_img_gray.crop((tick_start, 0, tick_end, row_num - 1))
         if title_range:
             title_start = title_range["start"]
             title_end = title_range["end"]
-            if title_start > 2:
-                title_start = title_start - 2
-            if title_end < col_num - 2:
-                title_end = title_end + 2
+            if title_start > margin:
+                title_start = title_start - margin
+            if title_end < col_num - margin:
+                title_end = title_end + margin
+            print("dir_90: ", title_start, ", ", title_end)
             title_img = axis_img_gray.crop((title_start, 0, title_end, row_num - 1))
     if TESTING['sign']:
         if line_img:

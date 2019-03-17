@@ -38,7 +38,6 @@ def understand_data(data):
     """Parse the pytesseract data"""
     lines = data.split("\n")
     items = []
-    # print(lines)
     head = lines[0].split("\t")
     for k, line in enumerate(lines):
         if k == 0:
@@ -164,7 +163,6 @@ def get_format_axis(items, axis_bbox, axis_direction):
 
 def divide_by_threshold(array, threshold, min_count=1):
     """Find ranges with the value larger than the given threshold"""
-    print(array)
     # Step 1: divide the array by the given threshold
     empty_ranges = {}
     temp_range = {}
@@ -381,26 +379,22 @@ def get_axes_texts(img_path, axis_entities):
                         # Step 2: enhance the contrast
                         axis_img_gray = contrast_enhance(axis_img).convert("L")
                         # Step 3: partition the image
-                        print("started")
                         line_img, tick_img, title_img = partition_axis(axis_img_gray, axis_id, axis_direction)
                         tick_info = {}
                         title_info = {}
                         if tick_img:
                             tick_texts = pt.image_to_data(tick_img)
-                            print("tick_texts: ", tick_texts)
+                            print("tick_texts (before): ", tick_texts)
                             tick_texts = understand_data(tick_texts)
+                            print("tick_texts (after): ", tick_texts)
                         if title_img:
                             title_texts = pt.image_to_data(title_img)
-                            print("title_texts: ", title_texts)
+                            print("title_texts (before): ", title_texts)
                             title_texts = understand_data(title_texts)
-                        print("ended")
-                        # print("partition finished")
+                            print("tick_texts (after): ", tick_texts)
                         # axis_texts = pt.image_to_data(axis_img_gray, lang=TS_LANG)
-                        # print("ocr finished")
                         # axis_texts = understand_data(axis_texts)
-                        # print("ocr parsing finished")
                         # formated_axis = get_format_axis(axis_texts, axis_bbox, axis_direction)
-                        # print("result packing finished")
                         # data.append(formated_axis)
                         axis_id = axis_id + 1
     return data

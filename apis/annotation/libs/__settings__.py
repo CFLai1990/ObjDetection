@@ -26,6 +26,12 @@ DT = {
 # Tessearct settings
 TS_LANG = 'eng'
 
+# Testing settings
+TESTING = {
+    'sign': True,
+    'dir': '/home/chufan.lai/testing'
+}
+
 COLOR_MUNSELL = os.path.abspath('./apis/annotation/data/color_name.csv')
 COLOR_HSV = os.path.abspath('./apis/annotation/data/color_threshold.csv')
 COLOR_CODE = [

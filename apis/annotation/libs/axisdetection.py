@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 from pytesseract import pytesseract as pt
 from sklearn.cluster import KMeans
-from .__settings__ import TS_LANG
+from .__settings__ import TS_LANG, TESTING
 
 GRAY_SCALE_LEVEL = 128
 
@@ -167,7 +167,6 @@ def divide_by_threshold(array, threshold, min_count=1):
     # Step 1: divide the array by the given threshold
     empty_ranges = {}
     temp_range = {}
-    print("Step 1 started")
     # Step 1-1: find the empty ranges
     for _id, _value in enumerate(array):
         if _value <= threshold:
@@ -184,7 +183,6 @@ def divide_by_threshold(array, threshold, min_count=1):
             range_head = temp_range["start"]
             if empty_ranges.get(range_head) is None:
                 empty_ranges[range_head] = temp_range
-    print("empty ranges: ", empty_ranges)
     # Step 1-2: find the non-empty ranges
     solid_ranges = {}
     temp_range = {}
@@ -208,10 +206,7 @@ def divide_by_threshold(array, threshold, min_count=1):
             range_head = temp_range["start"]
             if solid_ranges.get(range_head) is None:
                 solid_ranges[range_head] = temp_range
-    print("solid ranges: ", solid_ranges)
-    print("Step 1 finished")
     # Step 2: Decide which range belongs to which category
-    print("Step 2 started")
     line_range = None
     tick_range = None
     title_range = None
@@ -219,7 +214,6 @@ def divide_by_threshold(array, threshold, min_count=1):
         return line_range, tick_range, title_range
     range_values = list(solid_ranges.values())
     range_count = len(range_values)
-    print("Case started")
     # Case 1: only the ticks
     if range_count == 1:
         tick_range = range_values[0]
@@ -234,7 +228,6 @@ def divide_by_threshold(array, threshold, min_count=1):
                 min_range_id = range_id
         if min_range_id >= 0:
             line_range = range_values.pop(min_range_id)
-        print("line range: ", line_range)
         # Find the range closest to the line
         if line_range:
             min_dist = float('Inf')
@@ -250,11 +243,9 @@ def divide_by_threshold(array, threshold, min_count=1):
                     min_dist_id = range_id
             if min_dist_id >= 0:
                 tick_range = range_values.pop(min_dist_id)
-            print("tick range: ", tick_range)
             # If there are still ranges left, it must be the title
             if range_values:
                 title_range = range_values[0]
-            print("title range: ", title_range)
     return line_range, tick_range, title_range
 
 def partition_axis(axis_img_gray, axis_id, axis_direction):
@@ -278,10 +269,11 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
     for j in range(col_num):
         img_col = axis_array_simp[:, j].tolist()
         col_ent[j] = entropy(img_col)
-    test_img = Image.fromarray(axis_array_simp)
-    test_img.save('/home/chufan.lai/axis_' + str(axis_id) + '.png')
-    np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_row.txt', row_ent)
-    np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_col.txt', col_ent)
+    if TESTING['sign']:
+        test_img = Image.fromarray(axis_array_simp)
+        test_img.save(TESTING['dir'] + '/axis_' + str(axis_id) + '.png')
+        np.savetxt(TESTING['dir'] + '/axis_' + str(axis_id) + '_row.txt', row_ent)
+        np.savetxt(TESTING['dir'] + '/axis_' + str(axis_id) + '_col.txt', col_ent)
     # Divide the image
     if axis_direction == 0:
         line_range, tick_range, title_range = divide_by_threshold(row_ent, 0, 3)
@@ -299,12 +291,13 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
             tick_img = axis_img_gray.crop((tick_range["start"], 0, tick_range["end"], row_num - 1))
         if title_range:
             title_img = axis_img_gray.crop((title_range["start"], 0, title_range["end"], row_num - 1))
-    if line_img:
-        line_img.save('/home/chufan.lai/axis_' + str(axis_id) + '_line.png')
-    if tick_img:
-        tick_img.save('/home/chufan.lai/axis_' + str(axis_id) + '_tick.png')
-    if title_img:
-        title_img.save('/home/chufan.lai/axis_' + str(axis_id) + '_title.png')
+    if TESTING['sign']:
+        if line_img:
+            line_img.save(TESTING['dir'] + '/axis_' + str(axis_id) + '_line.png')
+        if tick_img:
+            tick_img.save(TESTING['dir'] + '/axis_' + str(axis_id) + '_tick.png')
+        if title_img:
+            title_img.save(TESTING['dir'] + '/axis_' + str(axis_id) + '_title.png')
     return line_img, tick_img, title_img
 
 def contrast_enhance(axis_img_PIL):
@@ -346,13 +339,23 @@ def get_axes_texts(img_path, axis_entities):
                         axis_img_gray = contrast_enhance(axis_img).convert("L")
                         # Step 3: partition the image
                         line_img, tick_img, title_img = partition_axis(axis_img_gray, axis_id, axis_direction)
-                        print("partition finished")
-                        axis_texts = pt.image_to_data(axis_img_gray, lang=TS_LANG)
-                        print("ocr finished")
-                        axis_texts = understand_data(axis_texts)
-                        print("ocr parsing finished")
-                        formated_axis = get_format_axis(axis_texts, axis_bbox, axis_direction)
-                        print("result packing finished")
-                        data.append(formated_axis)
+                        tick_info = {}
+                        title_info = {}
+                        if tick_img:
+                            tick_texts = pt.image_to_data(tick_img, lang=TS_LANG)
+                            tick_texts = understand_data(tick_texts)
+                            print("tick_texts: ", tick_texts)
+                        if title_img:
+                            title_texts = pt.image_to_data(title_img, lang=TS_LANG)
+                            title_texts = understand_data(title_texts)
+                            print("title_texts: ", title_texts)
+                        # print("partition finished")
+                        # axis_texts = pt.image_to_data(axis_img_gray, lang=TS_LANG)
+                        # print("ocr finished")
+                        # axis_texts = understand_data(axis_texts)
+                        # print("ocr parsing finished")
+                        # formated_axis = get_format_axis(axis_texts, axis_bbox, axis_direction)
+                        # print("result packing finished")
+                        # data.append(formated_axis)
                         axis_id = axis_id + 1
     return data

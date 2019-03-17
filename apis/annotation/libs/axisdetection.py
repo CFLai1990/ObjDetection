@@ -1,4 +1,5 @@
 """The module for detecting axes"""
+import traceback
 import math
 from PIL import Image
 import cv2
@@ -277,13 +278,14 @@ def partition_axis(axis_img, axis_id, axis_direction):
     if TESTING['sign']:
         cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '.png', \
             axis_array_simp, \
-            [int(cv2.IMWRITE_PNG_COMPRESSION),0])
+            [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
         np.savetxt(TESTING['dir'] + '/axis_' + str(axis_id) + '_row.txt', row_ent)
         np.savetxt(TESTING['dir'] + '/axis_' + str(axis_id) + '_col.txt', col_ent)
     print("Step 5")
+    print("axis_array.shape: ", axis_array.shape)
+    print("axis_array_simp.shape: ", axis_array_simp.shape)
     # Step 1: transform the image into a gray one
     axis_array = cv2.cvtColor(axis_array, cv2.COLOR_GRAY2BGR)
-    print("axis_array: ", axis_array)
     if axis_direction == 0:
         # Step 2: divide the axis image
         line_range, tick_range, title_range = divide_by_threshold(row_ent, 0, 3)
@@ -334,23 +336,26 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 title_end = title_end + MARGIN
             print("title: ", 0, row_num, title_start, title_end)
             title_array = axis_array[0:row_num, title_start:title_end]
-    print("line_array: ", line_array.shape)
-    print("tick_array: ", tick_array.shape)
-    print("title_array: ", title_array.shape)
+    print("line_array.shape: ", line_array.shape)
+    print("tick_array.shape: ", tick_array.shape)
+    print("title_array.shape: ", title_array.shape)
     print("Step 6")
     if TESTING['sign']:
-        if line_array:
-            cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_line.png', \
-                line_array, \
-                [int(cv2.IMWRITE_PNG_COMPRESSION),0])
-        if tick_array:
-            cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_tick.png', \
-                tick_array, \
-                [int(cv2.IMWRITE_PNG_COMPRESSION),0])
-        if title_array:
-            cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_title.png', \
-                title_array, \
-                [int(cv2.IMWRITE_PNG_COMPRESSION),0])
+        try:
+            if line_array:
+                cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_line.png', \
+                    line_array, \
+                    [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
+            if tick_array:
+                cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_tick.png', \
+                    tick_array, \
+                    [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
+            if title_array:
+                cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_title.png', \
+                    title_array, \
+                    [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
+        except Exception, e:
+            traceback.print_exc()
     return line_array, tick_array, title_array
 
 def contrast_enhance(axis_img):

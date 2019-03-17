@@ -7,6 +7,8 @@ from pytesseract import pytesseract as pt
 from sklearn.cluster import KMeans
 from .__settings__ import TS_LANG
 
+GRAY_SCALE_LEVEL = 16
+
 def PIL2CV(img_PIL):
     """Convert a PIL image to a CV2 image"""
     return cv2.cvtColor(np.asarray(img_PIL), cv2.COLOR_RGB2BGR)
@@ -168,6 +170,9 @@ def partition_axis(axis_img_gray, axis_id):
     axis_array = np.array(axis_img_gray, dtype=np.uint8)
     row_num = axis_array.shape[0]
     col_num = axis_array.shape[1]
+    # Simplify the gray scales
+    axis_array = (axis_array / GRAY_SCALE_LEVEL).astype(np.uint8)
+    axis_array = axis_array * GRAY_SCALE_LEVEL
     # row_avg = (np.sum(axis_array, axis=1) / axis_array.shape[1]).astype(np.uint8)
     # col_avg = (np.sum(axis_array, axis=0) / axis_array.shape[0]).astype(np.uint8)
     row_ent = np.zeros(row_num)

@@ -204,6 +204,7 @@ def divide_by_threshold(array, threshold, min_count=1):
                 temp_range["length"] = 1
         else:
             temp_range = {}
+        print(_id, temp_range)
         if temp_range and temp_range["length"] > 1:
             range_head = temp_range["start"]
             if solid_ranges.get(range_head) is None:

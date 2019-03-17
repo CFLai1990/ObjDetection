@@ -313,7 +313,11 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
         if tick_range:
             tick_start = tick_range["start"]
             tick_end = tick_range["end"]
+            print("-----------------------------")
             print("dir_90: ", tick_start, ", ", tick_end)
+            print("-----------------------------")
+            print("-----------------------------")
+            print("-----------------------------")
             print(type(tick_start), type(tick_end), type(margin))
             if tick_start > margin:
                 print('-1')

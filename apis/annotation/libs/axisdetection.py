@@ -285,14 +285,20 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
     # Divide the image
     if axis_direction == 0:
         line_range, tick_range, title_range = divide_by_threshold(row_ent, 0, 3)
-        line_img = axis_img_gray.crop((0, line_range["start"], col_num - 1, line_range["end"]))
-        tick_img = axis_img_gray.crop((0, tick_range["start"], col_num - 1, tick_range["end"]))
-        title_img = axis_img_gray.crop((0, title_range["start"], col_num - 1, title_range["end"]))
+        if line_range:
+            line_img = axis_img_gray.crop((0, line_range["start"], col_num - 1, line_range["end"]))
+        if tick_range:
+            tick_img = axis_img_gray.crop((0, tick_range["start"], col_num - 1, tick_range["end"]))
+        if title_range:
+            title_img = axis_img_gray.crop((0, title_range["start"], col_num - 1, title_range["end"]))
     elif axis_direction == 90:
         line_range, tick_range, title_range = divide_by_threshold(col_ent, 0, 3)
-        line_img = axis_img_gray.crop((line_range["start"], 0, line_range["end"], row_num - 1))
-        tick_img = axis_img_gray.crop((tick_range["start"], 0, tick_range["end"], row_num - 1))
-        title_img = axis_img_gray.crop((title_range["start"], 0, title_range["end"], row_num - 1))
+        if line_range:
+            line_img = axis_img_gray.crop((line_range["start"], 0, line_range["end"], row_num - 1))
+        if tick_range:
+            tick_img = axis_img_gray.crop((tick_range["start"], 0, tick_range["end"], row_num - 1))
+        if title_range:
+            title_img = axis_img_gray.crop((title_range["start"], 0, title_range["end"], row_num - 1))
     if line_img:
         line_img.save('/home/chufan.lai/axis_' + str(axis_id) + '_line.png')
     if tick_img:

@@ -183,8 +183,6 @@ def partition_axis(axis_img_gray, axis_id):
     for j in range(col_num):
         img_col = axis_array[:, j].tolist()
         col_ent[j] = entropy(img_col)
-    print("row average: ", row_ent)
-    print("column average: ", col_ent)
     np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_row.txt', row_ent)
     np.savetxt('/home/chufan.lai/axis_' + str(axis_id) + '_col.txt', col_ent)
     test_img = Image.fromarray(axis_array)

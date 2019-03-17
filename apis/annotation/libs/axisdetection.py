@@ -8,6 +8,7 @@ from sklearn.cluster import KMeans
 from .__settings__ import TS_LANG, TESTING
 
 GRAY_SCALE_LEVEL = 128
+MARGIN = 3
 
 def PIL2CV(img_PIL):
     """Convert a PIL image to a CV2 image"""
@@ -283,26 +284,24 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
     # Divide the image
     if axis_direction == 0:
         line_range, tick_range, title_range = divide_by_threshold(row_ent, 0, 3)
-        margin = 3
-        print(type(margin))
         if line_range:
             line_img = axis_img_gray.crop((0, line_range["start"], col_num - 1, line_range["end"]))
         if tick_range:
             tick_start = tick_range["start"]
             tick_end = tick_range["end"]
-            if tick_start > margin:
-                tick_start = tick_start - margin
-            if tick_end < row_num - margin:
-                tick_end = tick_end + margin
+            if tick_start > MARGIN:
+                tick_start = tick_start - MARGIN
+            if tick_end < row_num - MARGIN:
+                tick_end = tick_end + MARGIN
             print("dir_0: ", tick_start, ", ", tick_end)
             tick_img = axis_img_gray.crop((0, tick_start, col_num - 1, tick_end))
         if title_range:
             title_start = title_range["start"]
             title_end = title_range["end"]
-            if title_start > margin:
-                title_start = title_start - margin
-            if title_end < row_num - margin:
-                title_end = title_end + margin
+            if title_start > MARGIN:
+                title_start = title_start - MARGIN
+            if title_end < row_num - MARGIN:
+                title_end = title_end + MARGIN
             print("dir_0: ", title_start, ", ", title_end)
             title_img = axis_img_gray.crop((0, title_start, col_num - 1, title_end))
     elif axis_direction == 90:
@@ -316,20 +315,20 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
             tick_end = tick_range["end"]
             print(type(tick_start))
             print(type(tick_end))
-            print(margin)
-            print(type(margin))
+            print(MARGIN)
+            print(type(MARGIN))
             print("-----------------------------")
             print("dir_90: ", tick_start, ", ", tick_end)
             print("-----------------------------")
             print("-----------------------------")
             print("-----------------------------")
-            if tick_start > margin:
+            if tick_start > MARGIN:
                 print('-1')
-                tick_start = tick_start - margin
+                tick_start = tick_start - MARGIN
                 print('-2')
-            if tick_end < col_num - margin:
+            if tick_end < col_num - MARGIN:
                 print('-3')
-                tick_end = tick_end + margin
+                tick_end = tick_end + MARGIN
                 print('-4')
             print("dir_90: ", tick_start, ", ", tick_end)
             tick_img = axis_img_gray.crop((tick_start, 0, tick_end, row_num - 1))
@@ -338,14 +337,14 @@ def partition_axis(axis_img_gray, axis_id, axis_direction):
             title_start = title_range["start"]
             title_end = title_range["end"]
             print("dir_90: ", title_start, ", ", title_end)
-            print(type(title_start), type(title_end), type(margin))
-            if title_start > margin:
+            print(type(title_start), type(title_end), type(MARGIN))
+            if title_start > MARGIN:
                 print('-1')
-                title_start = title_start - margin
+                title_start = title_start - MARGIN
                 print('-2')
-            if title_end < col_num - margin:
+            if title_end < col_num - MARGIN:
                 print('-3')
-                title_end = title_end + margin
+                title_end = title_end + MARGIN
                 print('-4')
             print("dir_90: ", title_start, ", ", title_end)
             title_img = axis_img_gray.crop((title_start, 0, title_end, row_num - 1))

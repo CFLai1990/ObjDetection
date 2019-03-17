@@ -102,7 +102,7 @@ def classify_texts(direction, f_items, ticks, labels):
     for label_i in label_class:
         labels.append(f_items[label_i]["text"])
 
-def get_format_axis(items, axis_bbox, axis_direction):
+def get_format_axis(ticks_data, label_texts, axis_bbox, axis_direction):
     """Pack the textual information of the axis"""
     axis = {}
     axis_range = {
@@ -110,33 +110,29 @@ def get_format_axis(items, axis_bbox, axis_direction):
         "y": [axis_bbox.get("y"), axis_bbox.get("y") + axis_bbox.get("height")]
     }
     ticks = []
-    labels = []
-    format_items = []
-    for item in items:
-        item_text = item.get("text")
-        if item_text in ("-", ""):
-            continue
-        format_item = {}
-        if item_text[-1] == "-":
-            item_text = item_text[:-1]
-        format_item["text"] = item_text
+    # format_items = []
+    for tick_data in ticks_data:
+        item_text = tick_data.get("text")
+        tick = {}
+        tick["text"] = item_text
         bbox = {
-            "x": item["left"] + axis_bbox.get("x"),
-            "y": item["top"] + axis_bbox.get("y"),
-            "width": item.get("width"),
-            "height": item.get("height")
+            "x": tick_data["left"] + axis_bbox.get("x"),
+            "y": tick_data["top"] + axis_bbox.get("y"),
+            "width": tick_data.get("width"),
+            "height": tick_data.get("height")
         }
-        format_item["bbox"] = bbox
+        tick["bbox"] = bbox
         position = {
             "x": bbox["x"] + bbox["width"] / 2,
             "y": bbox["y"] + bbox["height"] / 2
         }
-        format_item["position"] = position
-        if format_item["text"] != "":
-            format_items.append(format_item)
+        tick["position"] = position
+        if tick["text"] != "":
+            ticks.append(tick)
+            # format_items.append(tick)
     # Classify if the texts belong to the ticks or the label
-    classify_texts(axis_direction, format_items, ticks, labels)
-    axis["label"] = " ".join(labels)
+    # classify_texts(axis_direction, format_items, ticks, labels)
+    axis["label"] = label_texts
     axis["axis_data"] = {
         "ticks": ticks,
         "direction": axis_direction
@@ -356,8 +352,7 @@ def get_axes_texts(img, axis_entities):
         # No axes in the image
         if img is None or axis_entities is None:
             return data
-        axis_id = 0
-        for axis_entity in axis_entities:
+        for axis_id, axis_entity in enumerate(axis_entities):
             axis_bbox = axis_entity.get("bbox")
             axis_direction = axis_entity.get("direction")
             if axis_bbox:
@@ -374,29 +369,24 @@ def get_axes_texts(img, axis_entities):
                         # Step 3: partition the image
                         line_img, tick_img, title_img = partition_axis(axis_img_enhanced, \
                             axis_id, axis_direction)
-                        tick_info = {}
-                        title_info = {}
+                        tick_texts = None
+                        title_texts = None
                         if tick_img is not None and isinstance(tick_img, np.ndarray):
                             tick_img_pil = CV2PIL(tick_img)
-                            tick_img_pil.save(TESTING['dir'] + '/axis_' + str(axis_id) + \
+                            if TESTING["sign"]:
+                                tick_img_pil.save(TESTING['dir'] + '/axis_' + str(axis_id) + \
                                 '_test_tick.png')
                             tick_texts = pt.image_to_data(tick_img_pil, config='--psm 6')
-                            print("tick_texts (before): ", tick_texts)
                             tick_texts = understand_data(tick_texts)
-                            print("tick_texts (after): ", tick_texts)
                         if title_img is not None and isinstance(tick_img, np.ndarray):
                             title_img_pil = CV2PIL(title_img)
-                            title_img_pil.save(TESTING['dir'] + '/axis_' + str(axis_id) + \
-                                '_test_title.png')
+                            if TESTING["sign"]:
+                                title_img_pil.save(TESTING['dir'] + '/axis_' + str(axis_id) + \
+                                    '_test_title.png')
                             title_texts = pt.image_to_string(title_img_pil, config='--psm 6')
-                            print("title_texts: ", title_texts)
-                            # title_texts = understand_data(title_texts)
-                            # print("tick_texts (after): ", tick_texts)
-                        # axis_texts = pt.image_to_data(axis_img, lang=TS_LANG)
-                        # axis_texts = understand_data(axis_texts)
-                        # formated_axis = get_format_axis(axis_texts, axis_bbox, axis_direction)
-                        # data.append(formated_axis)
-                        axis_id = axis_id + 1
+                        formated_axis = get_format_axis(tick_texts, title_texts, \
+                            axis_bbox, axis_direction)
+                        data.append(formated_axis)
     except Exception as e:
         print(repr(e))
         traceback.print_exc()

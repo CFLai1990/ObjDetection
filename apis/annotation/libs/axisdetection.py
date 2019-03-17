@@ -167,6 +167,7 @@ def divide_by_threshold(array, threshold, min_count=1):
     # Step 1: divide the array by the given threshold
     empty_ranges = {}
     temp_range = {}
+    print("Step 1 started")
     # Step 1-1: find the empty ranges
     for _id, _value in enumerate(array):
         if _value <= threshold:
@@ -183,6 +184,7 @@ def divide_by_threshold(array, threshold, min_count=1):
             range_head = temp_range["start"]
             if empty_ranges.get(range_head) is None:
                 empty_ranges[range_head] = temp_range
+    print("empty ranges: ", empty_ranges)
     # Step 1-2: find the non-empty ranges
     solid_ranges = {}
     temp_range = {}
@@ -206,6 +208,8 @@ def divide_by_threshold(array, threshold, min_count=1):
             range_head = temp_range["start"]
             if solid_ranges.get(range_head) is None:
                 solid_ranges[range_head] = temp_range
+    print("solid ranges: ", solid_ranges)
+    print("Step 1 finished")
     # Step 2: Decide which range belongs to which category
     line_range = None
     tick_range = None

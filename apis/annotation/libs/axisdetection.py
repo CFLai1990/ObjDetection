@@ -256,17 +256,16 @@ def partition_axis(axis_img, axis_id, axis_direction):
     axis_array_simp = axis_array.copy()
     row_num = axis_array_simp.shape[0]
     col_num = axis_array_simp.shape[1]
-    # Simplify the gray scales
-    # axis_array_simp = (axis_array_simp / GRAY_SCALE_LEVEL).astype(np.uint8)
-    # axis_array_simp = axis_array_simp * GRAY_SCALE_LEVEL
     # Denoising: bilateral filtering
     axis_array_simp = cv2.bilateralFilter(axis_array_simp, 4, 50, 50)
+    # Simplify the gray scales
+    axis_array_simp = (axis_array_simp / GRAY_SCALE_LEVEL).astype(np.uint8)
+    axis_array_simp = axis_array_simp * GRAY_SCALE_LEVEL
     # Find the background gray scale
-    counter = np.bincount(axis_array.flatten())
-    bg_gray = int(np.argmax(counter))
-    axis_array_simp[(axis_array > bg_gray - GRAY_RANGE) \
-    & (axis_array < bg_gray + GRAY_RANGE)] = bg_gray
-    # axis_array_simp = cv2.bilateralFilter(axis_array, 4, 50, 50)
+    # counter = np.bincount(axis_array.flatten())
+    # bg_gray = int(np.argmax(counter))
+    # axis_array_simp[(axis_array > bg_gray - GRAY_RANGE) \
+    # & (axis_array < bg_gray + GRAY_RANGE)] = bg_gray
     # Calculate the entropy of the simplified image
     row_ent = np.zeros(row_num)
     col_ent = np.zeros(col_num)

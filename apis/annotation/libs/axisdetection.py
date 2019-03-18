@@ -287,13 +287,13 @@ def partition_axis(axis_img, axis_id, axis_direction):
         np.savetxt(TESTING['dir'] + '/axis_' + str(axis_id) + '_col.txt', col_ent)
     # Step 1: transform the image into a gray one
     axis_array = cv2.cvtColor(axis_array, cv2.COLOR_GRAY2BGR)
+    # Step 1-1: prepare the binary image
+    axis_array_smooth = (axis_array_smooth / GRAY_SCALE_BINARY).astype(np.uint8)
+    axis_array_smooth = axis_array_smooth * GRAY_SCALE_BINARY
     if axis_direction == 0:
         # Step 2: divide the axis image
         line_range, tick_range, title_range = divide_by_threshold(row_ent, 3)
         # Step 3: crop the axis image
-        # Step 3-1: prepare the binary image
-        axis_array_smooth = (axis_array_smooth / GRAY_SCALE_BINARY).astype(np.uint8)
-        axis_array_smooth = axis_array_smooth * GRAY_SCALE_BINARY
         if line_range:
             line_array = axis_array_smooth[line_range["start"]:line_range["end"], 0:col_num]
         if tick_range:

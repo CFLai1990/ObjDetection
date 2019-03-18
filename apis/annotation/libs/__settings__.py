@@ -12,7 +12,7 @@ DT_MODEL = {
     },
     'vis': {
         'config':'/home/chufan.lai/packages/OD_Images/dtconfigs/e2e_mask_rcnn_R-50-FPN_1x.yaml',
-        'weights': '/home/chufan.lai/packages/detectron_models/test/train/cflai_train/generalized_rcnn/model_iter19999.pkl',
+        'weights': '/home/chufan.lai/packages/detectron_models/test/train/cflai_train/generalized_rcnn/model_iter69999.pkl',
     }
 }
 

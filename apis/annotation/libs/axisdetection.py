@@ -355,7 +355,7 @@ def get_axes_texts(img, axis_entities):
         for axis_id, axis_entity in enumerate(axis_entities):
             axis_bbox = axis_entity.get("bbox")
             axis_direction = axis_entity.get("direction")
-            print(axis_entity.get("score"))
+            axis_score = axis_entity.get("score")
             if axis_bbox:
                 axis_x = axis_bbox.get("x")
                 axis_y = axis_bbox.get("y")
@@ -387,7 +387,7 @@ def get_axes_texts(img, axis_entities):
                             title_texts = pt.image_to_string(title_img_pil, config='--psm 6')
                         if tick_texts is not None:
                             formated_axis = get_format_axis(tick_texts, title_texts, \
-                                axis_bbox, axis_direction)
+                                axis_bbox, axis_direction, axis_score)
                             data.append(formated_axis)
     except Exception as e:
         print(repr(e))

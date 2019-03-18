@@ -1,4 +1,5 @@
 """Auxiliary Detection"""
+import traceback
 import cv2
 import logging
 from .axisdetection import get_axes_texts
@@ -13,11 +14,15 @@ class AuxDetection:
 
     def infer_parameters(self, img_path, data_entities):
         """Get the auxiliary data in the vis image"""
-        self.aux = []
-        img = cv2.imread(img_path)
-        if img is not None:
-            self.get_legends(img, data_entities)
-            self.get_axes(img, data_entities)
+        try:
+            self.aux = []
+            img = cv2.imread(img_path)
+            if img is not None:
+                self.get_legends(img, data_entities)
+                self.get_axes(img, data_entities)
+        except Exception as e:
+            print(repr(e))
+            traceback.print_exc()
         return self.aux
 
     def get_legends(self, img, data_entities):

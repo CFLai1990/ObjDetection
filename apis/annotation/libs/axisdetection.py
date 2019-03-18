@@ -8,7 +8,7 @@ from pytesseract import pytesseract as pt
 from sklearn.cluster import KMeans
 from .__settings__ import TS_LANG, TESTING
 
-GRAY_SCALE_LEVEL = 128
+GRAY_SCALE_LEVEL = 32
 MARGIN = 3
 
 def PIL2CV(img_PIL):
@@ -102,7 +102,7 @@ def classify_texts(direction, f_items, ticks, labels):
     for label_i in label_class:
         labels.append(f_items[label_i]["text"])
 
-def get_format_axis(ticks_data, label_texts, axis_bbox, axis_direction):
+def get_format_axis(ticks_data, label_texts, axis_bbox, axis_direction, axis_score):
     """Pack the textual information of the axis"""
     axis = {}
     axis_range = {
@@ -139,8 +139,8 @@ def get_format_axis(ticks_data, label_texts, axis_bbox, axis_direction):
     }
     # make up the common object-detection data
     axis["class"] = "axis"
-    axis["score"] = 0.9
-    axis["color"] = {"white": 0.8, "black": 0.2}
+    axis["score"] = axis_score
+    axis["color"] = None
     axis["bbox"] = axis_bbox
     axis["mask"] = [[
         [axis_range["x"][0], axis_range["y"][0]],

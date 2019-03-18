@@ -261,7 +261,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
     print(axis_array.shape)
     # counter = np.bincount(axis_array)
     # bg_gray = np.argmax(counter)
-    axis_array_simp = cv2.bilateralFilter(img, 4, 50, 50)
+    axis_array_simp = cv2.bilateralFilter(axis_array, 4, 50, 50)
     # Calculate the entropy of the simplified image
     row_ent = np.zeros(row_num)
     col_ent = np.zeros(col_num)

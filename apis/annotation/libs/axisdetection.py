@@ -9,6 +9,7 @@ from sklearn.cluster import KMeans
 from .__settings__ import TS_LANG, TESTING
 
 GRAY_SCALE_LEVEL = 32
+GRAY_SCALE_BINARY = 128
 GRAY_RANGE = 10
 MARGIN = 3
 
@@ -257,13 +258,12 @@ def partition_axis(axis_img, axis_id, axis_direction):
     title_array = None
     # Initialize
     axis_array = cv2.cvtColor(axis_img, cv2.COLOR_BGR2GRAY).astype(np.uint8)
-    axis_array_simp = axis_array.copy()
     row_num = axis_array_simp.shape[0]
     col_num = axis_array_simp.shape[1]
     # Denoising: bilateral filtering
-    axis_array_simp = cv2.bilateralFilter(axis_array_simp, 4, 50, 50)
+    axis_array_smooth = cv2.bilateralFilter(axis_array, 4, 50, 50)
     # Simplify the gray scales
-    axis_array_simp = (axis_array_simp / GRAY_SCALE_LEVEL).astype(np.uint8)
+    axis_array_simp = (axis_array_smooth / GRAY_SCALE_LEVEL).astype(np.uint8)
     axis_array_simp = axis_array_simp * GRAY_SCALE_LEVEL
     # Find the background gray scale
     # counter = np.bincount(axis_array.flatten())
@@ -291,8 +291,11 @@ def partition_axis(axis_img, axis_id, axis_direction):
         # Step 2: divide the axis image
         line_range, tick_range, title_range = divide_by_threshold(row_ent, 3)
         # Step 3: crop the axis image
+        # Step 3-1: prepare the binary image
+        axis_array_smooth = (axis_array_smooth / GRAY_SCALE_BINARY).astype(np.uint8)
+        axis_array_smooth = axis_array_smooth * GRAY_SCALE_BINARY
         if line_range:
-            line_array = axis_array[line_range["start"]:line_range["end"], 0:col_num]
+            line_array = axis_array_smooth[line_range["start"]:line_range["end"], 0:col_num]
         if tick_range:
             tick_start = tick_range["start"]
             tick_end = tick_range["end"]
@@ -300,7 +303,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 tick_start = tick_start - MARGIN
             if tick_end <= row_num - MARGIN:
                 tick_end = tick_end + MARGIN
-            tick_array = axis_array[tick_start:tick_end, 0:col_num]
+            tick_array = axis_array_smooth[tick_start:tick_end, 0:col_num]
         if title_range:
             title_start = title_range["start"]
             title_end = title_range["end"]
@@ -308,13 +311,13 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 title_start = title_start - MARGIN
             if title_end <= row_num - MARGIN:
                 title_end = title_end + MARGIN
-            title_array = axis_array[title_start:title_end, 0:col_num]
+            title_array = axis_array_smooth[title_start:title_end, 0:col_num]
     elif axis_direction == 90:
         # Step 2: divide the axis image
         line_range, tick_range, title_range = divide_by_threshold(col_ent, 3)
         # Step 3: crop the axis image
         if line_range:
-            line_array = axis_array[0:row_num, line_range["start"]:line_range["end"]]
+            line_array = axis_array_smooth[0:row_num, line_range["start"]:line_range["end"]]
         if tick_range:
             tick_start = tick_range["start"]
             tick_end = tick_range["end"]
@@ -322,7 +325,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 tick_start = tick_start - MARGIN
             if tick_end <= col_num - MARGIN:
                 tick_end = tick_end + MARGIN
-            tick_array = axis_array[0:row_num, tick_start:tick_end]
+            tick_array = axis_array_smooth[0:row_num, tick_start:tick_end]
         if title_range:
             title_start = title_range["start"]
             title_end = title_range["end"]
@@ -330,7 +333,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 title_start = title_start - MARGIN
             if title_end <= col_num - MARGIN:
                 title_end = title_end + MARGIN
-            title_array = axis_array[0:row_num, title_start:title_end]
+            title_array = axis_array_smooth[0:row_num, title_start:title_end]
             # Assume the title should be rotated clockwise for 90 degrees
             title_array = np.rot90(title_array, 3)
     if TESTING['sign']:

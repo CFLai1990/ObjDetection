@@ -258,8 +258,8 @@ def partition_axis(axis_img, axis_id, axis_direction):
     title_array = None
     # Initialize
     axis_array = cv2.cvtColor(axis_img, cv2.COLOR_BGR2GRAY).astype(np.uint8)
-    row_num = axis_array_simp.shape[0]
-    col_num = axis_array_simp.shape[1]
+    row_num = axis_array.shape[0]
+    col_num = axis_array.shape[1]
     # Denoising: bilateral filtering
     axis_array_smooth = cv2.bilateralFilter(axis_array, 4, 50, 50)
     # Simplify the gray scales

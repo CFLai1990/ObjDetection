@@ -383,6 +383,7 @@ def get_axes_texts(img, axis_entities):
         # No axes in the image
         if img is None or axis_entities is None:
             return data
+        (img_height, img_width) = img.shape[:2]
         for axis_id, axis_entity in enumerate(axis_entities):
             axis_bbox = axis_entity.get("bbox")
             axis_direction = axis_entity.get("direction")
@@ -394,6 +395,21 @@ def get_axes_texts(img, axis_entities):
                 axis_height = axis_bbox.get("height")
                 if axis_x and axis_y and axis_width and axis_height:
                     if axis_x >= 0 and axis_y >= 0 and axis_width > 0 and axis_height > 0:
+                        # Step 0: extend the axis image to avoid mistakes
+                        if axis_direction == 0:
+                            axis_x_extra = max(round(axis_width * 0.02), 6)
+                            if axis_x >= axis_x_extra:
+                                axis_x = axis_x - axis_x_extra
+                                axis_width = axis_width + axis_x_extra
+                            if axis_x + axis_width + axis_x_extra < img_width:
+                                axis_width = axis_width + axis_x_extra
+                        elif axis_direction == 90:
+                            axis_y_extra = max(round(axis_height * 0.02), 6)
+                            if axis_y >= axis_y_extra:
+                                axis_y = axis_y - axis_y_extra
+                                axis_height = axis_height + axis_y_extra
+                            if axis_y + axis_height + axis_y_extra < img_height:
+                                axis_height = axis_height + axis_y_extra
                         # Step 1: crop the axis image
                         axis_img = img[axis_y:(axis_y + axis_height), axis_x:(axis_x + axis_width)]
                         # Step 2: enhance the contrast

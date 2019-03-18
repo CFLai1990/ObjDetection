@@ -337,6 +337,13 @@ def partition_axis(axis_img, axis_id, axis_direction):
             title_array = axis_array_smooth[0:row_num, title_start:title_end]
             # Assume the title should be rotated clockwise for 90 degrees
             title_array = np.rot90(title_array, 3)
+    # Scale the images in case the dpi is too low for detection
+    if tick_array is not None:
+        (h, w) = tick_array.shape[:2]
+        tick_array = cv2.resize(tick_array, (2*h, 2*w), interpolation=cv2.INTER_AREA)
+    if title_array is not None:
+        (h, w) = title_array.shape[:2]
+        title_array = cv2.resize(title_array, (2*h, 2*w), interpolation=cv2.INTER_AREA)
     if TESTING['sign']:
         if line_array is not None:
             cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_line.png', \

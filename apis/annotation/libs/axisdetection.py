@@ -292,7 +292,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
     # Step 1: transform the image into a gray one
     axis_array = cv2.cvtColor(axis_array, cv2.COLOR_GRAY2BGR)
     # Step 1-1: prepare the binary image
-    axis_array_smooth = (axis_array_smooth / GRAY_SCALE_BINARY).astype(np.uint8)
+    axis_array_smooth = (axis_array / GRAY_SCALE_BINARY).astype(np.uint8)
     axis_array_smooth = axis_array_smooth * GRAY_SCALE_BINARY
     axis_array_smooth[axis_array_smooth == 128] = 255
     if axis_direction == 0:

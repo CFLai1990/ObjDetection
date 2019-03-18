@@ -290,6 +290,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
     # Step 1-1: prepare the binary image
     axis_array_smooth = (axis_array_smooth / GRAY_SCALE_BINARY).astype(np.uint8)
     axis_array_smooth = axis_array_smooth * GRAY_SCALE_BINARY
+    axis_array_smooth[axis_array_smooth == 128] = 255
     if axis_direction == 0:
         # Step 2: divide the axis image
         line_range, tick_range, title_range = divide_by_threshold(row_ent, 3)

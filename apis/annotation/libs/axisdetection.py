@@ -8,7 +8,7 @@ from pytesseract import pytesseract as pt
 from sklearn.cluster import KMeans
 from .__settings__ import TS_LANG, TESTING
 
-GRAY_SCALE_LEVEL = 64
+GRAY_SCALE_LEVEL = 128
 GRAY_SCALE_BINARY = 128
 GRAY_RANGE = 10
 GAP_PERSENTAGE = 0.04

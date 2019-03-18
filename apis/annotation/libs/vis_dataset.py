@@ -5,7 +5,7 @@ def get_vis_dict():
     """The dataset that includes all the 'classes' field."""
     ds_dict = AttrDict()
     classes = [
-        '__ignore__', '_background_', 'rectangle', 'axis', 'legend'
+        '__ignore__', '_background_', 'rectangle', 'axis', 'legend', 'pie'
     ]
     ds_dict.classes = {i: name for i, name in enumerate(classes)}
     return ds_dict

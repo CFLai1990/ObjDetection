@@ -160,8 +160,12 @@ def get_format_axis(ticks_data, label_texts, axis_bbox, axis_direction, axis_sco
     }
     return axis
 
-def divide_by_threshold(array, threshold, min_count=1):
+def divide_by_threshold(array, min_count=1):
     """Find ranges with the value larger than the given threshold"""
+    # Step 0: decide the threshold
+    threshold = 0
+    if array.size > 0:
+        threshold = array.max/10
     # Step 1: divide the array by the given threshold
     empty_ranges = {}
     temp_range = {}
@@ -285,7 +289,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
     axis_array = cv2.cvtColor(axis_array, cv2.COLOR_GRAY2BGR)
     if axis_direction == 0:
         # Step 2: divide the axis image
-        line_range, tick_range, title_range = divide_by_threshold(row_ent, 0, 3)
+        line_range, tick_range, title_range = divide_by_threshold(row_ent, 3)
         # Step 3: crop the axis image
         if line_range:
             line_array = axis_array[line_range["start"]:line_range["end"], 0:col_num]
@@ -307,7 +311,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
             title_array = axis_array[title_start:title_end, 0:col_num]
     elif axis_direction == 90:
         # Step 2: divide the axis image
-        line_range, tick_range, title_range = divide_by_threshold(col_ent, 0, 3)
+        line_range, tick_range, title_range = divide_by_threshold(col_ent, 3)
         # Step 3: crop the axis image
         if line_range:
             line_array = axis_array[0:row_num, line_range["start"]:line_range["end"]]

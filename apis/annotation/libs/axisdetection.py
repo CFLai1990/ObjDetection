@@ -169,7 +169,6 @@ def divide_by_threshold(array):
     min_count = 3
     # if array.size > 0:
     #     min_count = round(float(array.size) * GAP_PERSENTAGE)
-    print("min_count: ", min_count)
     threshold = 0
     if array.size > 0:
         threshold = 0 #array.max() * THRES_PERSENTAGE

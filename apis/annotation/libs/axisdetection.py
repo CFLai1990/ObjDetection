@@ -8,7 +8,7 @@ from pytesseract import pytesseract as pt
 from sklearn.cluster import KMeans
 from .__settings__ import TS_LANG, TESTING
 
-GRAY_SCALE_LEVEL = 32
+GRAY_SCALE_LEVEL = 64
 GRAY_SCALE_BINARY = 128
 GRAY_RANGE = 10
 GAP_PERSENTAGE = 0.04
@@ -167,8 +167,8 @@ def divide_by_threshold(array):
     """Find ranges with the value larger than the given threshold"""
     # Step 0: decide the threshold and the min_count
     min_count = 3
-    if array.size > 0:
-        min_count = 3 #round(float(array.size) * GAP_PERSENTAGE)
+    # if array.size > 0:
+    #     min_count = round(float(array.size) * GAP_PERSENTAGE)
     print("min_count: ", min_count)
     threshold = 0
     if array.size > 0:

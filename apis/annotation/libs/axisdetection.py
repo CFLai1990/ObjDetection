@@ -11,7 +11,7 @@ from .__settings__ import TS_LANG, TESTING
 GRAY_SCALE_LEVEL = 32
 GRAY_SCALE_BINARY = 128
 GRAY_RANGE = 10
-GAP_PERSENTAGE = 4
+GAP_PERSENTAGE = 0.04
 MARGIN = 3
 
 def PIL2CV(img_PIL):
@@ -167,7 +167,7 @@ def divide_by_threshold(array):
     # Step 0: decide the threshold and the min_count
     min_count = 3
     if array.size > 0:
-        min_count = round(float(array.size) / 100 * GAP_PERSENTAGE)
+        min_count = round(float(array.size) * GAP_PERSENTAGE)
     threshold = 0
     if array.size > 0:
         threshold = array.max() * GAP_PERSENTAGE

@@ -53,6 +53,7 @@ class AuxDetection:
                 "height": axis_height
             }
         return {
+            "score": data_entity.get("score"),
             "bbox": bbox,
             "direction": direction
         }

@@ -355,6 +355,7 @@ def get_axes_texts(img, axis_entities):
         for axis_id, axis_entity in enumerate(axis_entities):
             axis_bbox = axis_entity.get("bbox")
             axis_direction = axis_entity.get("direction")
+            print(axis_entity.get("score"))
             if axis_bbox:
                 axis_x = axis_bbox.get("x")
                 axis_y = axis_bbox.get("y")

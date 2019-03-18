@@ -258,8 +258,9 @@ def partition_axis(axis_img, axis_id, axis_direction):
     # axis_array_simp = (axis_array / GRAY_SCALE_LEVEL).astype(np.uint8)
     # axis_array_simp = axis_array_simp * GRAY_SCALE_LEVEL
     # Find the background gray scale
-    counter = np.bincount(axis_array)
-    bg_gray = np.argmax(counter)
+    print(axis_array.shape)
+    # counter = np.bincount(axis_array)
+    # bg_gray = np.argmax(counter)
     axis_array_simp = cv2.bilateralFilter(img, 4, 50, 50)
     # Calculate the entropy of the simplified image
     row_ent = np.zeros(row_num)

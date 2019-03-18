@@ -166,7 +166,7 @@ def divide_by_threshold(array, min_count=1):
     # Step 0: decide the threshold
     threshold = 0
     if array.size > 0:
-        threshold = array.mean() / 10
+        threshold = array.mean() / 2
     # Step 1: divide the array by the given threshold
     empty_ranges = {}
     temp_range = {}

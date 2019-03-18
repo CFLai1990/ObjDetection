@@ -171,7 +171,7 @@ def divide_by_threshold(array):
         min_count = round(float(array.size) * GAP_PERSENTAGE)
     threshold = 0
     if array.size > 0:
-        threshold = array.max() * THRES_PERSENTAGE
+        threshold = array.mean() * THRES_PERSENTAGE
     # Step 1: divide the array by the given threshold
     empty_ranges = {}
     temp_range = {}

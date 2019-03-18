@@ -259,6 +259,8 @@ def partition_axis(axis_img, axis_id, axis_direction):
     # Simplify the gray scales
     # axis_array_simp = (axis_array_simp / GRAY_SCALE_LEVEL).astype(np.uint8)
     # axis_array_simp = axis_array_simp * GRAY_SCALE_LEVEL
+    # Denoising: bilateral filtering
+    axis_array_simp = cv2.bilateralFilter(axis_array_simp, 4, 50, 50)
     # Find the background gray scale
     counter = np.bincount(axis_array.flatten())
     bg_gray = int(np.argmax(counter))

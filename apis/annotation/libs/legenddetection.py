@@ -70,7 +70,7 @@ def get_legend_info(img, attrs, legend_entities):
                             max_score = float('-inf')
                             max_color = None
                             if colors:
-                                for color in enumerate(colors):
+                                for color in colors:
                                     c_score = colors[color]
                                     if float(c_score) > max_score:
                                         max_color = color

@@ -41,9 +41,7 @@ def divide_by_threshold(array):
     temp_range = {}
     # Step 1-1: find the empty ranges
     for _id, _value in enumerate(array):
-        print(_id, _value, threshold)
         if _value <= threshold:
-            print("yes")
             if temp_range:
                 temp_range["end"] = _id
                 temp_range["length"] = temp_range["length"] + 1
@@ -52,7 +50,6 @@ def divide_by_threshold(array):
                 temp_range["end"] = _id
                 temp_range["length"] = 1
         elif temp_range:
-            print("no")
             temp_range = {}
         if temp_range and temp_range["length"] >= min_count:
             range_head = temp_range["start"]

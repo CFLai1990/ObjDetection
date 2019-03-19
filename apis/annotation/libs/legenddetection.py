@@ -102,7 +102,7 @@ def partition_legend(legend_img, legend_id):
     legend_array = None
     label_array = None
     legend_gray = cv2.cvtColor(legend_img, cv2.COLOR_BGR2GRAY).astype(np.uint8)
-    row_num = axis_array.shape[0]
+    row_num = legend_img.shape[0]
     col_num = legend_img.shape[1]
     # Denoising: bilateral filtering
     # legend_gray = cv2.bilateralFilter(legend_img, 4, 50, 50)

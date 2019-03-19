@@ -55,6 +55,7 @@ def divide_by_threshold(array):
             range_head = temp_range["start"]
             if empty_ranges.get(range_head) is None:
                 empty_ranges[range_head] = temp_range
+    print(empty_ranges)
     # Step 1-2: find the non-empty ranges
     solid_ranges = {}
     temp_range = {}
@@ -78,6 +79,7 @@ def divide_by_threshold(array):
             range_head = temp_range["start"]
             if solid_ranges.get(range_head) is None:
                 solid_ranges[range_head] = temp_range
+    print(solid_ranges)
     # Step 2: Decide which range belongs to the legend
     legend_range = None
     label_range = None

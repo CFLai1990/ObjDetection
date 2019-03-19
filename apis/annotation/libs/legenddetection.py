@@ -65,7 +65,7 @@ def get_legend_info(img, attrs, legend_entities):
                             mask_img = np.ones((legend_height, legend_width)).astype(np.uint8)
                             color = attrs.get_mask_color(mask_img)
                             print("color: ", color)
-                            img_pil = CV2PIL(legend_width)
+                            img_pil = CV2PIL(legend_img)
                             if TESTING["sign"]:
                                 img_pil.save(TESTING['dir'] + '/legend_' + str(legend_id) + \
                                 '.png')

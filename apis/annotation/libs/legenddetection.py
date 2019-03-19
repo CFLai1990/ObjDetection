@@ -71,18 +71,21 @@ def get_legend_info(img, attrs, legend_entities):
                             max_color = None
                             if colors:
                                 for color in colors:
-                                    c_score = colors[color]
-                                    if float(c_score) > max_score:
+                                    c_score = float(colors[color])
+                                    if c_score > max_score:
                                         max_color = color
+                                        max_score = c_score
                                 background_color = max_color
                                 # Step 2: find the legend color
                                 max_score = float('-inf')
                                 max_color = None
-                                for color, c_score in enumerate(colors):
+                                for color in colors:
                                     if color == background_color:
                                         continue
+                                    c_score = float(colors[color])
                                     if c_score > max_score:
                                         max_color = color
+                                        max_score = c_score
                                 legend_color = max_color
                                 # Step 3: replace the legend color with the background color
                                 if legend_color is not None:

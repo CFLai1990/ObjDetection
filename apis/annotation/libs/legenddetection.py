@@ -100,6 +100,7 @@ def get_legend_info(img, attrs, legend_entities):
                                     attrs.replace_color(legend_img, legend_color, bg_gray)
                                     legend_img = cv2.cvtColor(legend_img, cv2.COLOR_GRAY2BGR)\
                                         .astype(np.uint8)
+                            print(legend_texts, legend_color)
                             img_pil = CV2PIL(legend_img)
                             if TESTING["sign"]:
                                 img_pil.save(TESTING['dir'] + '/legend_' + str(legend_id) + \

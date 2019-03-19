@@ -54,6 +54,7 @@ class ObjAttrs:
                     color_list[color_name]['low'].append(hsv_threshold)
                 else:
                     color_list[color_name]['high'].append(hsv_threshold)
+            print(color_list)
             self.color_list = color_list
 
     def infer_color(self, lab):

@@ -60,7 +60,8 @@ def get_legend_info(img, attrs, legend_entities):
                 if legend_x and legend_y and legend_width and legend_height:
                     if legend_x >= 0 and legend_y >= 0 and legend_width > 0 and legend_height > 0:
                         if img is not None and isinstance(img, np.ndarray):
-                            legend_img = img[legend_y:(legend_y + legend_height), legend_x:(legend_x + legend_width)]
+                            legend_img = img[legend_y:(legend_y + legend_height), \
+                                legend_x:(legend_x + legend_width)]
                             attrs.infer(legend_img)
                             mask_img = np.ones((legend_height, legend_width)).astype(np.uint8)
                             color = attrs.get_mask_color(mask_img)

@@ -105,7 +105,7 @@ def get_legend_info(img, attrs, legend_entities):
                                 img_pil.save(TESTING['dir'] + '/legend_' + str(legend_id) + \
                                 '.png')
                             legend_texts = pt.image_to_string(img_pil, config='--psm 6')
-                            print(legend_texts, legend_color)
+                            print((legend_x, legend_y), legend_texts, legend_color)
                             # legend_texts = pt.image_to_data(img_pil, config='--psm 6')
                             # legend_texts = understand_data(legend_texts)
                         if legend_texts is not None:

@@ -12,7 +12,7 @@ GRAY_SCALE_LEVEL = 64
 GRAY_SCALE_BINARY = 128
 GRAY_RANGE = 10
 GAP_PERSENTAGE = 0.04
-THRES_PERSENTAGE = 0.04
+THRES_PERSENTAGE = 0
 MARGIN = 3
 
 def PIL2CV(img_PIL):
@@ -171,7 +171,7 @@ def divide_by_threshold(array):
     #     min_count = round(float(array.size) * GAP_PERSENTAGE)
     threshold = 0
     if array.size > 0:
-        threshold = array.max() * THRES_PERSENTAGE
+        threshold = 0 #array.max() * THRES_PERSENTAGE
     # Step 1: divide the array by the given threshold
     empty_ranges = {}
     temp_range = {}

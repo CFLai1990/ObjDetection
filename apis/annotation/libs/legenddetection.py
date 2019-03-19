@@ -129,8 +129,6 @@ def partition_legend(legend_img, legend_id):
     if label_range:
         label_start = label_range["start"]
         label_end = label_range["end"]
-        if label_end <= col_num - MARGIN:
-            label_end = label_end + MARGIN
         label_array = legend_img[0:row_num, label_start:label_end]
     if TESTING['sign']:
         if legend_array is not None:
@@ -194,6 +192,11 @@ def get_legend_info(img, attrs, legend_entities):
                 legend_x = legend_bbox.get("x")
                 legend_y = legend_bbox.get("y")
                 legend_width = legend_bbox.get("width")
+                if legend_x > MARGIN:
+                    legend_x = legend_x - MARGIN
+                    legend_width = legend_width + MARGIN
+                if legend_x + legend_width < img_width - MARGIN:
+                    legend_width = legend_width + MARGIN
                 legend_height = legend_bbox.get("height")
                 if legend_x and legend_y and legend_width and legend_height:
                     if legend_x >= 0 and legend_y >= 0 and legend_width > 0 and legend_height > 0:

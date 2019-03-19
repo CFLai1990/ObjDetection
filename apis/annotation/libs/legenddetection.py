@@ -49,7 +49,6 @@ def get_legend_info(img, attrs, legend_entities):
         if img is None or legend_entities is None:
             return data
         (img_height, img_width) = img.shape[:2]
-        mask_img = np.ones((img_height, img_width))
         for legend_id, legend_entity in enumerate(legend_entities):
             legend_bbox = legend_entity.get("bbox")
             legend_score = legend_entity.get("score")
@@ -63,6 +62,7 @@ def get_legend_info(img, attrs, legend_entities):
                         if img is not None and isinstance(img, np.ndarray):
                             legend_img = img[legend_y:(legend_y + legend_height), legend_x:(legend_x + legend_width)]
                             attrs.infer(legend_img)
+                            mask_img = np.ones((legend_height, legend_width))
                             color = attrs.get_mask_color(mask_img)
                             print("color: ", color)
                             img_pil = CV2PIL(legend_width)

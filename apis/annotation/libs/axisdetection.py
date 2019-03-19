@@ -303,7 +303,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
         line_range, tick_range, title_range = divide_by_threshold(row_ent)
         # Step 3: crop the axis image
         if line_range:
-            line_array = axis_array[line_range["start"]:line_range["end"], 0:col_num]
+            line_array = axis_array_smooth[line_range["start"]:line_range["end"], 0:col_num]
         if tick_range:
             tick_start = tick_range["start"]
             tick_end = tick_range["end"]
@@ -311,7 +311,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 tick_start = tick_start - MARGIN
             if tick_end <= row_num - MARGIN:
                 tick_end = tick_end + MARGIN
-            tick_array = axis_array[tick_start:tick_end, 0:col_num]
+            tick_array = axis_array_smooth[tick_start:tick_end, 0:col_num]
         if title_range:
             title_start = title_range["start"]
             title_end = title_range["end"]
@@ -319,13 +319,13 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 title_start = title_start - MARGIN
             if title_end <= row_num - MARGIN:
                 title_end = title_end + MARGIN
-            title_array = axis_array[title_start:title_end, 0:col_num]
+            title_array = axis_array_smooth[title_start:title_end, 0:col_num]
     elif axis_direction == 90:
         # Step 2: divide the axis image
         line_range, tick_range, title_range = divide_by_threshold(col_ent)
         # Step 3: crop the axis image
         if line_range:
-            line_array = axis_array[0:row_num, line_range["start"]:line_range["end"]]
+            line_array = axis_array_smooth[0:row_num, line_range["start"]:line_range["end"]]
         if tick_range:
             tick_start = tick_range["start"]
             tick_end = tick_range["end"]
@@ -333,7 +333,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 tick_start = tick_start - MARGIN
             if tick_end <= col_num - MARGIN:
                 tick_end = tick_end + MARGIN
-            tick_array = axis_array[0:row_num, tick_start:tick_end]
+            tick_array = axis_array_smooth[0:row_num, tick_start:tick_end]
         if title_range:
             title_start = title_range["start"]
             title_end = title_range["end"]
@@ -341,7 +341,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 title_start = title_start - MARGIN
             if title_end <= col_num - MARGIN:
                 title_end = title_end + MARGIN
-            title_array = axis_array[0:row_num, title_start:title_end]
+            title_array = axis_array_smooth[0:row_num, title_start:title_end]
             # Assume the title should be rotated clockwise for 90 degrees
             title_array = np.rot90(title_array, 3)
     # Scale the images in case the dpi is too low for detection

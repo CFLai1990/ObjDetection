@@ -205,3 +205,4 @@ class ObjAttrs:
         if target_code is None:
             return False
         img[np.where((self.color_codes == target_code))] = bg_color
+        return True

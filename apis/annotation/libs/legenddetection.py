@@ -93,8 +93,10 @@ def get_legend_info(img, attrs, legend_entities):
                                     # Find the background gray scale
                                     counter = np.bincount(legend_img.flatten())
                                     bg_gray = int(np.argmax(counter))
+                                    print("background grayscale: ", bg_gray)
                                     attrs.replace_color(legend_img, legend_color, bg_gray)
-                                    legend_img = cv2.cvtColor(legend_img, cv2.COLOR_GRAY2BGR).astype(np.uint8)
+                                    legend_img = cv2.cvtColor(legend_img, cv2.COLOR_GRAY2BGR)\
+                                        .astype(np.uint8)
                             img_pil = CV2PIL(legend_img)
                             if TESTING["sign"]:
                                 img_pil.save(TESTING['dir'] + '/legend_' + str(legend_id) + \

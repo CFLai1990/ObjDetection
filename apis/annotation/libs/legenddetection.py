@@ -93,6 +93,7 @@ def get_legend_info(img, attrs, legend_entities):
                                     # Find the background gray scale
                                     counter = np.bincount(legend_img.flatten())
                                     bg_gray = int(np.argmax(counter))
+                                    print("legend_color: ", legend_color, type(legend_color))
                                     print("background grayscale: ", bg_gray)
                                     attrs.replace_color(legend_img, legend_color, bg_gray)
                                     legend_img = cv2.cvtColor(legend_img, cv2.COLOR_GRAY2BGR)\

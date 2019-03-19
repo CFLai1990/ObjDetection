@@ -87,13 +87,12 @@ def divide_by_threshold(array):
         return legend_range, label_range
     range_values = list(solid_ranges.values())
     legend_range = range_values.pop(0)
-    range_count = len(range_values)
-    for range_id, range_value in enumerate(range_values):
-        if label_range is None:
-            label_range = range_value
-        else:
-            label_range["end"] = range_value["end"]
-    label_range["length"] = label_range["end"] - label_range["start"] + 1
+    if range_values:
+        label_range = {
+            "start": range_values[0].get("start"),
+            "end": len(array) - 1
+        }
+        label_range["length"] = label_range["end"] - label_range["start"] + 1
     return legend_range, label_range
 
 def partition_legend(legend_img, legend_id):

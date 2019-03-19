@@ -105,14 +105,12 @@ def partition_legend(legend_img, legend_id):
     legend_array = None
     label_array = None
     legend_gray = cv2.cvtColor(legend_img, cv2.COLOR_BGR2GRAY).astype(np.uint8)
-    row_num = legend_img.shape[0]
     col_num = legend_img.shape[1]
     # Denoising: bilateral filtering
     # legend_gray = cv2.bilateralFilter(legend_img, 4, 50, 50)
     # Simplify the gray scales
     legend_array_simp = (legend_gray / GRAY_SCALE_LEVEL).astype(np.uint8)
     legend_array_simp = legend_array_simp * GRAY_SCALE_LEVEL
-    row_ent = np.zeros(row_num)
     col_ent = np.zeros(col_num)
     for j in range(col_num):
         img_col = legend_array_simp[:, j].tolist()
@@ -123,7 +121,7 @@ def partition_legend(legend_img, legend_id):
             [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
         np.savetxt(TESTING['dir'] + '/legend_' + str(legend_id) + '_col.txt', col_ent)
     # Step 2: divide the legend image
-    legend_range, label_range = divide_by_threshold(row_ent)
+    legend_range, label_range = divide_by_threshold(col_ent)
     # Step 3: crop the legend image
     if legend_range:
         legend_start = legend_range["start"]

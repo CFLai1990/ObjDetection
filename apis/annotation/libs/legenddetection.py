@@ -63,9 +63,6 @@ def get_legend_info(img, attrs, legend_entities):
                         if img is not None and isinstance(img, np.ndarray):
                             legend_img = img[legend_y:(legend_y + legend_height), \
                                 legend_x:(legend_x + legend_width)]
-                            # Step 0: scale up the legend image
-                            legend_img = cv2.resize(legend_img, (2*legend_width, 2*legend_height), \
-                                interpolation=cv2.INTER_AREA)
                             attrs.infer(legend_img)
                             mask_img = np.ones((legend_height, legend_width)).astype(np.uint8)
                             colors = attrs.get_mask_color(mask_img)
@@ -101,6 +98,9 @@ def get_legend_info(img, attrs, legend_entities):
                                     legend_img = cv2.cvtColor(legend_img, cv2.COLOR_GRAY2BGR)\
                                         .astype(np.uint8)
                             print(legend_texts, legend_color)
+                            # Step 4: scale up the legend image
+                            legend_img = cv2.resize(legend_img, (2*legend_width, 2*legend_height), \
+                                interpolation=cv2.INTER_AREA)
                             img_pil = CV2PIL(legend_img)
                             if TESTING["sign"]:
                                 img_pil.save(TESTING['dir'] + '/legend_' + str(legend_id) + \
@@ -116,7 +116,3 @@ def get_legend_info(img, attrs, legend_entities):
         print(repr(e))
         traceback.print_exc()
     return data
-
-    if title_array is not None:
-        (h, w) = title_array.shape[:2]
-        title_array = cv2.resize(title_array, (2*w, 2*h), interpolation=cv2.INTER_AREA)

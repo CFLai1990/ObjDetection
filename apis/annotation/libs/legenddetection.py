@@ -130,8 +130,8 @@ def partition_legend(legend_img, legend_id):
     if label_range:
         label_start = label_range["start"]
         label_end = label_range["end"]
-        if label_start >= MARGIN:
-            label_start = label_start - MARGIN
+        if label_end <= col_num - MARGIN:
+            label_end = label_end + MARGIN
         label_array = legend_img[0:row_num, label_start:label_end]
     if TESTING['sign']:
         if legend_array is not None:
@@ -239,8 +239,8 @@ def get_legend_info(img, attrs, legend_entities):
                                     #         .astype(np.uint8)
                             if label_img is not None:
                                 # Step 4: scale up the legend image
-                                (label_img_w, label_img_h) = label_img.shape[:2]
-                                label_img = cv2.resize(label_img, (2*label_img_w, 2*label_img_h), \
+                                (label_img_h, label_img_w) = label_img.shape[:2]
+                                label_img = cv2.resize(label_img, (3*label_img_w, 3*label_img_h), \
                                     interpolation=cv2.INTER_AREA)
                                 img_pil = CV2PIL(label_img)
                                 if TESTING["sign"]:

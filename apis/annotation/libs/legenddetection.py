@@ -97,7 +97,6 @@ def get_legend_info(img, attrs, legend_entities):
                                     attrs.replace_color(legend_img, legend_color, bg_gray)
                                     legend_img = cv2.cvtColor(legend_img, cv2.COLOR_GRAY2BGR)\
                                         .astype(np.uint8)
-                            print(legend_texts, legend_color)
                             # Step 4: scale up the legend image
                             legend_img = cv2.resize(legend_img, (2*legend_width, 2*legend_height), \
                                 interpolation=cv2.INTER_AREA)
@@ -105,6 +104,7 @@ def get_legend_info(img, attrs, legend_entities):
                             if TESTING["sign"]:
                                 img_pil.save(TESTING['dir'] + '/legend_' + str(legend_id) + \
                                 '.png')
+                            print(legend_texts, legend_color)
                             legend_texts = pt.image_to_string(img_pil, config='--psm 6')
                             # legend_texts = pt.image_to_data(img_pil, config='--psm 6')
                             # legend_texts = understand_data(legend_texts)

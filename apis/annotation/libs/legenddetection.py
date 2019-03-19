@@ -8,7 +8,7 @@ from .__settings__ import TESTING
 from .image_processing import CV2PIL
 
 GRAY_SCALE_LEVEL = 32
-MARGIN = 2
+MARGIN = 3
 
 def entropy(labels, base=None):
     """ Computes entropy of label distribution. """
@@ -30,7 +30,7 @@ def entropy(labels, base=None):
 def divide_by_threshold(array):
     """Find ranges with the value larger than the given threshold"""
     # Step 0: decide the threshold and the min_count
-    min_count = 3
+    min_count = 2
     # if array.size > 0:
     #     min_count = round(float(array.size) * GAP_PERSENTAGE)
     threshold = 0

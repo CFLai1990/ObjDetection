@@ -99,6 +99,7 @@ class ObjAttrs:
             color_map.fill(color['code'])
             color_map = cv2.bitwise_and(color_map, color_map, mask=mask)
             codes = codes + color_map
+        np.savetxt('home/chufan.lai/testing/legend.txt', codes)
         self.color_codes = codes
 
     def infer(self, img, mode='hsv'):

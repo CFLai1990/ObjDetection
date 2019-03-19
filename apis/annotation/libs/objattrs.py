@@ -202,6 +202,7 @@ class ObjAttrs:
     def replace_color(self, img, target_color, bg_color):
         """Replace the target color with the background color"""
         target_code = self.color_list.get(target_color)
+        print(type(img), type(target_color), type(bg_color))
         if target_code is None:
             return False
         target_code = int(target_code)

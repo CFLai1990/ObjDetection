@@ -344,13 +344,6 @@ def partition_axis(axis_img, axis_id, axis_direction):
             title_array = axis_array_smooth[0:row_num, title_start:title_end]
             # Assume the title should be rotated clockwise for 90 degrees
             title_array = np.rot90(title_array, 3)
-    # Scale the images in case the dpi is too low for detection
-    if tick_array is not None:
-        (h, w) = tick_array.shape[:2]
-        tick_array = cv2.resize(tick_array, (2*w, 2*h), interpolation=cv2.INTER_AREA)
-    if title_array is not None:
-        (h, w) = title_array.shape[:2]
-        title_array = cv2.resize(title_array, (2*w, 2*h), interpolation=cv2.INTER_AREA)
     if TESTING['sign']:
         if line_array is not None:
             cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_line.png', \
@@ -412,6 +405,10 @@ def get_axes_texts(img, axis_entities):
                                 axis_height = axis_height + axis_y_extra
                         # Step 1: crop the axis image
                         axis_img = img[axis_y:(axis_y + axis_height), axis_x:(axis_x + axis_width)]
+                        # Scale the images in case the dpi is too low for detection
+                        if axis_img is not None:
+                            (h, w) = axis_img.shape[:2]
+                            axis_img = cv2.resize(axis_img, (2*w, 2*h), interpolation=cv2.INTER_AREA)
                         # Step 2: enhance the contrast
                         axis_img_enhanced = contrast_enhance(axis_img)
                         # Step 3: partition the image

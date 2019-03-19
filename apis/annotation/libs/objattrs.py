@@ -100,7 +100,6 @@ class ObjAttrs:
             codes = codes + color_map
         self.color_codes = codes
 
-
     def infer(self, img, mode='hsv'):
         """Get the color names for the whole image"""
         if mode == 'munsell':

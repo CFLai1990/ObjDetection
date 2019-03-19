@@ -2,7 +2,9 @@
 import traceback
 import cv2
 import logging
+from .objattrs import ObjAttrs
 from .axisdetection import get_axes_texts
+from .legenddetection import get_legend_info
 
 class AuxDetection:
     """Auxiliary Entity Detection Class"""
@@ -11,6 +13,7 @@ class AuxDetection:
         self.aux = []
         self.axes = None
         self.legends = None
+        self.obj_attrs = ObjAttrs()
 
     def infer_parameters(self, img_path, data_entities):
         """Get the auxiliary data in the vis image"""
@@ -28,11 +31,25 @@ class AuxDetection:
     def get_legends(self, img, data_entities):
         """Get the color legends in the vis image"""
         self.legends = []
+        # Get the data entities with classname "legend"
+        legend_entities = []
+        legend_indices = []
+        if data_entities:
+            for entity_id, data_entity in enumerate(data_entities):
+                entity_class = data_entity.get("class")
+                if entity_class and entity_class == "legend":
+                    legend_indices.append(entity_id)
+            legend_indices.reverse()
+            for legend_id in legend_indices:
+                legend_entity = data_entities.pop(legend_id)
+                legend_entity = self.get_auxiliary_info(legend_entity)
+                legend_entities.append(legend_entity)
+        self.legends = get_legend_info(img, self.obj_attrs, legend_entities)
         if self.legends:
             for legend in self.legends:
                 self.aux.append(legend)
 
-    def get_axis_info(self, data_entity):
+    def get_auxiliary_info(self, data_entity):
         """Get the direction of an axis"""
         direction = None
         bbox = data_entity.get("bbox") or {}
@@ -76,7 +93,7 @@ class AuxDetection:
             axes_indices.reverse()
             for axis_id in axes_indices:
                 axis_entity = data_entities.pop(axis_id)
-                axis_entity = self.get_axis_info(axis_entity)
+                axis_entity = self.get_auxiliary_info(axis_entity)
                 axes_entities.append(axis_entity)
         self.axes = get_axes_texts(img, axes_entities)
         if self.axes:

@@ -1,12 +1,12 @@
 """The module for detecting axes"""
 import traceback
 import math
-from PIL import Image
 import cv2
 import numpy as np
 from pytesseract import pytesseract as pt
 from sklearn.cluster import KMeans
-from .__settings__ import TS_LANG, TESTING
+from .__settings__ import TESTING
+from .image_processing import CV2PIL
 
 GRAY_SCALE_LEVEL = 64
 GRAY_SCALE_BINARY = 128
@@ -14,14 +14,6 @@ GRAY_RANGE = 10
 GAP_PERSENTAGE = 0.04
 THRES_PERSENTAGE = 0
 MARGIN = 3
-
-def PIL2CV(img_PIL):
-    """Convert a PIL image to a CV2 image"""
-    return cv2.cvtColor(np.asarray(img_PIL), cv2.COLOR_RGB2BGR)
-
-def CV2PIL(img_CV):
-    """Convert a CV2 image to a PIL image"""
-    return Image.fromarray(cv2.cvtColor(img_CV, cv2.COLOR_BGR2RGB))
 
 def entropy(labels, base=None):
     """ Computes entropy of label distribution. """

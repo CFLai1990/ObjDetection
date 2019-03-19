@@ -49,7 +49,7 @@ def get_legend_info(img, attrs, legend_entities):
         if img is None or legend_entities is None:
             return data
         (img_height, img_width) = img.shape[:2]
-        mask_img = np.ones(img_height, img_width)
+        mask_img = np.ones((img_height, img_width))
         for legend_id, legend_entity in enumerate(legend_entities):
             legend_bbox = legend_entity.get("bbox")
             legend_score = legend_entity.get("score")

@@ -128,13 +128,13 @@ def partition_legend(legend_img, legend_id):
         legend_end = legend_range["end"]
         if legend_start >= MARGIN:
             legend_start = legend_start - MARGIN
-        legend_array = legend_img[legend_start:legend_end, 0:col_num]
+        legend_array = legend_img[0:row_num, legend_start:legend_end]
     if label_range:
         label_start = label_range["start"]
         label_end = label_range["end"]
         if label_start >= MARGIN:
             label_start = label_start - MARGIN
-        label_array = legend_img[label_start:label_end, 0:col_num]
+        label_array = legend_img[0:row_num, label_start:label_end]
     if TESTING['sign']:
         if legend_array is not None:
             cv2.imwrite(TESTING['dir'] + '/legend_' + str(legend_id) + '_content.png', \
@@ -206,56 +206,56 @@ def get_legend_info(img, attrs, legend_entities):
                             color_img, label_img = partition_legend(legend_img, legend_id)
                             if color_img is not None:
                                 attrs.infer(color_img)
-                            (color_img_w, color_img_h) = color_img.shape[:2]
-                            mask_img = np.ones((color_img_h, color_img_w)).astype(np.uint8)
-                            colors = attrs.get_mask_color(mask_img)
-                            print(colors)
-                            # Step 1: find the background color
-                            max_score = float('-inf')
-                            max_color = None
-                            if colors:
-                                for color in colors:
-                                    c_score = float(colors[color])
-                                    if c_score > max_score:
-                                        max_color = color
-                                        max_score = c_score
-                                background_color = max_color
-                                # Step 2: find the legend color
+                                mask_img = np.ones(color_img.shape[:2]).astype(np.uint8)
+                                colors = attrs.get_mask_color(mask_img)
+                                print(colors)
+                                # Step 1: find the background color
                                 max_score = float('-inf')
                                 max_color = None
-                                for color in colors:
-                                    if color == background_color:
-                                        continue
-                                    c_score = float(colors[color])
-                                    if c_score > max_score:
-                                        max_color = color
-                                        max_score = c_score
-                                legend_color = max_color
-                                # Step 3: replace the legend color with the background color
-                                # if legend_color is not None:
-                                #     legend_img = cv2.cvtColor(legend_img, cv2.COLOR_BGR2GRAY)
-                                #     # Find the background gray scale
-                                #     counter = np.bincount(legend_img.flatten())
-                                #     bg_gray = int(np.argmax(counter))
-                                #     attrs.replace_color(legend_img, legend_color, bg_gray)
-                                #     legend_img = cv2.cvtColor(legend_img, cv2.COLOR_GRAY2BGR)\
-                                #         .astype(np.uint8)
-                            # Step 4: scale up the legend image
-                            (label_img_w, label_img_h) = label_img.shape[:2]
-                            label_img = cv2.resize(label_img, (2*label_img_w, 2*label_img_h), \
-                                interpolation=cv2.INTER_AREA)
-                            img_pil = CV2PIL(label_img)
-                            if TESTING["sign"]:
-                                img_pil.save(TESTING['dir'] + '/legend_test_' + str(legend_id) + \
-                                '.png')
-                            legend_texts = pt.image_to_string(img_pil, config='--psm 6')
-                            print((legend_x, legend_y), legend_texts, legend_color)
-                            # legend_texts = pt.image_to_data(img_pil, config='--psm 6')
-                            # legend_texts = understand_data(legend_texts)
-                        if legend_texts is not None:
-                            formated_legend = get_format_legend(legend_color, legend_texts, \
-                                legend_bbox, legend_score)
-                            data.append(formated_legend)
+                                if colors:
+                                    for color in colors:
+                                        c_score = float(colors[color])
+                                        if c_score > max_score:
+                                            max_color = color
+                                            max_score = c_score
+                                    background_color = max_color
+                                    # Step 2: find the legend color
+                                    max_score = float('-inf')
+                                    max_color = None
+                                    for color in colors:
+                                        if color == background_color:
+                                            continue
+                                        c_score = float(colors[color])
+                                        if c_score > max_score:
+                                            max_color = color
+                                            max_score = c_score
+                                    legend_color = max_color
+                                    # Step 3: replace the legend color with the background color
+                                    # if legend_color is not None:
+                                    #     legend_img = cv2.cvtColor(legend_img, cv2.COLOR_BGR2GRAY)
+                                    #     # Find the background gray scale
+                                    #     counter = np.bincount(legend_img.flatten())
+                                    #     bg_gray = int(np.argmax(counter))
+                                    #     attrs.replace_color(legend_img, legend_color, bg_gray)
+                                    #     legend_img = cv2.cvtColor(legend_img, cv2.COLOR_GRAY2BGR)\
+                                    #         .astype(np.uint8)
+                            if label_img is not None:
+                                # Step 4: scale up the legend image
+                                (label_img_w, label_img_h) = label_img.shape[:2]
+                                label_img = cv2.resize(label_img, (2*label_img_w, 2*label_img_h), \
+                                    interpolation=cv2.INTER_AREA)
+                                img_pil = CV2PIL(label_img)
+                                if TESTING["sign"]:
+                                    img_pil.save(TESTING['dir'] + '/legend_test_' + str(legend_id) + \
+                                    '.png')
+                                legend_texts = pt.image_to_string(img_pil, config='--psm 6')
+                                print((legend_x, legend_y), legend_texts, legend_color)
+                                # legend_texts = pt.image_to_data(img_pil, config='--psm 6')
+                                # legend_texts = understand_data(legend_texts)
+                            if legend_texts is not None:
+                                formated_legend = get_format_legend(legend_color, legend_texts, \
+                                    legend_bbox, legend_score)
+                                data.append(formated_legend)
     except Exception as e:
         print(repr(e))
         traceback.print_exc()

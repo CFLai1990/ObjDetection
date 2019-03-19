@@ -198,7 +198,7 @@ def get_legend_info(img, attrs, legend_entities):
                         if img is not None and isinstance(img, np.ndarray):
                             legend_img = img[legend_y:(legend_y + legend_height), \
                                 legend_x:(legend_x + legend_width)]
-                            color_img, label_img = legend_id(legend_img, legend_id)
+                            color_img, label_img = partition_legend(legend_img, legend_id)
                             attrs.infer(color_img)
                             (color_img_w, color_img_h) = color_img.shape[:2]
                             mask_img = np.ones((color_img_h, color_img_w)).astype(np.uint8)

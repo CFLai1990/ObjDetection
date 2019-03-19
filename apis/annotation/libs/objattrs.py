@@ -54,7 +54,6 @@ class ObjAttrs:
                     color_list[color_name]['low'].append(hsv_threshold)
                 else:
                     color_list[color_name]['high'].append(hsv_threshold)
-            print(color_list)
             self.color_list = color_list
 
     def infer_color(self, lab):
@@ -86,8 +85,6 @@ class ObjAttrs:
         height = img.shape[0]
         width = img.shape[1]
         codes = np.zeros((height, width), dtype=np.uint8)
-        if height > 1000:
-            print(img[830][690])
         for color in self.color_list.values():
             threshold_num = len(color['low'])
             if threshold_num == 1:
@@ -96,17 +93,10 @@ class ObjAttrs:
                 mask = np.zeros((height, width), dtype=np.uint8)
                 for i in range(threshold_num):
                     mask_i = cv2.inRange(img, color['low'][i], color['high'][i])
-                    if height > 1000:
-                        print("code: ", color["code"])
-                        print("range: ", color['low'][i], color['high'][i])
-                        print(mask_i[830][690])
                     mask = cv2.bitwise_or(mask, mask_i)
             color_map = np.empty((height, width), dtype=np.uint8)
             color_map.fill(color['code'])
             color_map = cv2.bitwise_and(color_map, color_map, mask=mask)
-            if height > 1000:
-                print("code: ", color["code"])
-                print(color_map[830][690])
             codes = codes + color_map
         self.color_codes = codes
 
@@ -208,3 +198,10 @@ class ObjAttrs:
             'size': size,
             'position': position
         }
+
+    def replace_color(self, img, target_color, bg_color):
+        """Replace the target color with the background color"""
+        target_code = self.color_list.get(target_color)
+        if target_code is None:
+            return False
+        img[np.where((self.color_codes == target_code))] = bg_color

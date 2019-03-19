@@ -52,6 +52,7 @@ def get_legend_info(img, attrs, legend_entities):
         for legend_id, legend_entity in enumerate(legend_entities):
             legend_bbox = legend_entity.get("bbox")
             legend_score = legend_entity.get("score")
+            legend_color = None
             if legend_bbox:
                 legend_x = legend_bbox.get("x")
                 legend_y = legend_bbox.get("y")
@@ -64,8 +65,32 @@ def get_legend_info(img, attrs, legend_entities):
                                 legend_x:(legend_x + legend_width)]
                             attrs.infer(legend_img)
                             mask_img = np.ones((legend_height, legend_width)).astype(np.uint8)
-                            color = attrs.get_mask_color(mask_img)
-                            print("color: ", color)
+                            colors = attrs.get_mask_color(mask_img)
+                            # Step 1: find the background color
+                            max_score = float('-inf')
+                            max_color = None
+                            if colors:
+                                for color, c_score in enumerate(colors):
+                                    if c_score > max_score:
+                                        max_color = color
+                                background_color = max_color
+                                # Step 2: find the legend color
+                                max_score = float('-inf')
+                                max_color = None
+                                for color, c_score in enumerate(colors):
+                                    if color == background_color:
+                                        continue
+                                    if c_score > max_score:
+                                        max_color = color
+                                legend_color = max_color
+                                # Step 3: replace the legend color with the background color
+                                if legend_color is not None:
+                                    legend_img = cv2.cvtColor(legend_img, cv2.COLOR_BGR2GRAY)
+                                    # Find the background gray scale
+                                    counter = np.bincount(legend_img.flatten())
+                                    bg_gray = int(np.argmax(counter))
+                                    attrs.replace_color(legend_img, legend_color, bg_gray)
+                                    legend_img = cv2.cvtColor(legend_img, cv2.COLOR_GRAY2BGR).astype(np.uint8)
                             img_pil = CV2PIL(legend_img)
                             if TESTING["sign"]:
                                 img_pil.save(TESTING['dir'] + '/legend_' + str(legend_id) + \
@@ -75,7 +100,7 @@ def get_legend_info(img, attrs, legend_entities):
                             # legend_texts = pt.image_to_data(img_pil, config='--psm 6')
                             # legend_texts = understand_data(legend_texts)
                         if legend_texts is not None:
-                            formated_legend = get_format_legend("red", legend_texts, \
+                            formated_legend = get_format_legend(legend_color, legend_texts, \
                                 legend_bbox, legend_score)
                             data.append(formated_legend)
     except Exception as e:

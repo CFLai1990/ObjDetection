@@ -96,6 +96,10 @@ class ObjAttrs:
                 mask = np.zeros((height, width), dtype=np.uint8)
                 for i in range(threshold_num):
                     mask_i = cv2.inRange(img, color['low'][i], color['high'][i])
+                    if height > 1000:
+                        print("code: ", color["code"])
+                        print("range: ", color['low'][i], color['high'][i])
+                        print(mask_i[830][690])
                     mask = cv2.bitwise_or(mask, mask_i)
             color_map = np.empty((height, width), dtype=np.uint8)
             color_map.fill(color['code'])

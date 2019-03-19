@@ -62,7 +62,7 @@ def get_legend_info(img, attrs, legend_entities):
                         if img is not None and isinstance(img, np.ndarray):
                             legend_img = img[legend_y:(legend_y + legend_height), legend_x:(legend_x + legend_width)]
                             attrs.infer(legend_img)
-                            mask_img = np.ones((legend_height, legend_width))
+                            mask_img = np.ones((legend_height, legend_width)).astype(np.uint8)
                             color = attrs.get_mask_color(mask_img)
                             print("color: ", color)
                             img_pil = CV2PIL(legend_width)

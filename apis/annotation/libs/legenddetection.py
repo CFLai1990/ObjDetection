@@ -97,6 +97,8 @@ def divide_by_threshold(array):
 def partition_legend(legend_img, legend_id):
     """Partition the legend image into two parts: legend and label"""
     # Initialize
+    legend_array = None
+    label_array = None
     legend_gray = cv2.cvtColor(legend_img, cv2.COLOR_BGR2GRAY).astype(np.uint8)
     row_num = legend_img.shape[0]
     col_num = legend_img.shape[1]

@@ -8,7 +8,7 @@ from .__settings__ import TESTING
 from .image_processing import CV2PIL
 
 GRAY_SCALE_LEVEL = 32
-MARGIN = 3
+MARGIN = 2
 
 def entropy(labels, base=None):
     """ Computes entropy of label distribution. """
@@ -201,7 +201,8 @@ def get_legend_info(img, attrs, legend_entities):
                             legend_img = img[legend_y:(legend_y + legend_height), \
                                 legend_x:(legend_x + legend_width)]
                             color_img, label_img = partition_legend(legend_img, legend_id)
-                            attrs.infer(color_img)
+                            if color_img is not None:
+                                attrs.infer(color_img)
                             (color_img_w, color_img_h) = color_img.shape[:2]
                             mask_img = np.ones((color_img_h, color_img_w)).astype(np.uint8)
                             colors = attrs.get_mask_color(mask_img)

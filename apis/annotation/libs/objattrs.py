@@ -116,6 +116,9 @@ class ObjAttrs:
     def get_mask_color(self, mask_img):
         """Count the colors inside the mask"""
         color_codes = self.color_codes
+        print(color_codes.shape)
+        print(mask_img.shape)
+        print(mask_img.dtype)
         masked = cv2.bitwise_and(color_codes, color_codes, mask=mask_img)
         unique, counts = np.unique(masked, return_counts=True)
         code_dict = dict(zip(unique, counts))

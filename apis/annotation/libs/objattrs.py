@@ -86,6 +86,8 @@ class ObjAttrs:
         height = img.shape[0]
         width = img.shape[1]
         codes = np.zeros((height, width), dtype=np.uint8)
+        if height > 1000:
+            print(img[830][690])
         for color in self.color_list.values():
             threshold_num = len(color['low'])
             if threshold_num == 1:
@@ -98,9 +100,10 @@ class ObjAttrs:
             color_map = np.empty((height, width), dtype=np.uint8)
             color_map.fill(color['code'])
             color_map = cv2.bitwise_and(color_map, color_map, mask=mask)
+            if height > 1000:
+                print("code: ", color["code"])
+                print(color_map[830][690])
             codes = codes + color_map
-        if height > 1000 or width > 1000:
-            np.savetxt('home/chufan.lai/testing/legend.txt', codes)
         self.color_codes = codes
 
     def infer(self, img, mode='hsv'):

@@ -267,6 +267,10 @@ def partition_axis(axis_img, axis_id, axis_direction):
     col_num = axis_array.shape[1]
     # Denoising: bilateral filtering
     axis_array_smooth = cv2.bilateralFilter(axis_array, 4, 50, 50)
+    # Scale the images in case the dpi is too low for detection
+    if axis_array_smooth is not None:
+        (h, w) = axis_img.shape[:2]
+        axis_array_smooth = cv2.resize(axis_array_smooth, (2*w, 2*h), interpolation=cv2.INTER_AREA)
     # Simplify the gray scales
     axis_array_simp = (axis_array_smooth / GRAY_SCALE_LEVEL).astype(np.uint8)
     axis_array_simp = axis_array_simp * GRAY_SCALE_LEVEL
@@ -296,8 +300,6 @@ def partition_axis(axis_img, axis_id, axis_direction):
     # axis_array_smooth = (axis_array / GRAY_SCALE_BINARY).astype(np.uint8)
     # axis_array_smooth = axis_array_smooth * GRAY_SCALE_BINARY
     # axis_array_smooth[axis_array_smooth == 128] = 255
-    # Smoothing
-    # axis_array_smooth = cv2.bilateralFilter(axis_array, 4, 50, 50)
     if axis_direction == 0:
         # Step 2: divide the axis image
         line_range, tick_range, title_range = divide_by_threshold(row_ent)
@@ -405,10 +407,6 @@ def get_axes_texts(img, axis_entities):
                                 axis_height = axis_height + axis_y_extra
                         # Step 1: crop the axis image
                         axis_img = img[axis_y:(axis_y + axis_height), axis_x:(axis_x + axis_width)]
-                        # Scale the images in case the dpi is too low for detection
-                        if axis_img is not None:
-                            (h, w) = axis_img.shape[:2]
-                            axis_img = cv2.resize(axis_img, (2*w, 2*h), interpolation=cv2.INTER_AREA)
                         # Step 2: enhance the contrast
                         axis_img_enhanced = contrast_enhance(axis_img)
                         # Step 3: partition the image

@@ -63,9 +63,13 @@ def get_legend_info(img, attrs, legend_entities):
                         if img is not None and isinstance(img, np.ndarray):
                             legend_img = img[legend_y:(legend_y + legend_height), \
                                 legend_x:(legend_x + legend_width)]
+                            # Step 0: scale up the legend image
+                            legend_img = cv2.resize(legend_img, (2*legend_width, 2*legend_height), \
+                                interpolation=cv2.INTER_AREA)
                             attrs.infer(legend_img)
                             mask_img = np.ones((legend_height, legend_width)).astype(np.uint8)
                             colors = attrs.get_mask_color(mask_img)
+                            print(colors)
                             # Step 1: find the background color
                             max_score = float('-inf')
                             max_color = None
@@ -93,8 +97,6 @@ def get_legend_info(img, attrs, legend_entities):
                                     # Find the background gray scale
                                     counter = np.bincount(legend_img.flatten())
                                     bg_gray = int(np.argmax(counter))
-                                    print("legend_color: ", legend_color, type(legend_color))
-                                    print("background grayscale: ", bg_gray)
                                     attrs.replace_color(legend_img, legend_color, bg_gray)
                                     legend_img = cv2.cvtColor(legend_img, cv2.COLOR_GRAY2BGR)\
                                         .astype(np.uint8)
@@ -103,7 +105,6 @@ def get_legend_info(img, attrs, legend_entities):
                                 img_pil.save(TESTING['dir'] + '/legend_' + str(legend_id) + \
                                 '.png')
                             legend_texts = pt.image_to_string(img_pil, config='--psm 6')
-                            print("label: ", legend_texts)
                             # legend_texts = pt.image_to_data(img_pil, config='--psm 6')
                             # legend_texts = understand_data(legend_texts)
                         if legend_texts is not None:

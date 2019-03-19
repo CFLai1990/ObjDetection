@@ -6,7 +6,7 @@ import numpy as np
 from pytesseract import pytesseract as pt
 from sklearn.cluster import KMeans
 from .__settings__ import TESTING
-from .image_processing import CV2PIL
+from .image_processing import CV2PIL, contrast_enhance
 
 GRAY_SCALE_LEVEL = 64
 GRAY_SCALE_BINARY = 128
@@ -357,16 +357,6 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 title_array, \
                 [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
     return line_array, tick_array, title_array
-
-def contrast_enhance(axis_img):
-    """Enhance the contrast of the axis image"""
-    lab= cv2.cvtColor(axis_img, cv2.COLOR_BGR2LAB)
-    l, a, b = cv2.split(lab)
-    clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
-    cl = clahe.apply(l)
-    limg = cv2.merge((cl, a, b))
-    enhanced_img = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
-    return enhanced_img
 
 def get_axes_texts(img, axis_entities):
     """The function for getting the texts in the axis"""

@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 from pytesseract import pytesseract as pt
 from .__settings__ import TESTING
-from .image_processing import CV2PIL
+from .image_processing import CV2PIL, contrast_enhance
 
 def get_format_legend(legend_color, legend_texts, legend_bbox, legend_score):
     """Pack the textual information of the axis"""
@@ -63,6 +63,7 @@ def get_legend_info(img, attrs, legend_entities):
                         if img is not None and isinstance(img, np.ndarray):
                             legend_img = img[legend_y:(legend_y + legend_height), \
                                 legend_x:(legend_x + legend_width)]
+                            legend_img = contrast_enhance(legend_img)
                             attrs.infer(legend_img)
                             mask_img = np.ones((legend_height, legend_width)).astype(np.uint8)
                             colors = attrs.get_mask_color(mask_img)

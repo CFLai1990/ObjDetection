@@ -267,10 +267,6 @@ def partition_axis(axis_img, axis_id, axis_direction):
     col_num = axis_array.shape[1]
     # Denoising: bilateral filtering
     axis_array_smooth = cv2.bilateralFilter(axis_array, 4, 50, 50)
-    # Scale the images in case the dpi is too low for detection
-    if axis_array_smooth is not None:
-        (h, w) = axis_img.shape[:2]
-        axis_array_smooth = cv2.resize(axis_array_smooth, (2*w, 2*h), interpolation=cv2.INTER_AREA)
     # Simplify the gray scales
     axis_array_simp = (axis_array_smooth / GRAY_SCALE_LEVEL).astype(np.uint8)
     axis_array_simp = axis_array_simp * GRAY_SCALE_LEVEL
@@ -300,12 +296,14 @@ def partition_axis(axis_img, axis_id, axis_direction):
     # axis_array_smooth = (axis_array / GRAY_SCALE_BINARY).astype(np.uint8)
     # axis_array_smooth = axis_array_smooth * GRAY_SCALE_BINARY
     # axis_array_smooth[axis_array_smooth == 128] = 255
+    # Smoothing
+    # axis_array_smooth = cv2.bilateralFilter(axis_array, 4, 50, 50)
     if axis_direction == 0:
         # Step 2: divide the axis image
         line_range, tick_range, title_range = divide_by_threshold(row_ent)
         # Step 3: crop the axis image
         if line_range:
-            line_array = axis_array_smooth[line_range["start"]:line_range["end"], 0:col_num]
+            line_array = axis_array[line_range["start"]:line_range["end"], 0:col_num]
         if tick_range:
             tick_start = tick_range["start"]
             tick_end = tick_range["end"]
@@ -313,7 +311,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 tick_start = tick_start - MARGIN
             if tick_end <= row_num - MARGIN:
                 tick_end = tick_end + MARGIN
-            tick_array = axis_array_smooth[tick_start:tick_end, 0:col_num]
+            tick_array = axis_array[tick_start:tick_end, 0:col_num]
         if title_range:
             title_start = title_range["start"]
             title_end = title_range["end"]
@@ -321,13 +319,13 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 title_start = title_start - MARGIN
             if title_end <= row_num - MARGIN:
                 title_end = title_end + MARGIN
-            title_array = axis_array_smooth[title_start:title_end, 0:col_num]
+            title_array = axis_array[title_start:title_end, 0:col_num]
     elif axis_direction == 90:
         # Step 2: divide the axis image
         line_range, tick_range, title_range = divide_by_threshold(col_ent)
         # Step 3: crop the axis image
         if line_range:
-            line_array = axis_array_smooth[0:row_num, line_range["start"]:line_range["end"]]
+            line_array = axis_array[0:row_num, line_range["start"]:line_range["end"]]
         if tick_range:
             tick_start = tick_range["start"]
             tick_end = tick_range["end"]
@@ -335,7 +333,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 tick_start = tick_start - MARGIN
             if tick_end <= col_num - MARGIN:
                 tick_end = tick_end + MARGIN
-            tick_array = axis_array_smooth[0:row_num, tick_start:tick_end]
+            tick_array = axis_array[0:row_num, tick_start:tick_end]
         if title_range:
             title_start = title_range["start"]
             title_end = title_range["end"]
@@ -343,9 +341,16 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 title_start = title_start - MARGIN
             if title_end <= col_num - MARGIN:
                 title_end = title_end + MARGIN
-            title_array = axis_array_smooth[0:row_num, title_start:title_end]
+            title_array = axis_array[0:row_num, title_start:title_end]
             # Assume the title should be rotated clockwise for 90 degrees
             title_array = np.rot90(title_array, 3)
+    # Scale the images in case the dpi is too low for detection
+    if tick_array is not None:
+        (h, w) = tick_array.shape[:2]
+        tick_array = cv2.resize(tick_array, (2*w, 2*h), interpolation=cv2.INTER_AREA)
+    if title_array is not None:
+        (h, w) = title_array.shape[:2]
+        title_array = cv2.resize(title_array, (2*w, 2*h), interpolation=cv2.INTER_AREA)
     if TESTING['sign']:
         if line_array is not None:
             cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_line.png', \

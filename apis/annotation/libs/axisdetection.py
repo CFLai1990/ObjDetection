@@ -267,8 +267,6 @@ def partition_axis(axis_img, axis_id, axis_direction):
     col_num = axis_array.shape[1]
     # Denoising: bilateral filtering
     axis_array_smooth = cv2.bilateralFilter(axis_array, 4, 50, 50)
-    clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
-    axis_array_smooth = clahe.apply(axis_array_smooth)
     # Simplify the gray scales
     axis_array_simp = (axis_array_smooth / GRAY_SCALE_LEVEL).astype(np.uint8)
     axis_array_simp = axis_array_simp * GRAY_SCALE_LEVEL

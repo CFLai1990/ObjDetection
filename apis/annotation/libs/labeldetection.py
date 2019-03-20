@@ -62,11 +62,6 @@ def get_label_texts(img, data_entities):
                         (data_img_h, data_img_w) = data_img.shape[:2]
                         data_img = cv2.cvtColor(data_img, \
                             cv2.COLOR_BGR2GRAY).astype(np.uint8)
-                        # # Denoising: bilateral filtering
-                        # data_img = cv2.bilateralFilter(data_img, 4, 50, 50)
-                        # # Simplify the gray scales
-                        # data_img = (data_img / GRAY_SCALE_LEVEL).astype(np.uint8)
-                        # data_img = data_img * GRAY_SCALE_LEVEL
                         data_img = cv2.resize(data_img, \
                             (2*data_img_w, 2*data_img_h), \
                             interpolation=cv2.INTER_AREA)
@@ -76,4 +71,8 @@ def get_label_texts(img, data_entities):
                                 [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
                         img_pil = CV2PIL(data_img)
                         label_texts = pt.image_to_string(img_pil, config='--psm 6')
-                        print(label_texts)
+                        if label_texts == "" or len(label_texts) < 2:
+                            continue
+                        else:
+                            labels = label_texts.split("\n")
+                            data_entity["label"] = labels

@@ -237,6 +237,7 @@ class ObjAttrs:
         # Set up the mask image
         mask_img = np.zeros(img.shape[:2], dtype=np.uint8)
         bbox_mask = np.zeros(img.shape[:2])
+        print("bbox: ", bbox)
         bbox_poly = np.array([\
             [bbox["x"], bbox["y"]],\
             [bbox["x"] + bbox["width"], bbox["y"]],\

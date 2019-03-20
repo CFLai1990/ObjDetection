@@ -252,7 +252,7 @@ class ObjAttrs:
         color_mask = cv2.inRange(img_lab, major_color_lower, major_color_upper)
         mask_img[np.where((bbox_mask > 0) & (color_mask > 0))] = 255
         rand_id = random.randint(0, 99)
-        print(rand_id, major_color_bgr)
+        print(rand_id, major_color_lab)
         if TESTING["label"]["sign"]:
             cv2.imwrite(TESTING['dir'] + '/mask_' + str(rand_id) + '.png', \
                 mask_img, \

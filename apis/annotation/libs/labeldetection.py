@@ -72,8 +72,8 @@ def get_label_texts(img, data_entities):
                         major_color_upper = np.array(major_color_bgr, dtype=np.int8) + COLOR_RANGE
                         major_color_lower = np.array(major_color_bgr, dtype=np.int8) - COLOR_RANGE
                         data_img[np.where((data_mask > 0) \
-                            & ((data_mask < major_color_upper).all()) \
-                            & ((data_mask > major_color_lower).all()))] = major_color_bgr
+                            & ((data_img < major_color_upper).all()) \
+                            & ((data_img > major_color_lower).all()))] = major_color_bgr
                         # data_img_enhanced = contrast_enhance(data_img)
                         (data_img_h, data_img_w) = data_img.shape[:2]
                         data_img_enhanced = cv2.cvtColor(data_img_enhanced, \

@@ -79,10 +79,11 @@ def get_label_texts(img, data_entities):
                         (data_img_h, data_img_w) = data_img.shape[:2]
                         data_img = cv2.cvtColor(data_img, \
                             cv2.COLOR_BGR2GRAY).astype(np.uint8)
-                        data_img = (data_img / GRAY_SCALE_LEVEL).astype(np.uint8)
-                        data_img = data_img * GRAY_SCALE_LEVEL
                         # Denoising: bilateral filtering
                         data_img = cv2.bilateralFilter(data_img, 4, 50, 50)
+                        # Simplify the gray scales
+                        data_img = (data_img / GRAY_SCALE_LEVEL).astype(np.uint8)
+                        data_img = data_img * GRAY_SCALE_LEVEL
                         data_img = cv2.resize(data_img, \
                             (2*data_img_w, 2*data_img_h), \
                             interpolation=cv2.INTER_AREA)

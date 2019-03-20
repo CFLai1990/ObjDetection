@@ -41,6 +41,7 @@ def get_major_color(colors, colors_rgb, mode="bgr"):
                 max_score = c_score
                 max_rgb = colors_rgb[color]
         max_color = max_rgb.copy()
+        print("rgb: ", max_color)
         if mode == "bgr":
             max_color.reverse()
         elif mode == "lab":

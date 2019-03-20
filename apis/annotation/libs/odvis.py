@@ -325,6 +325,7 @@ def vis_one_image(
                 img[:, :, c] = color_mask[c]
             e = masks[:, :, i]
 
+            print(contour)
             if contour is None:
                 contour, hier = cv2.findContours(e.copy(), \
                     cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)

@@ -246,14 +246,15 @@ class ObjAttrs:
         cv2.fillPoly(bbox_mask, [bbox_poly], 255)
         # Find the contour of the pure-color block
         major_color_bgr = get_major_color(colors, colors_rgb)
-        major_color_upper = np.array(major_color_bgr, dtype=np.int8) + COLOR_RANGE
-        major_color_lower = np.array(major_color_bgr, dtype=np.int8) - COLOR_RANGE
+        major_color_upper = np.array(major_color_bgr, dtype=np.int32) + COLOR_RANGE
+        major_color_lower = np.array(major_color_bgr, dtype=np.int32) - COLOR_RANGE
         mask_img[np.where((bbox_mask > 0) \
-                            & ((img < major_color_upper).all()) \
-                            & ((img > major_color_lower).all()))] = 255
+                            & (img < major_color_upper).all() \
+                            & (img > major_color_lower).all())] = 255
+        print(major_color_upper, major_color_lower)
         test_img = np.zeros(img.shape[:2])
-        test_img[np.where(((img < major_color_upper).all()) \
-                            & ((img > major_color_lower).all()))] = 255
+        test_img[np.where((img < major_color_upper).all() \
+                            & (img > major_color_lower).all())] = 255
         rand_id = random.randint(0, 99)
         if TESTING["label"]["sign"]:
             cv2.imwrite(TESTING['dir'] + '/bbox_' + str(rand_id) + '.png', \

@@ -53,8 +53,8 @@ def get_label_texts(img, data_entities):
                         # Step 1: fill the other areas with the major color
                         data_img[np.where(data_mask == 0)] = major_color_bgr
                         # Step 2: smooth the similar colors
-                        major_color_upper = np.array(major_color_bgr, dtype=np.int8) + COLOR_RANGE
-                        major_color_lower = np.array(major_color_bgr, dtype=np.int8) - COLOR_RANGE
+                        major_color_upper = np.array(major_color_bgr, dtype=np.int32) + COLOR_RANGE
+                        major_color_lower = np.array(major_color_bgr, dtype=np.int32) - COLOR_RANGE
                         data_img[np.where((data_mask > 0) \
                             & ((data_img < major_color_upper).all()) \
                             & ((data_img > major_color_lower).all()))] = major_color_bgr

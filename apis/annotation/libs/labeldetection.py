@@ -66,10 +66,6 @@ def get_label_texts(img, data_entities):
                             data_x:(data_x + data_width)].copy()
                         data_mask = mask_img[data_y:(data_y + data_height),\
                             data_x:(data_x + data_width)]
-                        if TESTING["label"]["sign"]:
-                            cv2.imwrite(TESTING['dir'] + '/label_' + str(data_id) + '_mask.png', \
-                                data_mask, \
-                                [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
                         # Step 1: fill the other areas with the major color
                         data_img[np.where(data_mask == 0)] = major_color_bgr
                         # Step 2: smooth the similar colors

@@ -75,6 +75,7 @@ def get_label_texts(img, data_entities):
                             & ((data_img < major_color_upper).all()) \
                             & ((data_img > major_color_lower).all()))] = major_color_bgr
                         # data_img_enhanced = contrast_enhance(data_img)
+                        data_img_enhanced = data_img
                         (data_img_h, data_img_w) = data_img.shape[:2]
                         data_img_enhanced = cv2.cvtColor(data_img_enhanced, \
                             cv2.COLOR_BGR2GRAY).astype(np.uint8)

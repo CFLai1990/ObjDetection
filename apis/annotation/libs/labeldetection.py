@@ -19,6 +19,9 @@ def get_label_texts(img, data_entities):
                 data_y = bbox.get("y")
                 data_width = bbox.get("width")
                 data_height = bbox.get("height")
+                if TESTING["label"]["sign"]:
+                    print(bbox)
+                    print(data_x, data_y, data_width, data_height)
                 if data_x and data_y and data_width and data_height:
                     if data_x >= 0 and data_y >= 0 and data_width > 0 and data_height > 0:
                         data_img = img[data_y:(data_y + data_height), data_x:(data_x + data_width)]

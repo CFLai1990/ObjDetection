@@ -55,7 +55,7 @@ def divide_by_threshold(array):
             range_head = temp_range["start"]
             if empty_ranges.get(range_head) is None:
                 empty_ranges[range_head] = temp_range
-    print(empty_ranges)
+    # print(empty_ranges)
     # Step 1-2: find the non-empty ranges
     solid_ranges = {}
     temp_range = {}
@@ -79,7 +79,7 @@ def divide_by_threshold(array):
             range_head = temp_range["start"]
             if solid_ranges.get(range_head) is None:
                 solid_ranges[range_head] = temp_range
-    print(solid_ranges)
+    # print(solid_ranges)
     # Step 2: Decide which range belongs to the legend
     legend_range = None
     label_range = None
@@ -208,7 +208,7 @@ def get_legend_info(img, attrs, legend_entities):
                                 attrs.infer(color_img)
                                 mask_img = np.ones(color_img.shape[:2]).astype(np.uint8)
                                 colors = attrs.get_mask_color(mask_img)
-                                print(colors)
+                                # print(colors)
                                 # find the legend color
                                 max_score = float('-inf')
                                 max_color = None
@@ -239,7 +239,8 @@ def get_legend_info(img, attrs, legend_entities):
                                     img_pil.save(TESTING['dir'] + '/legend_test_' + str(legend_id) + \
                                     '.png')
                                 legend_texts = pt.image_to_string(img_pil, config='--psm 6')
-                                print((legend_x, legend_y), legend_texts, legend_color)
+                                if TESTING["legend"]["sign"]:
+                                    print((legend_x, legend_y), legend_texts, legend_color)
                                 # legend_texts = pt.image_to_data(img_pil, config='--psm 6')
                                 # legend_texts = understand_data(legend_texts)
                             if legend_texts is not None:

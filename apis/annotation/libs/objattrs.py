@@ -8,7 +8,7 @@ import cv2
 from colormath.color_objects import LabColor, HSVColor
 from colormath.color_diff import delta_e_cie2000 as color_diff
 from colormath.color_conversions import convert_color
-from .image_processing import get_mode, get_major_color
+from .image_processing import get_mode, get_major_color, get_contour_area
 from .__settings__ import COLOR_CODE, COLOR_MUNSELL, COLOR_HSV, TESTING
 
 OUTPUT_DIR = os.path.abspath('./files/annotation')
@@ -258,17 +258,17 @@ class ObjAttrs:
             cv2.imwrite(TESTING['dir'] + '/mask_' + str(rand_id) + '.png', \
                 mask_img, \
                 [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
-        new_contour_list, hier = cv2.findContours(mask_img, \
-                    cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours, hier = cv2.findContours(mask_img, \
+                    cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         # Remove the bad contours
-        if new_contour_list:
-            bad_contours = []
-            for c_id, contour in enumerate(new_contour_list):
-                c_length = contour.reshape((-1, 2)).shape[0]
-                if c_length <= 2:
-                    bad_contours.append(c_id)
-            if bad_contours:
-                bad_contours.reverse()
-                for bad_id in bad_contours:
-                    new_contour_list.pop(bad_id)
+        new_contour_list = []
+        if contours:
+            max_contour = None
+            max_contour_area = float('-inf')
+            for contour in contours:
+                area = get_contour_area(contour, "np")
+                if area > max_contour_area:
+                    max_contour_area = area
+                    max_contour = contour
+            new_contour_list.append(max_contour)
         return new_contour_list

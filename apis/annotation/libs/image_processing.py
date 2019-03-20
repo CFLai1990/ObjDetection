@@ -53,4 +53,17 @@ def get_major_color(colors, colors_rgb, mode="bgr"):
             fake_img = cv2.cvtColor(fake_img, cv2.COLOR_RGB2HSV)
             max_color = fake_img[0][0]
     return max_color
-    
+
+def get_contour_area(contour, c_type="np"):
+    """Get the area of a certain mask"""
+    area = 0
+    if contour is not None:
+        if c_type == "np":
+            area = cv2.contourArea(contour)
+        elif c_type == "list":
+            pt_num = len(contour)
+            np_contour = np.array((pt_num, 1, 2), dtype=np.int32)
+            for i in range(pt_num):
+                np_contour[i, 0] = contour[i]
+            area = cv2.contourArea(np_contour)
+    return area

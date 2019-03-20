@@ -5,7 +5,7 @@ import numpy as np
 from pytesseract import pytesseract as pt
 from sklearn.cluster import KMeans
 from .__settings__ import TESTING
-from .image_processing import CV2PIL, get_major_color
+from .image_processing import CV2PIL, get_major_color, get_contour_area
 
 GRAY_SCALE_LEVEL = 64
 COLOR_RANGE = 16
@@ -14,11 +14,12 @@ def get_mask_img(img, masks):
     """Get the largest mask of the entity"""
     mask_img = np.zeros(img.shape[:2])
     major_mask = None
-    major_mask_pt_num = float("-inf")
+    major_mask_area = float("-inf")
     if masks:
         for mask in masks:
-            if mask and len(mask) > major_mask_pt_num:
-                major_mask_pt_num = len(mask)
+            contour_area = get_contour_area(mask, "list")
+            if contour_area > major_mask_area:
+                major_mask_area = contour_area
                 major_mask = mask
         if major_mask is not None:
             mask_polygon = np.array([[major_mask]], dtype=np.int32)

@@ -47,5 +47,9 @@ def get_major_color(colors, colors_rgb, mode="bgr"):
             fake_img = np.array([[max_color]], dtype=np.uint8)
             fake_img = cv2.cvtColor(fake_img, cv2.COLOR_BGR2LAB)
             max_color = fake_img[0][0]
+        elif mode == "hsv":
+            fake_img = np.array([[max_color]], dtype=np.uint8)
+            fake_img = cv2.cvtColor(fake_img, cv2.COLOR_BGR2HSV)
+            max_color = fake_img[0][0]
     return max_color
     

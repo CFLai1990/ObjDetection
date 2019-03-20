@@ -12,7 +12,7 @@ from .image_processing import get_mode, get_major_color
 from .__settings__ import COLOR_CODE, COLOR_MUNSELL, COLOR_HSV, TESTING
 
 OUTPUT_DIR = os.path.abspath('./files/annotation')
-COLOR_RANGE_LAB = np.array([5, 8, 8], dtype=np.int32)
+COLOR_RANGE_HSV = np.array([5, 8, 8], dtype=np.int32)
 
 class ObjAttrs:
     """The class for attribute detection"""
@@ -245,14 +245,14 @@ class ObjAttrs:
             ])
         cv2.fillPoly(bbox_mask, [bbox_poly], 255)
         # Find the contour of the pure-color block
-        major_color_lab = get_major_color(colors, colors_rgb, "lab")
-        major_color_upper = np.array(major_color_lab, dtype=np.int32) + COLOR_RANGE_LAB
-        major_color_lower = np.array(major_color_lab, dtype=np.int32) - COLOR_RANGE_LAB
-        img_lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
-        color_mask = cv2.inRange(img_lab, major_color_lower, major_color_upper)
+        major_color_hsv = get_major_color(colors, colors_rgb, "hsv")
+        major_color_upper = np.array(major_color_hsv, dtype=np.int32) + COLOR_RANGE_HSV
+        major_color_lower = np.array(major_color_hsv, dtype=np.int32) - COLOR_RANGE_HSV
+        img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        color_mask = cv2.inRange(img_hsv, major_color_lower, major_color_upper)
         mask_img[np.where((bbox_mask > 0) & (color_mask > 0))] = 255
         rand_id = random.randint(0, 99)
-        print(rand_id, major_color_lab)
+        print(rand_id, major_color_hsv)
         if TESTING["label"]["sign"]:
             cv2.imwrite(TESTING['dir'] + '/mask_' + str(rand_id) + '.png', \
                 mask_img, \

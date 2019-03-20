@@ -251,13 +251,11 @@ class ObjAttrs:
         mask_img[np.where((bbox_mask > 0) \
                             & ((img < major_color_upper).all()) \
                             & ((img > major_color_lower).all()))] = 255
-        rand_id = random.randint(0,99)
+        rand_id = random.randint(0, 99)
+        print(rand_id, major_color_bgr)
         if TESTING["label"]["sign"]:
             cv2.imwrite(TESTING['dir'] + '/contour_' + str(rand_id) + '.png', \
                 mask_img, \
-                [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
-            cv2.imwrite(TESTING['dir'] + '/bbox_' + str(rand_id) + '.png', \
-                bbox_mask, \
                 [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
         new_contour_list, hier = cv2.findContours(mask_img, \
                     cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)

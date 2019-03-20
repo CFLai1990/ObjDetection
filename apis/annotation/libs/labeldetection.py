@@ -60,7 +60,8 @@ def get_label_texts(img, data_entities):
                             cv2.imwrite(TESTING['dir'] + '/label_' + str(data_id) + '_test.png', \
                                 data_img, \
                                 [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
-                        data_img[np.where(data_mask == 0)] = major_color_bgr
+                        test = data_img[np.where(data_mask == 0)]
+                        print(test)
                         data_img_enhanced = contrast_enhance(data_img)
                         (data_img_h, data_img_w) = data_img.shape[:2]
                         data_img_enhanced = cv2.cvtColor(data_img_enhanced, \

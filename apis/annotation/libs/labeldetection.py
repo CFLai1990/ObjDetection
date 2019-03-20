@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 from pytesseract import pytesseract as pt
 from sklearn.cluster import KMeans
-from .__settings__ import TESTING
+from .__settings__ import TESTING, TS_LANG
 from .image_processing import CV2PIL, contrast_enhance
 
 GRAY_SCALE_LEVEL = 64
@@ -89,5 +89,5 @@ def get_label_texts(img, data_entities):
                                 data_img, \
                                 [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
                         img_pil = CV2PIL(data_img)
-                        label_texts = pt.image_to_string(img_pil, config='--psm 6')
+                        label_texts = pt.image_to_string(img_pil, lang=TS_LANG, config='--psm 6')
                         print(label_texts)

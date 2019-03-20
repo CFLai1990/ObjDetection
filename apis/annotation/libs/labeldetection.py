@@ -38,7 +38,7 @@ def get_label_texts(img, data_entities):
             mask_img = get_mask_img(img, data_entity.get("mask"))
             colors = data_entity.get("color")
             colors_rgb = data_entity.get("color_rgb")
-            major_color_bgr = get_major_color(colors, colors_rgb)
+            major_color_bgr = get_major_color(colors, colors_rgb, "bgr")
             if bbox is not None:
                 data_x = bbox.get("x")
                 data_y = bbox.get("y")

@@ -29,18 +29,23 @@ def get_mode(array):
         mode = int(np.argmax(counter))
     return mode
 
-def get_major_color(colors, colors_rgb):
+def get_major_color(colors, colors_rgb, mode="bgr"):
     """Get the major color of an entity"""
     max_score = float('-inf')
     max_rgb = None
-    max_bgr = None
+    max_color = None
     if colors and colors_rgb:
         for color in colors:
             c_score = float(colors[color])
             if c_score > max_score:
                 max_score = c_score
                 max_rgb = colors_rgb[color]
-        max_bgr = max_rgb.copy()
-        max_bgr.reverse()
-    return max_bgr
+        max_color = max_rgb.copy()
+        if mode == "bgr":
+            max_color.reverse()
+        elif mode == "lab":
+            fake_img = np.array([[max_color]], dtype=np.uint8)
+            fake_img = cv2.cvtColor(fake_img, cv2.COLOR_BGR2LAB)
+            max_color = fake_img[0][0]
+    return max_color
     

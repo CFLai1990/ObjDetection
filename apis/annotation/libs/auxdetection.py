@@ -5,7 +5,7 @@ import cv2
 from .objattrs import ObjAttrs
 from .axisdetection import get_axes_texts
 from .legenddetection import get_legend_info
-from .lebeldetection import get_label_texts
+from .labeldetection import get_label_texts
 
 class AuxDetection:
     """Auxiliary Entity Detection Class"""

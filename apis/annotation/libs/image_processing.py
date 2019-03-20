@@ -62,8 +62,9 @@ def get_contour_area(contour, c_type="np"):
             area = cv2.contourArea(contour)
         elif c_type == "list":
             pt_num = len(contour)
-            np_contour = np.array((pt_num, 1, 2), dtype=np.int32)
-            for i in range(pt_num):
-                np_contour[i, 0] = contour[i]
-            area = cv2.contourArea(np_contour)
+            if pt_num > 2:
+                np_contour = np.zeros((pt_num, 1, 2), dtype=np.int32)
+                for i in range(pt_num):
+                    np_contour[i, 0] = contour[i]
+                area = cv2.contourArea(np_contour)
     return area

@@ -7,6 +7,7 @@ from sklearn.cluster import KMeans
 from .__settings__ import TESTING
 from .image_processing import CV2PIL, contrast_enhance
 
+GRAY_SCALE_LEVEL = 64
 COLOR_RANGE = 16
 
 def get_major_color(colors, colors_rgb):
@@ -74,18 +75,19 @@ def get_label_texts(img, data_entities):
                         data_img[np.where((data_mask > 0) \
                             & ((data_img < major_color_upper).all()) \
                             & ((data_img > major_color_lower).all()))] = major_color_bgr
-                        # data_img_enhanced = contrast_enhance(data_img)
-                        data_img_enhanced = data_img
+                        # data_img = contrast_enhance(data_img)
                         (data_img_h, data_img_w) = data_img.shape[:2]
-                        data_img_enhanced = cv2.cvtColor(data_img_enhanced, \
+                        data_img = cv2.cvtColor(data_img, \
                             cv2.COLOR_BGR2GRAY).astype(np.uint8)
-                        data_img_enhanced = cv2.resize(data_img_enhanced, \
+                        data_img = (data_img / GRAY_SCALE_LEVEL).astype(np.uint8)
+                        data_img = data_img * GRAY_SCALE_LEVEL
+                        data_img = cv2.resize(data_img, \
                             (2*data_img_w, 2*data_img_h), \
                             interpolation=cv2.INTER_AREA)
                         if TESTING["label"]["sign"]:
                             cv2.imwrite(TESTING['dir'] + '/label_' + str(data_id) + '.png', \
-                                data_img_enhanced, \
+                                data_img, \
                                 [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
-                        img_pil = CV2PIL(data_img_enhanced)
+                        img_pil = CV2PIL(data_img)
                         label_texts = pt.image_to_string(img_pil, config='--psm 6')
                         print(label_texts)

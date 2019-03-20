@@ -252,14 +252,14 @@ class ObjAttrs:
         img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         color_mask = cv2.inRange(img_hsv, major_color_lower, major_color_upper)
         mask_img[np.where((bbox_mask > 0) & (color_mask > 0))] = 255
-        rand_id = random.randint(0, 99)
-        print(rand_id, major_color_upper, major_color_lower)
+        mask_img = cv2.bilateralFilter(mask_img, 4, 50, 50)
         if TESTING["label"]["sign"]:
+            rand_id = random.randint(0, 99)
             cv2.imwrite(TESTING['dir'] + '/mask_' + str(rand_id) + '.png', \
                 mask_img, \
                 [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
         contours, hier = cv2.findContours(mask_img, \
-                    cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+                    cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         # Remove the bad contours
         new_contour_list = []
         if contours:

@@ -8,7 +8,7 @@ from colormath.color_objects import LabColor, HSVColor
 from colormath.color_diff import delta_e_cie2000 as color_diff
 from colormath.color_conversions import convert_color
 from .image_processing import get_mode, get_major_color
-from .__settings__ import COLOR_CODE, COLOR_MUNSELL, COLOR_HSV
+from .__settings__ import COLOR_CODE, COLOR_MUNSELL, COLOR_HSV, TESTING
 
 OUTPUT_DIR = os.path.abspath('./files/annotation')
 COLOR_RANGE = 8
@@ -250,6 +250,11 @@ class ObjAttrs:
         mask_img[np.where((bbox_mask > 0) \
                             & ((img < major_color_upper).all()) \
                             & ((img > major_color_lower).all()))] = 255
+        rand_id = random.randint(0,99)
+        if TESTING["label"]["sign"]:
+            cv2.imwrite(TESTING['dir'] + '/contour_' + str(rand_id) + '.png', \
+                mask_img, \
+                [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
         new_contour_list, hier = cv2.findContours(mask_img, \
                     cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         return new_contour_list

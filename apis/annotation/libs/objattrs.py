@@ -12,7 +12,7 @@ from .image_processing import get_mode, get_major_color
 from .__settings__ import COLOR_CODE, COLOR_MUNSELL, COLOR_HSV, TESTING
 
 OUTPUT_DIR = os.path.abspath('./files/annotation')
-COLOR_RANGE = 8
+COLOR_RANGE = 16
 
 class ObjAttrs:
     """The class for attribute detection"""

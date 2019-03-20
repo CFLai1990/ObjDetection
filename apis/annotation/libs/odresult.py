@@ -30,10 +30,10 @@ class ODResultGenerator:
     def get_bbox(self, box_x=0, box_y=0, box_width=0, box_height=0):
         """Get the bounding box"""
         self.bbox = {
-            'x': box_x,
-            'y': box_y,
-            'width': box_width,
-            'height': box_height
+            'x': round(box_x),
+            'y': round(box_y),
+            'width': round(box_width),
+            'height': round(box_height)
         }
 
     def get_mask(self, contours=None, attrs=None):

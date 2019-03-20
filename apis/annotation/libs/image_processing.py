@@ -41,16 +41,15 @@ def get_major_color(colors, colors_rgb, mode="bgr"):
                 max_score = c_score
                 max_rgb = colors_rgb[color]
         max_color = max_rgb.copy()
-        print("rgb: ", max_color)
         if mode == "bgr":
             max_color.reverse()
         elif mode == "lab":
             fake_img = np.array([[max_color]], dtype=np.uint8)
-            fake_img = cv2.cvtColor(fake_img, cv2.COLOR_BGR2LAB)
+            fake_img = cv2.cvtColor(fake_img, cv2.COLOR_RGB2LAB)
             max_color = fake_img[0][0]
         elif mode == "hsv":
             fake_img = np.array([[max_color]], dtype=np.uint8)
-            fake_img = cv2.cvtColor(fake_img, cv2.COLOR_BGR2HSV)
+            fake_img = cv2.cvtColor(fake_img, cv2.COLOR_RGB2HSV)
             max_color = fake_img[0][0]
     return max_color
     

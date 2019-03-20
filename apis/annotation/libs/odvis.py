@@ -252,7 +252,7 @@ def vis_one_image_opencv(
 def vis_one_image(
         im, outputPath, boxes, segms=None, keypoints=None, thresh=0.9,
         kp_thresh=2, dpi=200, box_alpha=0.0, dataset=None, show_class=False,
-        out_when_no_box=False, contour=None):
+        out_when_no_box=False, contours_by_inds=None):
     """Visual debugging of detections."""
 
     if isinstance(boxes, list):
@@ -325,10 +325,11 @@ def vis_one_image(
                 img[:, :, c] = color_mask[c]
             e = masks[:, :, i]
 
-            print(contour)
-            if contour is None:
+            if contours_by_inds is None:
                 contour, hier = cv2.findContours(e.copy(), \
                     cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
+            else:
+                contour = contours_by_inds[i]
 
             for c in contour:
                 polygon = Polygon(
@@ -411,6 +412,7 @@ def parse_results(
     results = []
     attrs.infer(image)
     # Go through the bounding boxes
+    contours_by_inds = []
     for i in sorted_inds:
         result_generator = ODResultGenerator()
         bbox = boxes[i, :4]
@@ -442,6 +444,7 @@ def parse_results(
             mask_attrs = attrs.get_mask(binary, contour_list)
             if class_name in FIX_DICT:
                 contour_list = attrs.fix_contours(new_bbox, mask_attrs, contour_list)
+            contours_by_inds[i] = contour_list
             contours = []
             for contour in contour_list:
                 ctr = contour.reshape((-1, 2)).astype(float).tolist()
@@ -449,4 +452,4 @@ def parse_results(
             result_generator.get_mask(contours=contours, attrs=mask_attrs)
         results.append(result_generator.pack())
     attrs.clear_all()
-    return results, contour_list
+    return results, contours_by_inds

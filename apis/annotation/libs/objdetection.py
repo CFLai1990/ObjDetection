@@ -169,7 +169,7 @@ class ObjDetection:
             thresh=self.setting['threshold_detection'],
             kp_thresh=self.setting['threshold_keypoint'],
             out_when_no_box=True,
-            contour=contours
+            contours_by_inds=contours
         )
         return output_path, parameters
         

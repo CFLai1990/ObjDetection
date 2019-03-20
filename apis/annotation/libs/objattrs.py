@@ -138,8 +138,9 @@ class ObjAttrs:
                 color_dict[color_name] = round(code_dict[code] / pixel_num, 4)
                 # The gray scale of some color inside the mask
                 gray_in_mask = img_gray[np.where((mask_img > 0) & (color_codes == code))]
-                gray_mode = get_mode(gray_in_mask)
-                major_color_rgb = (img_rgb[np.where(img_gray == gray_mode)][0]).tolist()
+                gray_mode_in_mask = get_mode(gray_in_mask)
+                major_color_rgb = (img_rgb[np.where((mask_img > 0) & \
+                    (img_gray == gray_mode_in_mask))][0]).tolist()
                 rgb_dict[color_name] = major_color_rgb
         return color_dict, rgb_dict
 

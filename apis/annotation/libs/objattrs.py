@@ -237,13 +237,13 @@ class ObjAttrs:
         # Set up the mask image
         mask_img = np.zeros(img.shape[:2], dtype=np.uint8)
         bbox_mask = np.zeros(img.shape[:2])
-        print("bbox: ", bbox)
         bbox_poly = np.array([\
             [bbox["x"], bbox["y"]],\
             [bbox["x"] + bbox["width"], bbox["y"]],\
             [bbox["x"] + bbox["width"], bbox["y"] + bbox["height"]],\
             [bbox["x"], bbox["y"] + bbox["height"]],\
             ])
+        print(bbox_poly)
         cv2.fillPoly(bbox_mask, [bbox_poly], 255)
         # Find the contour of the pure-color block
         major_color_bgr = get_major_color(colors, colors_rgb)

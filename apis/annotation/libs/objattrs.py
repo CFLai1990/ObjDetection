@@ -256,6 +256,9 @@ class ObjAttrs:
             cv2.imwrite(TESTING['dir'] + '/contour_' + str(rand_id) + '.png', \
                 mask_img, \
                 [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
+            cv2.imwrite(TESTING['dir'] + '/bbox_' + str(rand_id) + '.png', \
+                mask_img, \
+                [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
         new_contour_list, hier = cv2.findContours(mask_img, \
                     cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         return new_contour_list

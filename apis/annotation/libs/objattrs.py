@@ -12,7 +12,7 @@ from .image_processing import get_mode, get_major_color
 from .__settings__ import COLOR_CODE, COLOR_MUNSELL, COLOR_HSV, TESTING
 
 OUTPUT_DIR = os.path.abspath('./files/annotation')
-COLOR_RANGE = 16
+COLOR_RANGE = 8
 
 class ObjAttrs:
     """The class for attribute detection"""
@@ -257,4 +257,15 @@ class ObjAttrs:
                 [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
         new_contour_list, hier = cv2.findContours(mask_img, \
                     cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        # Remove the bad contours
+        if new_contour_list:
+            bad_contours = []
+            for c_id, contour in enumerate(new_contour_list):
+                c_length = contour.reshape((-1, 2)).shape[0]
+                if c_length <= 2:
+                    bad_contours.append(c_id)
+            if bad_contours:
+                bad_contours.reverse()
+                for bad_id in bad_contours:
+                    new_contour_list.pop(bad_id)
         return new_contour_list

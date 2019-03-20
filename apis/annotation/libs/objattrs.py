@@ -124,7 +124,7 @@ class ObjAttrs:
         color_codes = self.color_codes
         img = self.img
         img_rgb = self.img_rgb
-        img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY).astype(np.uint8)
+        img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         masked = cv2.bitwise_and(color_codes, color_codes, mask=mask_img)
         unique, counts = np.unique(masked, return_counts=True)
         code_dict = dict(zip(unique, counts))
@@ -138,12 +138,12 @@ class ObjAttrs:
             if code != 0:
                 color_name = COLOR_CODE[code]
                 color_dict[color_name] = round(code_dict[code] / pixel_num, 4)
-                # The gray scale of some color inside the mask
-                gray_in_mask = img_gray[np.where((mask_img > 0) & (color_codes == code))]
-                gray_mode_in_mask = get_mode(gray_in_mask)
-                major_color_rgb = (img_rgb[np.where((mask_img > 0) & \
-                    (img_gray == gray_mode_in_mask))][0]).tolist()
-                rgb_dict[color_name] = major_color_rgb
+                # The hue of some color inside the mask
+                hsv_in_mask = img_hsv[np.where((mask_img > 0) & (color_codes == code))]
+                major_color_hsv = np.mean(hsv_in_mask, axis=0).astype(np.uint8)
+                fake_img = np.array([[major_color_hsv]], dtype=np.uint8)
+                fake_img = cv2.cvtColor(fake_img, cv2.COLOR_HSV2RGB)
+                rgb_dict[color_name] = fake_img[0][0]
         return color_dict, rgb_dict
 
     def get_mask_size(self, contour_list):

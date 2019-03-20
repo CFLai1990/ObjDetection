@@ -438,7 +438,7 @@ def parse_results(
                 cv2.CHAIN_APPROX_SIMPLE)
             # Get the attributes
             mask_attrs = attrs.get_mask(binary, contour_list)
-            contour_list = attrs.fix_contours(new_bbox, attrs, contour_list)
+            contour_list = attrs.fix_contours(new_bbox, mask_attrs, contour_list)
             contours = []
             for contour in contour_list:
                 ctr = contour.reshape((-1, 2)).astype(float).tolist()

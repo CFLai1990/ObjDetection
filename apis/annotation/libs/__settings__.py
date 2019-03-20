@@ -40,7 +40,7 @@ TESTING = {
     'dir': '/home/chufan.lai/testing'
 }
 
-FIX_CONTOUR = False
+FIX_CONTOUR = True
 
 COLOR_MUNSELL = os.path.abspath('./apis/annotation/data/color_name.csv')
 COLOR_HSV = os.path.abspath('./apis/annotation/data/color_threshold.csv')

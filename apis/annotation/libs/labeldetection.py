@@ -53,6 +53,7 @@ def get_label_texts(img, data_entities):
                         data_mask = mask_img[data_y:(data_y + data_height),\
                             data_x:(data_x + data_width)]
                         # Step 1: fill the other areas with the major color
+                        print(type(data_img), type(data_mask), type(major_color_bgr))
                         data_img[np.where(data_mask == 0)] = major_color_bgr
                         data_img_enhanced = contrast_enhance(data_img)
                         (data_img_h, data_img_w) = data_img.shape[:2]

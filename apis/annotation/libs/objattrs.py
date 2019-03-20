@@ -143,7 +143,8 @@ class ObjAttrs:
                 major_color_hsv = np.mean(hsv_in_mask, axis=0).astype(np.uint8)
                 fake_img = np.array([[major_color_hsv]], dtype=np.uint8)
                 fake_img = cv2.cvtColor(fake_img, cv2.COLOR_HSV2RGB)
-                rgb_dict[color_name] = fake_img[0][0]
+                major_color_rgb = fake_img[0][0].tolist()
+                rgb_dict[color_name] = major_color_rgb
         return color_dict, rgb_dict
 
     def get_mask_size(self, contour_list):

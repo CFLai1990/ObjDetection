@@ -4,7 +4,7 @@ import os
 import csv
 import numpy as np
 import cv2
-from random import random
+import random
 from colormath.color_objects import LabColor, HSVColor
 from colormath.color_diff import delta_e_cie2000 as color_diff
 from colormath.color_conversions import convert_color

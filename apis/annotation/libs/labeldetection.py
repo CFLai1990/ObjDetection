@@ -37,6 +37,9 @@ def get_mask_img(img, masks):
         if major_mask is not None:
             mask_polygon = np.array([[major_mask]], dtype=np.int32)
             cv2.fillPoly(mask_img, mask_polygon, 255)
+    if mask_img is not None:
+        kernel = np.ones((5, 5), np.uint8)
+        mask_img = cv2.erode(mask_img, kernel, iterations=1)
     return mask_img
 
 def get_label_texts(img, data_entities):
@@ -50,7 +53,6 @@ def get_label_texts(img, data_entities):
             colors = data_entity.get("color")
             colors_rgb = data_entity.get("color_rgb")
             major_color_bgr = get_major_color(colors, colors_rgb)
-            print(type(major_color_bgr))
             if bbox is not None:
                 data_x = bbox.get("x")
                 data_y = bbox.get("y")
@@ -63,6 +65,10 @@ def get_label_texts(img, data_entities):
                         data_mask = mask_img[data_y:(data_y + data_height),\
                             data_x:(data_x + data_width)]
                         # Step 1: fill the other areas with the major color
+                        if TESTING["label"]["sign"]:
+                            cv2.imwrite(TESTING['dir'] + '/label_' + str(data_id) + '_mask.png', \
+                                data_mask, \
+                                [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
                         data_img[np.where(data_mask == 0)] = major_color_bgr
                         data_img_enhanced = contrast_enhance(data_img)
                         (data_img_h, data_img_w) = data_img.shape[:2]

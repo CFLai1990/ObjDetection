@@ -276,7 +276,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
     for j in range(col_num):
         img_col = axis_array_simp[:, j].tolist()
         col_ent[j] = entropy(img_col)
-    if TESTING['sign']:
+    if TESTING["axis"]["sign"]:
         cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '.png', \
             axis_array_simp, \
             [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
@@ -343,7 +343,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
     if title_array is not None:
         (h, w) = title_array.shape[:2]
         title_array = cv2.resize(title_array, (2*w, 2*h), interpolation=cv2.INTER_AREA)
-    if TESTING['sign']:
+    if TESTING["axis"]["sign"]:
         if line_array is not None:
             cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_line.png', \
                 line_array, \
@@ -403,14 +403,14 @@ def get_axes_texts(img, axis_entities):
                         title_texts = None
                         if tick_img is not None and isinstance(tick_img, np.ndarray):
                             tick_img_pil = CV2PIL(tick_img)
-                            if TESTING["sign"]:
+                            if TESTING["axis"]["sign"]:
                                 tick_img_pil.save(TESTING['dir'] + '/axis_' + str(axis_id) + \
                                 '_test_tick.png')
                             tick_texts = pt.image_to_data(tick_img_pil, config='--psm 6')
                             tick_texts = understand_data(tick_texts)
                         if title_img is not None and isinstance(tick_img, np.ndarray):
                             title_img_pil = CV2PIL(title_img)
-                            if TESTING["sign"]:
+                            if TESTING["axis"]["sign"]:
                                 title_img_pil.save(TESTING['dir'] + '/axis_' + str(axis_id) + \
                                     '_test_title.png')
                             title_texts = pt.image_to_string(title_img_pil, config='--psm 6')

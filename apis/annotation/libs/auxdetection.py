@@ -1,10 +1,11 @@
 """Auxiliary Detection"""
 import traceback
-import cv2
 import logging
+import cv2
 from .objattrs import ObjAttrs
 from .axisdetection import get_axes_texts
 from .legenddetection import get_legend_info
+from .lebeldetection import get_label_texts
 
 class AuxDetection:
     """Auxiliary Entity Detection Class"""
@@ -23,31 +24,11 @@ class AuxDetection:
             if img is not None:
                 self.get_legends(img, data_entities)
                 self.get_axes(img, data_entities)
+                self.get_labels(img, data_entities)
         except Exception as e:
             print(repr(e))
             traceback.print_exc()
         return self.aux
-
-    def get_legends(self, img, data_entities):
-        """Get the color legends in the vis image"""
-        self.legends = []
-        # Get the data entities with classname "legend"
-        legend_entities = []
-        legend_indices = []
-        if data_entities:
-            for entity_id, data_entity in enumerate(data_entities):
-                entity_class = data_entity.get("class")
-                if entity_class and entity_class == "legend":
-                    legend_indices.append(entity_id)
-            legend_indices.reverse()
-            for legend_id in legend_indices:
-                legend_entity = data_entities.pop(legend_id)
-                legend_entity = self.get_auxiliary_info(legend_entity)
-                legend_entities.append(legend_entity)
-        self.legends = get_legend_info(img, self.obj_attrs, legend_entities)
-        if self.legends:
-            for legend in self.legends:
-                self.aux.append(legend)
 
     def get_auxiliary_info(self, data_entity):
         """Get the direction of an axis"""
@@ -79,6 +60,32 @@ class AuxDetection:
             "bbox": bbox,
             "direction": direction
         }
+
+    def get_labels(self, img, data_entities):
+        """Get the labels inside each entity"""
+        if data_entities:
+            get_label_texts(img, data_entities)
+
+    def get_legends(self, img, data_entities):
+        """Get the color legends in the vis image"""
+        self.legends = []
+        # Get the data entities with classname "legend"
+        legend_entities = []
+        legend_indices = []
+        if data_entities:
+            for entity_id, data_entity in enumerate(data_entities):
+                entity_class = data_entity.get("class")
+                if entity_class and entity_class == "legend":
+                    legend_indices.append(entity_id)
+            legend_indices.reverse()
+            for legend_id in legend_indices:
+                legend_entity = data_entities.pop(legend_id)
+                legend_entity = self.get_auxiliary_info(legend_entity)
+                legend_entities.append(legend_entity)
+        self.legends = get_legend_info(img, self.obj_attrs, legend_entities)
+        if self.legends:
+            for legend in self.legends:
+                self.aux.append(legend)
 
     def get_axes(self, img, data_entities):
         """Get the axis in the vis image"""

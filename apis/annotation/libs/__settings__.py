@@ -28,7 +28,15 @@ TS_LANG = 'eng'
 
 # Testing settings
 TESTING = {
-    'sign': True,
+    'axis': {
+        'sign': False,
+    },
+    'legend': {
+        'sign': False,
+    },
+    'label': {
+        'sign': True,
+    },
     'dir': '/home/chufan.lai/testing'
 }
 

@@ -112,7 +112,7 @@ def partition_legend(legend_img, legend_id):
     for j in range(col_num):
         img_col = legend_array_simp[:, j].tolist()
         col_ent[j] = entropy(img_col)
-    if TESTING['sign']:
+    if TESTING["legend"]["sign"]:
         cv2.imwrite(TESTING['dir'] + '/legend_' + str(legend_id) + '.png', \
             legend_array_simp, \
             [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
@@ -130,7 +130,7 @@ def partition_legend(legend_img, legend_id):
         label_start = label_range["start"]
         label_end = label_range["end"]
         label_array = legend_img[0:row_num, label_start:label_end]
-    if TESTING['sign']:
+    if TESTING["legend"]["sign"]:
         if legend_array is not None:
             cv2.imwrite(TESTING['dir'] + '/legend_' + str(legend_id) + '_content.png', \
                 legend_array, \
@@ -235,7 +235,7 @@ def get_legend_info(img, attrs, legend_entities):
                                 label_img = cv2.resize(label_img, (3*label_img_w, 3*label_img_h), \
                                     interpolation=cv2.INTER_AREA)
                                 img_pil = CV2PIL(label_img)
-                                if TESTING["sign"]:
+                                if TESTING["legend"]["sign"]:
                                     img_pil.save(TESTING['dir'] + '/legend_test_' + str(legend_id) + \
                                     '.png')
                                 legend_texts = pt.image_to_string(img_pil, config='--psm 6')

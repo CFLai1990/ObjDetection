@@ -53,8 +53,13 @@ def get_label_texts(img, data_entities):
                         data_mask = mask_img[data_y:(data_y + data_height),\
                             data_x:(data_x + data_width)]
                         # Step 1: fill the other areas with the major color
-                        print(np.where(data_mask == 0))
-                        print(data_img.shape)
+                        if TESTING["label"]["sign"]:
+                            cv2.imwrite(TESTING['dir'] + '/label_' + str(data_id) + '_mask.png', \
+                                data_mask, \
+                                [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
+                            cv2.imwrite(TESTING['dir'] + '/label_' + str(data_id) + '_test.png', \
+                                data_img, \
+                                [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
                         data_img[np.where(data_mask == 0)] = major_color_bgr
                         data_img_enhanced = contrast_enhance(data_img)
                         (data_img_h, data_img_w) = data_img.shape[:2]

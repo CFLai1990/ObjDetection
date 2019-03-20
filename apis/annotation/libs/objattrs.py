@@ -251,12 +251,15 @@ class ObjAttrs:
         mask_img[np.where((bbox_mask > 0) \
                             & (img < major_color_upper).all() \
                             & (img > major_color_lower).all())] = 255
-        print(major_color_upper, major_color_lower)
         test_img = np.zeros(img.shape[:2])
         test_img[np.where((img < major_color_upper).all() \
                             & (img > major_color_lower).all())] = 255
         rand_id = random.randint(0, 99)
+        print(rand_id, major_color_upper, major_color_lower)
         if TESTING["label"]["sign"]:
+            cv2.imwrite(TESTING['dir'] + '/image.png', \
+                img, \
+                [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
             cv2.imwrite(TESTING['dir'] + '/bbox_' + str(rand_id) + '.png', \
                 bbox_mask, \
                 [int(cv2.IMWRITE_PNG_COMPRESSION), 0])

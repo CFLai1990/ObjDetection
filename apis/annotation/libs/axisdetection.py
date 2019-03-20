@@ -262,9 +262,6 @@ def partition_axis(axis_img, axis_id, axis_direction):
     # Simplify the gray scales
     axis_array_simp = (axis_array_smooth / GRAY_SCALE_LEVEL).astype(np.uint8)
     axis_array_simp = axis_array_simp * GRAY_SCALE_LEVEL
-    # Find the background gray scale
-    # counter = np.bincount(axis_array.flatten())
-    # bg_gray = int(np.argmax(counter))
     # axis_array_simp[(axis_array > bg_gray - GRAY_RANGE) \
     # & (axis_array < bg_gray + GRAY_RANGE)] = bg_gray
     # Calculate the entropy of the simplified image
@@ -393,7 +390,7 @@ def get_axes_texts(img, axis_entities):
                             if axis_y + axis_height + axis_y_extra < img_height:
                                 axis_height = axis_height + axis_y_extra
                         # Step 1: crop the axis image
-                        axis_img = img[axis_y:(axis_y + axis_height), axis_x:(axis_x + axis_width)]
+                        axis_img = img[axis_y:(axis_y + axis_height), axis_x:(axis_x + axis_width)].copy()
                         # Step 2: enhance the contrast
                         axis_img_enhanced = contrast_enhance(axis_img)
                         # Step 3: partition the image

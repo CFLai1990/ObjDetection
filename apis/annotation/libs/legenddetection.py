@@ -141,7 +141,7 @@ def partition_legend(legend_img, legend_id):
                 [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
     return legend_array, label_array
 
-def get_format_legend(legend_color, legend_texts, legend_bbox, legend_score):
+def get_format_legend(legend_color, legend_rgb, legend_texts, legend_bbox, legend_score):
     """Pack the textual information of the axis"""
     legend = {}
     legend_range = {
@@ -150,7 +150,8 @@ def get_format_legend(legend_color, legend_texts, legend_bbox, legend_score):
     }
     legend["label"] = [legend_texts]
     legend["legend_data"] = {
-        "color": legend_color
+        "color": legend_color,
+        "color_rgb": legend_rgb
     }
     # make up the common object-detection data
     legend["class"] = "legend"
@@ -202,16 +203,17 @@ def get_legend_info(img, attrs, legend_entities):
                     if legend_x >= 0 and legend_y >= 0 and legend_width > 0 and legend_height > 0:
                         if img is not None and isinstance(img, np.ndarray):
                             legend_img = img[legend_y:(legend_y + legend_height), \
-                                legend_x:(legend_x + legend_width)]
+                                legend_x:(legend_x + legend_width)].copy()
                             color_img, label_img = partition_legend(legend_img, legend_id)
                             if color_img is not None:
                                 attrs.infer(color_img)
                                 mask_img = np.ones(color_img.shape[:2]).astype(np.uint8)
-                                colors = attrs.get_mask_color(mask_img)
+                                colors, color_values = attrs.get_mask_color(mask_img)
                                 # print(colors)
                                 # find the legend color
                                 max_score = float('-inf')
                                 max_color = None
+                                max_rgb = None
                                 for color in colors:
                                     if color == "white":
                                         continue
@@ -219,7 +221,9 @@ def get_legend_info(img, attrs, legend_entities):
                                     if c_score > max_score:
                                         max_color = color
                                         max_score = c_score
+                                        max_rgb = color_values[color]
                                     legend_color = max_color
+                                    legend_rgb = max_rgb
                                     # Step 3: replace the legend color with the background color
                                     # if legend_color is not None:
                                     #     legend_img = cv2.cvtColor(legend_img, cv2.COLOR_BGR2GRAY)
@@ -244,8 +248,8 @@ def get_legend_info(img, attrs, legend_entities):
                                 # legend_texts = pt.image_to_data(img_pil, config='--psm 6')
                                 # legend_texts = understand_data(legend_texts)
                             if legend_texts is not None:
-                                formated_legend = get_format_legend(legend_color, legend_texts, \
-                                    legend_bbox, legend_score)
+                                formated_legend = get_format_legend(legend_color, legend_rgb, \
+                                    legend_texts, legend_bbox, legend_score)
                                 data.append(formated_legend)
     except Exception as e:
         print(repr(e))

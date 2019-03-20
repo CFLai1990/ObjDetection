@@ -7,7 +7,7 @@ import cv2
 from colormath.color_objects import LabColor, HSVColor
 from colormath.color_diff import delta_e_cie2000 as color_diff
 from colormath.color_conversions import convert_color
-
+from .image_processing import get_mode
 from .__settings__ import COLOR_CODE, COLOR_MUNSELL, COLOR_HSV
 
 OUTPUT_DIR = os.path.abspath('./files/annotation')
@@ -19,6 +19,8 @@ class ObjAttrs:
         # self.init_munsell()
         self.init_hsv()
         self.color_codes = None
+        self.img = None
+        self.img_rgb = None
 
     def init_munsell(self):
         """Initialize the 330 Munsell colors"""
@@ -102,6 +104,8 @@ class ObjAttrs:
 
     def infer(self, img, mode='hsv'):
         """Get the color names for the whole image"""
+        self.img = img
+        self.img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         if mode == 'munsell':
             # Turn the image from BGR to LAB
             img_lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
@@ -116,6 +120,9 @@ class ObjAttrs:
     def get_mask_color(self, mask_img):
         """Count the colors inside the mask"""
         color_codes = self.color_codes
+        img = self.img
+        img_rgb = self.img_rgb
+        img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY).astype(np.uint8)
         masked = cv2.bitwise_and(color_codes, color_codes, mask=mask_img)
         unique, counts = np.unique(masked, return_counts=True)
         code_dict = dict(zip(unique, counts))
@@ -124,11 +131,17 @@ class ObjAttrs:
             if code != 0:
                 pixel_num += num
         color_dict = {}
+        rgb_dict = {}
         for code in code_dict:
             if code != 0:
                 color_name = COLOR_CODE[code]
                 color_dict[color_name] = round(code_dict[code] / pixel_num, 4)
-        return color_dict
+                # The gray scale of some color inside the mask
+                gray_in_mask = img_gray[np.where((mask_img > 0) & (color_codes == code))]
+                gray_mode = get_mode(gray_in_mask)
+                major_color_rgb = (img_rgb[np.where(img_gray == gray_mode)][0]).tolist()
+                rgb_dict[color_name] = major_color_rgb
+        return color_dict, rgb_dict
 
     def get_mask_size(self, contour_list):
         """Get the size of the mask: area, x_range, y_range"""
@@ -186,15 +199,18 @@ class ObjAttrs:
     def clear_all(self):
         """Clear the temporary data"""
         self.color_codes = None
+        self.img = None
+        self.img_rgb = None
 
     def get_mask(self, mask_img, contour_list):
         """Get the colors inside the mask"""
         # mask_img: the binary masked image
-        color = self.get_mask_color(mask_img)
+        color, color_values = self.get_mask_color(mask_img)
         areas, size = self.get_mask_size(contour_list)
         position = self.get_mask_position(contour_list, areas, size['area'])
         return {
             'color': color,
+            'color_rgb': color_values,
             'size': size,
             'position': position
         }

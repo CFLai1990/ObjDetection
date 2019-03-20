@@ -20,3 +20,12 @@ def contrast_enhance(axis_img):
     limg = cv2.merge((cl, a, b))
     enhanced_img = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
     return enhanced_img
+
+def get_mode(array):
+    """Find the mode in the array"""
+    mode = None
+    if isinstance(array, np.ndarray):
+        counter = np.bincount(array.flatten())
+        mode = int(np.argmax(counter))
+    return mode
+    

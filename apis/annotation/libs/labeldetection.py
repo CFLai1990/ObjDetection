@@ -48,9 +48,12 @@ def get_label_texts(img, data_entities):
                 data_height = bbox.get("height")
                 if data_x and data_y and data_width and data_height:
                     if data_x >= 0 and data_y >= 0 and data_width > 0 and data_height > 0:
-                        data_img = img[data_y:(data_y + data_height), data_x:(data_x + data_width)].copy()
+                        data_img = img[data_y:(data_y + data_height),\
+                            data_x:(data_x + data_width)].copy()
+                        data_mask = mask_img[data_y:(data_y + data_height),\
+                            data_x:(data_x + data_width)]
                         # Step 1: fill the other areas with the major color
-                        data_img[np.where(mask_img == 0)] = major_color_bgr
+                        data_img[np.where(data_mask == 0)] = major_color_bgr
                         data_img_enhanced = contrast_enhance(data_img)
                         (data_img_h, data_img_w) = data_img.shape[:2]
                         data_img_enhanced = cv2.cvtColor(data_img_enhanced, \

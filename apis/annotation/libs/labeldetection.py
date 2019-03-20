@@ -40,7 +40,7 @@ def get_label_texts(img, data_entities):
             colors = data_entity.get("color")
             colors_rgb = data_entity.get("color_rgb")
             major_color_rgb = get_major_color(colors, colors_rgb)
-            major_color_bgr = np.array(major_color_rgb.reverse())
+            major_color_bgr = major_color_rgb.reverse()
             if bbox is not None:
                 data_x = bbox.get("x")
                 data_y = bbox.get("y")

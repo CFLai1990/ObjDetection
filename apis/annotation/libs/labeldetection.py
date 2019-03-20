@@ -55,9 +55,8 @@ def get_label_texts(img, data_entities):
                         # Step 2: smooth the similar colors
                         major_color_upper = np.array(major_color_bgr, dtype=np.int32) + COLOR_RANGE
                         major_color_lower = np.array(major_color_bgr, dtype=np.int32) - COLOR_RANGE
-                        data_img[np.where((data_mask > 0) \
-                            & ((data_img < major_color_upper).all()) \
-                            & ((data_img > major_color_lower).all()))] = major_color_bgr
+                        color_mask = cv2.inRange(data_img, major_color_lower, major_color_upper)
+                        data_img[np.where((data_mask > 0) & (color_mask > 0))] = major_color_bgr
                         (data_img_h, data_img_w) = data_img.shape[:2]
                         data_img = cv2.cvtColor(data_img, \
                             cv2.COLOR_BGR2GRAY).astype(np.uint8)

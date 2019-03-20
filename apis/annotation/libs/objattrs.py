@@ -12,7 +12,7 @@ from .image_processing import get_mode, get_major_color
 from .__settings__ import COLOR_CODE, COLOR_MUNSELL, COLOR_HSV, TESTING
 
 OUTPUT_DIR = os.path.abspath('./files/annotation')
-COLOR_RANGE = 8
+COLOR_RANGE = 16
 
 class ObjAttrs:
     """The class for attribute detection"""
@@ -251,6 +251,7 @@ class ObjAttrs:
         color_mask = cv2.inRange(img, major_color_lower, major_color_upper)
         mask_img[np.where((bbox_mask > 0) & (color_mask > 0))] = 255
         rand_id = random.randint(0, 99)
+        print(rand_id, major_color_bgr)
         if TESTING["label"]["sign"]:
             cv2.imwrite(TESTING['dir'] + '/mask_' + str(rand_id) + '.png', \
                 mask_img, \

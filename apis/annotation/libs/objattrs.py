@@ -1,10 +1,10 @@
 """Detect the attributes inside each mask"""
+import random
 import time
 import os
 import csv
 import numpy as np
 import cv2
-import random
 from colormath.color_objects import LabColor, HSVColor
 from colormath.color_diff import delta_e_cie2000 as color_diff
 from colormath.color_conversions import convert_color

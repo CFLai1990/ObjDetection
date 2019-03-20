@@ -5,27 +5,10 @@ import numpy as np
 from pytesseract import pytesseract as pt
 from sklearn.cluster import KMeans
 from .__settings__ import TESTING
-from .image_processing import CV2PIL, contrast_enhance
+from .image_processing import CV2PIL, get_major_color
 
 GRAY_SCALE_LEVEL = 64
 COLOR_RANGE = 16
-
-def get_major_color(colors, colors_rgb):
-    """Get the major color of the entity"""
-    max_score = float('-inf')
-    max_color = None
-    max_rgb = None
-    max_bgr = None
-    if colors and colors_rgb:
-        for color in colors:
-            c_score = float(colors[color])
-            if c_score > max_score:
-                max_color = color
-                max_score = c_score
-                max_rgb = colors_rgb[color]
-        max_bgr = max_rgb.copy()
-        max_bgr.reverse()
-    return max_bgr
 
 def get_mask_img(img, masks):
     """Get the largest mask of the entity"""
@@ -75,7 +58,6 @@ def get_label_texts(img, data_entities):
                         data_img[np.where((data_mask > 0) \
                             & ((data_img < major_color_upper).all()) \
                             & ((data_img > major_color_lower).all()))] = major_color_bgr
-                        # data_img = contrast_enhance(data_img)
                         (data_img_h, data_img_w) = data_img.shape[:2]
                         data_img = cv2.cvtColor(data_img, \
                             cv2.COLOR_BGR2GRAY).astype(np.uint8)

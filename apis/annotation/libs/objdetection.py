@@ -125,7 +125,7 @@ class ObjDetection:
         # Run object detection
         img = self.infer(img_path)
         # Get the result parameters
-        parameters = parse_results(
+        parameters, contours = parse_results(
             self.result['boxes'],
             self.result['segms'],
             self.result['keyps'],
@@ -147,6 +147,16 @@ class ObjDetection:
         # Run object detection
         img = self.infer(img_path)
         # Render the masks
+        parameters, contours = parse_results(
+            self.result['boxes'],
+            self.result['segms'],
+            self.result['keyps'],
+            image=img,
+            attrs=self.obj_attrs,
+            dataset=self.class_dict,
+            thresh=self.setting['threshold_detection'],
+            out_when_no_box=True
+        )
         vis_one_image(
             img[:, :, ::-1],    # BGR -> RGB for visualization
             output_path,
@@ -158,17 +168,8 @@ class ObjDetection:
             show_class=True,
             thresh=self.setting['threshold_detection'],
             kp_thresh=self.setting['threshold_keypoint'],
-            out_when_no_box=True
-        )
-        parameters = parse_results(
-            self.result['boxes'],
-            self.result['segms'],
-            self.result['keyps'],
-            image=img,
-            attrs=self.obj_attrs,
-            dataset=self.class_dict,
-            thresh=self.setting['threshold_detection'],
-            out_when_no_box=True
+            out_when_no_box=True,
+            contour=contours
         )
         return output_path, parameters
         

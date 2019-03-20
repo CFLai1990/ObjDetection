@@ -7,10 +7,11 @@ import cv2
 from colormath.color_objects import LabColor, HSVColor
 from colormath.color_diff import delta_e_cie2000 as color_diff
 from colormath.color_conversions import convert_color
-from .image_processing import get_mode
+from .image_processing import get_mode, get_major_color
 from .__settings__ import COLOR_CODE, COLOR_MUNSELL, COLOR_HSV
 
 OUTPUT_DIR = os.path.abspath('./files/annotation')
+COLOR_RANGE = 8
 
 class ObjAttrs:
     """The class for attribute detection"""
@@ -224,3 +225,31 @@ class ObjAttrs:
         target_code = int(target_code['code'])
         img[np.where((self.color_codes == target_code))] = bg_color
         return True
+
+    def fix_contours(self, bbox, attributes, contour_list):
+        """Fix the contour for pure-color shapes"""
+        colors = attributes.get("color")
+        colors_rgb = attributes.get("color_rgb")
+        if colors is None or colors_rgb is None:
+            return contour_list
+        img = self.img
+        # Set up the mask image
+        mask_img = np.zeros(img.shape[:2])
+        bbox_mask = np.zeros(img.shape[:2])
+        bbox_poly = np.array([\
+            [bbox["x"], bbox["y"]],\
+            [bbox["x"] + bbox["width"], bbox["y"]],\
+            [bbox["x"] + bbox["width"], bbox["y"] + bbox["height"]],\
+            [bbox["x"], bbox["y"] + bbox["height"]],\
+            ])
+        cv2.fillPoly(bbox_mask, [bbox_poly], 255)
+        # Find the contour of the pure-color block
+        major_color_bgr = get_major_color(colors, colors_rgb)
+        major_color_upper = np.array(major_color_bgr, dtype=np.int8) + COLOR_RANGE
+        major_color_lower = np.array(major_color_bgr, dtype=np.int8) - COLOR_RANGE
+        mask_img[np.where((bbox_mask > 0) \
+                            & ((img < major_color_upper).all()) \
+                            & ((img > major_color_lower).all()))] = 255
+        new_contour_list, hier = cv2.findContours(mask_img, \
+                    cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        return new_contour_list

@@ -28,4 +28,19 @@ def get_mode(array):
         counter = np.bincount(array.flatten())
         mode = int(np.argmax(counter))
     return mode
+
+def get_major_color(colors, colors_rgb):
+    """Get the major color of an entity"""
+    max_score = float('-inf')
+    max_rgb = None
+    max_bgr = None
+    if colors and colors_rgb:
+        for color in colors:
+            c_score = float(colors[color])
+            if c_score > max_score:
+                max_score = c_score
+                max_rgb = colors_rgb[color]
+        max_bgr = max_rgb.copy()
+        max_bgr.reverse()
+    return max_bgr
     

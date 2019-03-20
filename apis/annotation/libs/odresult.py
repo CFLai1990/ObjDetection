@@ -30,6 +30,7 @@ class ODResultGenerator:
 
     def get_bbox(self, box_x=0, box_y=0, box_width=0, box_height=0):
         """Get the bounding box"""
+        bbox = None
         if self.fix_bbox:
             masks = self.masks
             x_min = float("inf")
@@ -48,19 +49,21 @@ class ODResultGenerator:
                                 y_min = vertex[1]
                             if vertex[1] > y_max:
                                 y_max = vertex[1]
-                self.bbox = {
+                bbox = {
                     'x': x_min,
                     'y': y_min,
                     'width': x_max - x_min,
                     'height': y_max - y_min
                 }
         else:
-            self.bbox = {
+            bbox = {
                 'x': round(box_x),
                 'y': round(box_y),
                 'width': round(box_width),
                 'height': round(box_height)
             }
+        self.bbox = bbox
+        return bbox
 
     def get_mask(self, contours=None, attrs=None):
         """Get the contour with its attributes"""

@@ -12,6 +12,7 @@ def get_major_color(colors, colors_rgb):
     max_score = float('-inf')
     max_color = None
     max_rgb = None
+    max_bgr = None
     if colors and colors_rgb:
         for color in colors:
             c_score = float(colors[color])
@@ -19,14 +20,23 @@ def get_major_color(colors, colors_rgb):
                 max_color = color
                 max_score = c_score
                 max_rgb = colors_rgb[color]
-    return max_rgb
+        max_bgr = max_rgb.copy()
+        max_bgr.reverse()
+    return max_bgr
 
 def get_mask_img(img, masks):
     """Get the largest mask of the entity"""
     mask_img = np.zeros(img.shape[:2])
+    major_mask = None
+    major_mask_pt_num = float("-inf")
     if masks:
-        mask_polygon = np.array([masks], dtype=np.int32)
-        cv2.fillPoly(mask_img, mask_polygon, 255)
+        for mask in masks:
+            if mask and len(mask) > major_mask_pt_num:
+                major_mask_pt_num = len(mask)
+                major_mask = mask
+        if major_mask is not None:
+            mask_polygon = np.array([[major_mask]], dtype=np.int32)
+            cv2.fillPoly(mask_img, mask_polygon, 255)
     return mask_img
 
 def get_label_texts(img, data_entities):
@@ -39,8 +49,8 @@ def get_label_texts(img, data_entities):
             mask_img = get_mask_img(img, data_entity.get("mask"))
             colors = data_entity.get("color")
             colors_rgb = data_entity.get("color_rgb")
-            major_color_rgb = get_major_color(colors, colors_rgb)
-            major_color_bgr = major_color_rgb.reverse()
+            major_color_bgr = get_major_color(colors, colors_rgb)
+            print(type(major_color_bgr))
             if bbox is not None:
                 data_x = bbox.get("x")
                 data_y = bbox.get("y")
@@ -53,15 +63,7 @@ def get_label_texts(img, data_entities):
                         data_mask = mask_img[data_y:(data_y + data_height),\
                             data_x:(data_x + data_width)]
                         # Step 1: fill the other areas with the major color
-                        if TESTING["label"]["sign"]:
-                            cv2.imwrite(TESTING['dir'] + '/label_' + str(data_id) + '_mask.png', \
-                                data_mask, \
-                                [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
-                            cv2.imwrite(TESTING['dir'] + '/label_' + str(data_id) + '_test.png', \
-                                data_img, \
-                                [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
-                        test = data_img[np.where(data_mask == 0)]
-                        print(test)
+                        data_img[np.where(data_mask == 0)] = major_color_bgr
                         data_img_enhanced = contrast_enhance(data_img)
                         (data_img_h, data_img_w) = data_img.shape[:2]
                         data_img_enhanced = cv2.cvtColor(data_img_enhanced, \

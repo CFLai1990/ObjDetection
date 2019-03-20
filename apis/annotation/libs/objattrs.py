@@ -243,7 +243,6 @@ class ObjAttrs:
             [bbox["x"] + bbox["width"], bbox["y"] + bbox["height"]],\
             [bbox["x"], bbox["y"] + bbox["height"]],\
             ])
-        print(bbox_poly)
         cv2.fillPoly(bbox_mask, [bbox_poly], 255)
         # Find the contour of the pure-color block
         major_color_bgr = get_major_color(colors, colors_rgb)
@@ -258,7 +257,7 @@ class ObjAttrs:
                 mask_img, \
                 [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
             cv2.imwrite(TESTING['dir'] + '/bbox_' + str(rand_id) + '.png', \
-                mask_img, \
+                bbox_mask, \
                 [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
         new_contour_list, hier = cv2.findContours(mask_img, \
                     cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)

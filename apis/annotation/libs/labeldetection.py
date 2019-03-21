@@ -55,13 +55,13 @@ def get_label_texts(img, data_entities):
                             data_x:(data_x + data_width)]
                         data_img = cv2.cvtColor(data_img, cv2.COLOR_BGR2HSV)
                         # Step 1: fill the other areas with the major color
-                        data_img[np.where(data_mask == 0)] = WHITE_HSV #major_color_hsv
+                        data_img[np.where(data_mask == 0)] = major_color_hsv #WHITE_HSV
                         # Step 2: smooth the similar colors
                         major_color_upper = np.array(major_color_hsv, dtype=np.int32) + COLOR_RANGE_HSV
                         major_color_lower = np.array(major_color_hsv, dtype=np.int32) - COLOR_RANGE_HSV
                         color_mask = cv2.inRange(data_img, major_color_lower, major_color_upper)
-                        data_img[np.where((data_mask > 0) & (color_mask > 0))] = WHITE_HSV #major_color_hsv
-                        data_img[np.where((data_mask > 0) & (color_mask == 0))] = BLACK_HSV
+                        data_img[np.where((data_mask > 0) & (color_mask > 0))] = major_color_hsv #WHITE_HSV
+                        # data_img[np.where((data_mask > 0) & (color_mask == 0))] = BLACK_HSV
                         (data_img_h, data_img_w) = data_img.shape[:2]
                         data_img = cv2.cvtColor(data_img, \
                             cv2.COLOR_BGR2GRAY).astype(np.uint8)

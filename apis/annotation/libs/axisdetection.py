@@ -401,14 +401,17 @@ def get_axes_texts(img, axis_entities):
                                 axis_height = axis_height + axis_y_extra
                             if axis_y + axis_height + axis_y_extra < img_height:
                                 axis_height = axis_height + axis_y_extra
-                        print("finally")
+                        print("Step 1")
                         # Step 1: crop the axis image
                         axis_img = img[axis_y:(axis_y + axis_height), axis_x:(axis_x + axis_width)].copy()
+                        print("Step 2")
                         # Step 2: enhance the contrast
                         axis_img_enhanced = contrast_enhance(axis_img)
+                        print("Step 3")
                         # Step 3: partition the image
                         line_img, tick_img, title_img = partition_axis(axis_img_enhanced, \
                             axis_id, axis_direction)
+                        print("Step 4")
                         tick_texts = None
                         title_texts = None
                         if tick_img is not None and isinstance(tick_img, np.ndarray):

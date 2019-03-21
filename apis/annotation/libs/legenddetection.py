@@ -247,10 +247,10 @@ def get_legend_info(img, attrs, legend_entities):
                                     print((legend_x, legend_y), legend_texts, legend_color)
                                 # legend_texts = pt.image_to_data(img_pil, config='--psm 6')
                                 # legend_texts = understand_data(legend_texts)
-                            if legend_texts is not None:
-                                formated_legend = get_format_legend(legend_color, legend_rgb, \
-                                    legend_texts, legend_bbox, legend_score)
-                                data.append(formated_legend)
+                                if legend_texts is not None:
+                                    formated_legend = get_format_legend(legend_color, legend_rgb, \
+                                        legend_texts, legend_bbox, legend_score)
+                                    data.append(formated_legend)
     except Exception as e:
         print(repr(e))
         traceback.print_exc()

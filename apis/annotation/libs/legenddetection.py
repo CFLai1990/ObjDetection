@@ -242,7 +242,7 @@ def get_legend_info(img, attrs, legend_entities):
                                 label_img_gray = cv2.cvtColor(label_img, cv2.COLOR_BGR2GRAY)
                                 label_img_gray = (label_img_gray / GRAY_SCALE_BINARY).astype(np.uint8)
                                 label_img_gray = label_img_gray * GRAY_SCALE_BINARY
-                                label_img = cv2.cvtColor(label_img, cv2.COLOR_GRAY2BGR)
+                                label_img = cv2.cvtColor(label_img_gray, cv2.COLOR_GRAY2BGR)
                                 img_pil = CV2PIL(label_img)
                                 if TESTING["legend"]["sign"]:
                                     img_pil.save(TESTING['dir'] + '/legend_test_' + str(legend_id) + \

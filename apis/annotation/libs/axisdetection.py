@@ -289,6 +289,8 @@ def partition_axis(axis_img, axis_id, axis_direction):
     # Smoothing
     # axis_array_smooth = cv2.bilateralFilter(axis_array, 4, 50, 50)
     print("Step ~2")
+    print("axis_direction: ", axis_direction)
+    print(axis_direction == 0, axis_direction == 90)
     if axis_direction == 0:
         # Step 2: divide the axis image
         print("before")

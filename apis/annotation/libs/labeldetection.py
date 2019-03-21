@@ -9,6 +9,8 @@ from .image_processing import CV2PIL, get_major_color, get_contour_area
 
 GRAY_SCALE_LEVEL = 64
 COLOR_RANGE_HSV = np.array([10, 32, 32], dtype=np.int32)
+WHITE_HSV = np.array([0, 0, 255], dtype=np.uint8)
+BLACK_HSV = np.array([0, 0, 0], dtype=np.uint8)
 
 def get_mask_img(img, masks):
     """Get the largest mask of the entity"""
@@ -53,12 +55,13 @@ def get_label_texts(img, data_entities):
                             data_x:(data_x + data_width)]
                         data_img = cv2.cvtColor(data_img, cv2.COLOR_BGR2HSV)
                         # Step 1: fill the other areas with the major color
-                        data_img[np.where(data_mask == 0)] = major_color_hsv
+                        data_img[np.where(data_mask == 0)] = WHITE_HSV #major_color_hsv
                         # Step 2: smooth the similar colors
                         major_color_upper = np.array(major_color_hsv, dtype=np.int32) + COLOR_RANGE_HSV
                         major_color_lower = np.array(major_color_hsv, dtype=np.int32) - COLOR_RANGE_HSV
                         color_mask = cv2.inRange(data_img, major_color_lower, major_color_upper)
-                        data_img[np.where((data_mask > 0) & (color_mask > 0))] = major_color_hsv
+                        data_img[np.where((data_mask > 0) & (color_mask > 0))] = WHITE_HSV #major_color_hsv
+                        data_img[np.where((data_mask > 0) & (color_mask == 0))] = BLACK_HSV
                         (data_img_h, data_img_w) = data_img.shape[:2]
                         data_img = cv2.cvtColor(data_img, \
                             cv2.COLOR_BGR2GRAY).astype(np.uint8)

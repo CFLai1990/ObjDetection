@@ -290,6 +290,10 @@ def partition_axis(axis_img, axis_id, axis_direction):
     if axis_direction == 0:
         # Step 2: divide the axis image
         line_range, tick_range, title_range = divide_by_threshold(row_ent)
+        if TESTING["axis"]["sign"]:
+            print("line_range: ", line_range)
+            print("tick_range: ", tick_range)
+            print("title_range: ", title_range)
         # Step 3: crop the axis image
         if line_range:
             line_array = axis_array_smooth[line_range["start"]:line_range["end"], 0:col_num]
@@ -411,7 +415,6 @@ def get_axes_texts(img, axis_entities):
                                 title_img_pil.save(TESTING['dir'] + '/axis_' + str(axis_id) + \
                                     '_test_title.png')
                             title_texts = pt.image_to_string(title_img_pil, config='--psm 6')
-                        print(tick_texts, title_texts)
                         if tick_texts is not None:
                             formated_axis = get_format_axis(tick_texts, title_texts, \
                                 axis_bbox, axis_direction, axis_score)

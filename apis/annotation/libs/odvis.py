@@ -34,15 +34,15 @@ import detectron.utils.keypoints as keypoint_utils
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from .odresult import ODResultGenerator
+from .vis_dataset import FIX_DICT
+from .__settings__ import FIX_CONTOUR
 envu.set_up_matplotlib()
 
 plt.rcParams['pdf.fonttype'] = 42  # For editing in Adobe Illustrator
 
-
 _GRAY = (218, 227, 218)
 _GREEN = (18, 127, 15)
 _WHITE = (255, 255, 255)
-
 
 def kp_connections(keypoints):
     kp_lines = [
@@ -252,7 +252,7 @@ def vis_one_image_opencv(
 def vis_one_image(
         im, outputPath, boxes, segms=None, keypoints=None, thresh=0.9,
         kp_thresh=2, dpi=200, box_alpha=0.0, dataset=None, show_class=False,
-        out_when_no_box=False):
+        out_when_no_box=False, contours_dict=None):
     """Visual debugging of detections."""
 
     if isinstance(boxes, list):
@@ -325,8 +325,11 @@ def vis_one_image(
                 img[:, :, c] = color_mask[c]
             e = masks[:, :, i]
 
-            contour, hier = cv2.findContours(
-                e.copy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
+            if contours_dict is None:
+                contour, hier = cv2.findContours(e.copy(), \
+                    cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
+            else:
+                contour = contours_dict[i]
 
             for c in contour:
                 polygon = Polygon(
@@ -409,6 +412,7 @@ def parse_results(
     results = []
     attrs.infer(image)
     # Go through the bounding boxes
+    contours_dict = {}
     for i in sorted_inds:
         result_generator = ODResultGenerator()
         bbox = boxes[i, :4]
@@ -421,7 +425,7 @@ def parse_results(
         class_name = dataset.classes[classes[i]]
         result_generator.get_class(class_name)
         # Get the bounding box
-        result_generator.get_bbox(
+        new_bbox = result_generator.get_bbox(
             bbox[0].item(),
             bbox[1].item(),
             (bbox[2] - bbox[0]).item(),
@@ -438,6 +442,9 @@ def parse_results(
                 cv2.CHAIN_APPROX_SIMPLE)
             # Get the attributes
             mask_attrs = attrs.get_mask(binary, contour_list)
+            if FIX_CONTOUR and class_name in FIX_DICT:
+                contour_list = attrs.fix_contours(new_bbox, mask_attrs, contour_list)
+            contours_dict[i] = contour_list
             contours = []
             for contour in contour_list:
                 ctr = contour.reshape((-1, 2)).astype(float).tolist()
@@ -445,4 +452,4 @@ def parse_results(
             result_generator.get_mask(contours=contours, attrs=mask_attrs)
         results.append(result_generator.pack())
     attrs.clear_all()
-    return results
+    return results, contours_dict

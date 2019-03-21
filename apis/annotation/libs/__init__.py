@@ -1,5 +1,6 @@
 """apis.annotation.libs: __init__"""
 from .objdetection import ObjDetection
+from .auxdetection import AuxDetection
 from .tonlp import NLPData
 # import the fake od results
 from .demo_pie import PIE_DATA, PIE_AUX

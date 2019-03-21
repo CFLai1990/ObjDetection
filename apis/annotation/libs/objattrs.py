@@ -1,4 +1,5 @@
 """Detect the attributes inside each mask"""
+import random
 import time
 import os
 import csv
@@ -7,10 +8,11 @@ import cv2
 from colormath.color_objects import LabColor, HSVColor
 from colormath.color_diff import delta_e_cie2000 as color_diff
 from colormath.color_conversions import convert_color
-
-from .__settings__ import COLOR_CODE, COLOR_MUNSELL, COLOR_HSV
+from .image_processing import get_mode, get_major_color, get_contour_area
+from .__settings__ import COLOR_CODE, COLOR_MUNSELL, COLOR_HSV, TESTING
 
 OUTPUT_DIR = os.path.abspath('./files/annotation')
+COLOR_RANGE_HSV = np.array([10, 32, 32], dtype=np.int32)
 
 class ObjAttrs:
     """The class for attribute detection"""
@@ -19,6 +21,8 @@ class ObjAttrs:
         # self.init_munsell()
         self.init_hsv()
         self.color_codes = None
+        self.img = None
+        self.img_rgb = None
 
     def init_munsell(self):
         """Initialize the 330 Munsell colors"""
@@ -100,9 +104,10 @@ class ObjAttrs:
             codes = codes + color_map
         self.color_codes = codes
 
-
     def infer(self, img, mode='hsv'):
         """Get the color names for the whole image"""
+        self.img = img
+        self.img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         if mode == 'munsell':
             # Turn the image from BGR to LAB
             img_lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
@@ -117,6 +122,9 @@ class ObjAttrs:
     def get_mask_color(self, mask_img):
         """Count the colors inside the mask"""
         color_codes = self.color_codes
+        img = self.img
+        img_rgb = self.img_rgb
+        img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         masked = cv2.bitwise_and(color_codes, color_codes, mask=mask_img)
         unique, counts = np.unique(masked, return_counts=True)
         code_dict = dict(zip(unique, counts))
@@ -125,11 +133,19 @@ class ObjAttrs:
             if code != 0:
                 pixel_num += num
         color_dict = {}
+        rgb_dict = {}
         for code in code_dict:
             if code != 0:
                 color_name = COLOR_CODE[code]
                 color_dict[color_name] = round(code_dict[code] / pixel_num, 4)
-        return color_dict
+                # The hue of some color inside the mask
+                hsv_in_mask = img_hsv[np.where((mask_img > 0) & (color_codes == code))]
+                major_color_hsv = np.mean(hsv_in_mask, axis=0).astype(np.uint8)
+                fake_img = np.array([[major_color_hsv]], dtype=np.uint8)
+                fake_img = cv2.cvtColor(fake_img, cv2.COLOR_HSV2RGB)
+                major_color_rgb = fake_img[0][0].tolist()
+                rgb_dict[color_name] = major_color_rgb
+        return color_dict, rgb_dict
 
     def get_mask_size(self, contour_list):
         """Get the size of the mask: area, x_range, y_range"""
@@ -187,15 +203,72 @@ class ObjAttrs:
     def clear_all(self):
         """Clear the temporary data"""
         self.color_codes = None
+        self.img = None
+        self.img_rgb = None
 
     def get_mask(self, mask_img, contour_list):
         """Get the colors inside the mask"""
         # mask_img: the binary masked image
-        color = self.get_mask_color(mask_img)
+        color, color_values = self.get_mask_color(mask_img)
         areas, size = self.get_mask_size(contour_list)
         position = self.get_mask_position(contour_list, areas, size['area'])
         return {
             'color': color,
+            'color_rgb': color_values,
             'size': size,
             'position': position
         }
+
+    def replace_color(self, img, target_color, bg_color):
+        """Replace the target color with the background color"""
+        target_code = self.color_list.get(target_color)
+        if target_code is None:
+            return False
+        target_code = int(target_code['code'])
+        img[np.where((self.color_codes == target_code))] = bg_color
+        return True
+
+    def fix_contours(self, bbox, attributes, contour_list):
+        """Fix the contour for pure-color shapes"""
+        colors = attributes.get("color")
+        colors_rgb = attributes.get("color_rgb")
+        if colors is None or colors_rgb is None:
+            return contour_list
+        img = self.img
+        # Set up the mask image
+        mask_img = np.zeros(img.shape[:2], dtype=np.uint8)
+        bbox_mask = np.zeros(img.shape[:2])
+        bbox_poly = np.array([\
+            [bbox["x"], bbox["y"]],\
+            [bbox["x"] + bbox["width"], bbox["y"]],\
+            [bbox["x"] + bbox["width"], bbox["y"] + bbox["height"]],\
+            [bbox["x"], bbox["y"] + bbox["height"]],\
+            ])
+        cv2.fillPoly(bbox_mask, [bbox_poly], 255)
+        # Find the contour of the pure-color block
+        major_color_hsv = get_major_color(colors, colors_rgb, "hsv")
+        major_color_upper = np.array(major_color_hsv, dtype=np.int32) + COLOR_RANGE_HSV
+        major_color_lower = np.array(major_color_hsv, dtype=np.int32) - COLOR_RANGE_HSV
+        img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        color_mask = cv2.inRange(img_hsv, major_color_lower, major_color_upper)
+        mask_img[np.where((bbox_mask > 0) & (color_mask > 0))] = 255
+        mask_img = cv2.bilateralFilter(mask_img, 4, 50, 50)
+        if TESTING["label"]["sign"]:
+            rand_id = random.randint(0, 99)
+            cv2.imwrite(TESTING['dir'] + '/mask_' + str(rand_id) + '.png', \
+                mask_img, \
+                [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
+        contours, hier = cv2.findContours(mask_img, \
+                    cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        # Remove the bad contours
+        new_contour_list = []
+        if contours:
+            max_contour = None
+            max_contour_area = float('-inf')
+            for contour in contours:
+                area = get_contour_area(contour, "np")
+                if area > max_contour_area:
+                    max_contour_area = area
+                    max_contour = contour
+            new_contour_list.append(max_contour)
+        return new_contour_list

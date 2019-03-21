@@ -14,7 +14,7 @@ class NLPData:
     def get_labels(self):
         """The function for getting all the visible labels"""
         labels = []
-        if self.data is not None:
+        if self.data:
             for entity in self.data:
                 if entity.get("label") is not None:
                     entity_labels = entity["label"]

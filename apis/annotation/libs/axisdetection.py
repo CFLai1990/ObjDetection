@@ -291,6 +291,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
         # Step 2: divide the axis image
         line_range, tick_range, title_range = divide_by_threshold(row_ent)
         if TESTING["axis"]["sign"]:
+            print("direction: 0")
             print("line_range: ", line_range)
             print("tick_range: ", tick_range)
             print("title_range: ", title_range)
@@ -316,6 +317,11 @@ def partition_axis(axis_img, axis_id, axis_direction):
     elif axis_direction == 90:
         # Step 2: divide the axis image
         line_range, tick_range, title_range = divide_by_threshold(col_ent)
+        if TESTING["axis"]["sign"]:
+            print("direction: 90")
+            print("line_range: ", line_range)
+            print("tick_range: ", tick_range)
+            print("title_range: ", title_range)
         # Step 3: crop the axis image
         if line_range:
             line_array = axis_array_smooth[0:row_num, line_range["start"]:line_range["end"]]

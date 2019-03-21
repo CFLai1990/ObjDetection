@@ -39,13 +39,16 @@ class AuxDetection:
             axis_y = bbox.get("y")
             axis_width = bbox.get("width")
             axis_height = bbox.get("height")
-            if axis_x and isinstance(axis_x, float) and axis_y and isinstance(axis_y, float):
-                axis_x = round(axis_x)
-                axis_y = round(axis_y)
-            if axis_width and isinstance(axis_width, float) and axis_height and isinstance(axis_height, float):
-                axis_width = round(axis_width)
-                axis_height = round(axis_height)
-                if axis_width >= 0 and axis_height >= 0:
+            if axis_x is not None and axis_y is not None:
+                if isinstance(axis_x, float) and axis_y and isinstance(axis_y, float):
+                    axis_x = round(axis_x)
+                    axis_y = round(axis_y)
+            if axis_width is not None and axis_height is not None:
+                if isinstance(axis_width, float) and isinstance(axis_height, float):
+                    axis_width = round(axis_width)
+                    axis_height = round(axis_height)
+                if isinstance(axis_width, int) and isinstance(axis_height, int) and \
+                    axis_width >= 0 and axis_height >= 0:
                     direction = 0
                     if axis_width < axis_height:
                         direction = 90

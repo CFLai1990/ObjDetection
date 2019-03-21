@@ -45,7 +45,8 @@ class ApiClass(API):
         ext_type, img_type, output_dir = self.parse_info(obj)
         # Object detection
         if INFER_SIGN:
-            output_path, data = self.obj_detector.infer_image_with_parameters(img_path, img_type, output_dir)
+            output_path, data = self.obj_detector.infer_image_with_parameters(img_path, \
+                img_type, output_dir)
         else:
             output_path = None
             data = None

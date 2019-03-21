@@ -8,7 +8,7 @@ from .__settings__ import TESTING
 from .image_processing import CV2PIL, get_major_color, get_contour_area
 
 GRAY_SCALE_LEVEL = 64
-COLOR_RANGE_HSV = np.array([10, 32, 32], dtype=np.int32)
+COLOR_RANGE_HSV = np.array([10, 16, 16], dtype=np.int32)
 WHITE_HSV = np.array([0, 0, 255], dtype=np.uint8)
 BLACK_HSV = np.array([0, 0, 0], dtype=np.uint8)
 

@@ -382,6 +382,7 @@ def get_axes_texts(img, axis_entities):
             print("NONE!!!")
             return data
         (img_height, img_width) = img.shape[:2]
+        print("axis_entity: ", axis_entity)
         for axis_id, axis_entity in enumerate(axis_entities):
             axis_bbox = axis_entity.get("bbox")
             axis_direction = axis_entity.get("direction")

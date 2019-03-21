@@ -77,6 +77,6 @@ def get_label_texts(img, data_entities):
                         label_texts = pt.image_to_string(img_pil, config='--psm 6')
                         if label_texts == "" or len(label_texts) < 2:
                             continue
-                        else
+                        else:
                             labels = label_texts.split("\n")
                             data_entity["label"] = labels

@@ -279,7 +279,6 @@ def partition_axis(axis_img, axis_id, axis_direction):
             [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
         np.savetxt(TESTING['dir'] + '/axis_' + str(axis_id) + '_row.txt', row_ent)
         np.savetxt(TESTING['dir'] + '/axis_' + str(axis_id) + '_col.txt', col_ent)
-    print("Step ~1")
     # Step 1: transform the image into a gray one
     axis_array = cv2.cvtColor(axis_array, cv2.COLOR_GRAY2BGR)
     # Step 1-1: prepare the binary image
@@ -288,14 +287,9 @@ def partition_axis(axis_img, axis_id, axis_direction):
     # axis_array_smooth[axis_array_smooth == 128] = 255
     # Smoothing
     # axis_array_smooth = cv2.bilateralFilter(axis_array, 4, 50, 50)
-    print("Step ~2")
-    print("axis_direction: ", axis_direction)
-    print(axis_direction == 0, axis_direction == 90)
     if axis_direction == 0:
         # Step 2: divide the axis image
-        print("before")
         line_range, tick_range, title_range = divide_by_threshold(row_ent)
-        print("after")
         if TESTING["axis"]["sign"]:
             print("direction: 0")
             print("line_range: ", line_range)
@@ -322,9 +316,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
             title_array = axis_array_smooth[title_start:title_end, 0:col_num]
     elif axis_direction == 90:
         # Step 2: divide the axis image
-        print("before")
         line_range, tick_range, title_range = divide_by_threshold(col_ent)
-        print("after")
         if TESTING["axis"]["sign"]:
             print("direction: 90")
             print("line_range: ", line_range)
@@ -379,16 +371,12 @@ def get_axes_texts(img, axis_entities):
         data = []
         # No axes in the image
         if img is None or axis_entities is None:
-            print("NONE!!!")
             return data
         (img_height, img_width) = img.shape[:2]
         for axis_id, axis_entity in enumerate(axis_entities):
-            print("axis_id: ", axis_id)
-            print("axis_entity: ", axis_entity)
             axis_bbox = axis_entity.get("bbox")
             axis_direction = axis_entity.get("direction")
             axis_score = axis_entity.get("score")
-            print("axis_bbox: ", axis_bbox)
             if axis_bbox:
                 axis_x = axis_bbox.get("x")
                 axis_y = axis_bbox.get("y")
@@ -411,17 +399,13 @@ def get_axes_texts(img, axis_entities):
                                 axis_height = axis_height + axis_y_extra
                             if axis_y + axis_height + axis_y_extra < img_height:
                                 axis_height = axis_height + axis_y_extra
-                        print("Step 1")
                         # Step 1: crop the axis image
                         axis_img = img[axis_y:(axis_y + axis_height), axis_x:(axis_x + axis_width)].copy()
-                        print("Step 2")
                         # Step 2: enhance the contrast
                         axis_img_enhanced = contrast_enhance(axis_img)
-                        print("Step 3")
                         # Step 3: partition the image
                         line_img, tick_img, title_img = partition_axis(axis_img_enhanced, \
                             axis_id, axis_direction)
-                        print("Step 4")
                         tick_texts = None
                         title_texts = None
                         if tick_img is not None and isinstance(tick_img, np.ndarray):

@@ -8,7 +8,6 @@ from .__settings__ import TESTING
 from .image_processing import CV2PIL
 
 GRAY_SCALE_LEVEL = 32
-GRAY_SCALE_BINARY = 128
 MARGIN = 3
 
 def entropy(labels, base=None):
@@ -239,10 +238,6 @@ def get_legend_info(img, attrs, legend_entities):
                                 (label_img_h, label_img_w) = label_img.shape[:2]
                                 label_img = cv2.resize(label_img, (3*label_img_w, 3*label_img_h), \
                                     interpolation=cv2.INTER_AREA)
-                                label_img_gray = cv2.cvtColor(label_img, cv2.COLOR_BGR2GRAY)
-                                label_img_gray = (label_img_gray / GRAY_SCALE_BINARY).astype(np.uint8)
-                                label_img_gray = label_img_gray * GRAY_SCALE_BINARY
-                                label_img = cv2.cvtColor(label_img_gray, cv2.COLOR_GRAY2BGR)
                                 img_pil = CV2PIL(label_img)
                                 if TESTING["legend"]["sign"]:
                                     img_pil.save(TESTING['dir'] + '/legend_test_' + str(legend_id) + \

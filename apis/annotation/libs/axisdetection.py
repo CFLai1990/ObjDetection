@@ -279,6 +279,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
             [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
         np.savetxt(TESTING['dir'] + '/axis_' + str(axis_id) + '_row.txt', row_ent)
         np.savetxt(TESTING['dir'] + '/axis_' + str(axis_id) + '_col.txt', col_ent)
+    print("Step ~1")
     # Step 1: transform the image into a gray one
     axis_array = cv2.cvtColor(axis_array, cv2.COLOR_GRAY2BGR)
     # Step 1-1: prepare the binary image
@@ -287,9 +288,12 @@ def partition_axis(axis_img, axis_id, axis_direction):
     # axis_array_smooth[axis_array_smooth == 128] = 255
     # Smoothing
     # axis_array_smooth = cv2.bilateralFilter(axis_array, 4, 50, 50)
+    print("Step ~2")
     if axis_direction == 0:
         # Step 2: divide the axis image
+        print("before")
         line_range, tick_range, title_range = divide_by_threshold(row_ent)
+        print("after")
         if TESTING["axis"]["sign"]:
             print("direction: 0")
             print("line_range: ", line_range)
@@ -316,7 +320,9 @@ def partition_axis(axis_img, axis_id, axis_direction):
             title_array = axis_array_smooth[title_start:title_end, 0:col_num]
     elif axis_direction == 90:
         # Step 2: divide the axis image
+        print("before")
         line_range, tick_range, title_range = divide_by_threshold(col_ent)
+        print("after")
         if TESTING["axis"]["sign"]:
             print("direction: 90")
             print("line_range: ", line_range)

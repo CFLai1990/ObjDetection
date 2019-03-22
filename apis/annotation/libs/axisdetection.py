@@ -128,7 +128,10 @@ def get_format_axis(ticks_data, label_texts, axis_bbox, axis_direction, axis_sco
             # format_items.append(tick)
     # Classify if the texts belong to the ticks or the label
     # classify_texts(axis_direction, format_items, ticks, labels)
-    axis["label"] = label_texts
+    axis_label = label_texts
+    if isinstance(axis_label, list):
+        axis_label = " ".join(axis_label)
+    axis["label"] = axis_label
     axis["axis_data"] = {
         "ticks": ticks,
         "direction": axis_direction

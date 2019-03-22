@@ -148,7 +148,10 @@ def get_format_legend(legend_color, legend_rgb, legend_texts, legend_bbox, legen
         "x": [legend_bbox.get("x"), legend_bbox.get("x") + legend_bbox.get("width")],
         "y": [legend_bbox.get("y"), legend_bbox.get("y") + legend_bbox.get("height")]
     }
-    legend["label"] = [legend_texts]
+    legend_label = legend_texts
+    if isinstance(legend_label, list):
+        legend_label = " ".join(legend_label)
+    legend["label"] = legend_label
     legend["legend_data"] = {
         "color": legend_color,
         "color_rgb": legend_rgb

@@ -121,11 +121,12 @@ def get_format_axis(ticks_data, label_texts, ticks_bbox, img_shape, axis_bbox, a
         item_text = tick_data.get("text")
         tick = {}
         tick["text"] = item_text
-        print("____________________________________")
-        print("tick_data: ", tick_data)
-        print("axis_bbox: ", axis_bbox)
-        print("tick_range: ", tick_range)
-        print("____________________________________")
+        if TESTING["axis"]["sign"]:
+            print("---------------------------------------")
+            print("tick_data: ", tick_data)
+            print("axis_bbox: ", axis_bbox)
+            print("tick_range: ", tick_range)
+            print("---------------------------------------")
         tick_bbox = {
             "x": round(tick_data["left"] / SCALE_DEGREE) + tick_range.get("x") + axis_bbox.get("x"),
             "y": round(tick_data["top"] / SCALE_DEGREE) + tick_range.get("y") + axis_bbox.get("y"),
@@ -468,7 +469,6 @@ def get_axes_texts(img, axis_entities):
                                     '_test_title.png')
                             title_texts = pt.image_to_string(title_img_pil, config='--psm 6')
                         if tick_texts is not None:
-                            print("axis_bbox: ", new_axis_bbox)
                             img_shape = {
                                 "width": img_width,
                                 "height": img_height

@@ -108,6 +108,7 @@ def get_format_axis(ticks_data, label_texts, axis_bbox, axis_direction, axis_sco
     ticks = []
     # format_items = []
     for tick_data in ticks_data:
+        print(item_text)
         item_text = tick_data.get("text")
         tick = {}
         tick["text"] = item_text

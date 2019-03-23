@@ -12,6 +12,7 @@ GRAY_SCALE_LEVEL = 64
 GRAY_SCALE_BINARY = 128
 GRAY_RANGE = 10
 GAP_PERSENTAGE = 0.04
+SCALE_DEGREE = 2
 THRES_PERSENTAGE = 0
 MARGIN = 3
 
@@ -98,7 +99,7 @@ def classify_texts(direction, f_items, ticks, labels):
     for label_i in label_class:
         labels.append(f_items[label_i]["text"])
 
-def get_format_axis(ticks_data, label_texts, axis_bbox, axis_direction, axis_score):
+def get_format_axis(ticks_data, label_texts, tick_bbox, axis_bbox, axis_direction, axis_score):
     """Pack the textual information of the axis"""
     axis = {}
     axis_range = {
@@ -106,17 +107,24 @@ def get_format_axis(ticks_data, label_texts, axis_bbox, axis_direction, axis_sco
         "y": [axis_bbox.get("y"), axis_bbox.get("y") + axis_bbox.get("height")]
     }
     ticks = []
+    tick_range = {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+    }
+    if tick_bbox is not None:
+        tick_range = tick_bbox
     # format_items = []
     for tick_data in ticks_data:
-        print(tick_data)
         item_text = tick_data.get("text")
         tick = {}
         tick["text"] = item_text
         bbox = {
-            "x": tick_data["left"] + axis_bbox.get("x"),
-            "y": tick_data["top"] + axis_bbox.get("y"),
-            "width": tick_data.get("width"),
-            "height": tick_data.get("height")
+            "x": round(tick_data["left"] / SCALE_DEGREE) + tick_range.get("x") + axis_bbox.get("x"),
+            "y": round(tick_data["top"] / SCALE_DEGREE) + tick_range.get("y") + axis_bbox.get("y"),
+            "width": round(tick_range.get("width") / SCALE_DEGREE),
+            "height": round(tick_range.get("height") / SCALE_DEGREE)
         }
         tick["bbox"] = bbox
         position = {
@@ -257,6 +265,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
     line_array = None
     tick_array = None
     title_array = None
+    tick_bbox = None
     # Initialize
     axis_array = cv2.cvtColor(axis_img, cv2.COLOR_BGR2GRAY).astype(np.uint8)
     row_num = axis_array.shape[0]
@@ -294,11 +303,6 @@ def partition_axis(axis_img, axis_id, axis_direction):
     if axis_direction == 0:
         # Step 2: divide the axis image
         line_range, tick_range, title_range = divide_by_threshold(row_ent)
-        if TESTING["axis"]["sign"]:
-            print("direction: 0")
-            print("line_range: ", line_range)
-            print("tick_range: ", tick_range)
-            print("title_range: ", title_range)
         # Step 3: crop the axis image
         if line_range:
             line_array = axis_array_smooth[line_range["start"]:line_range["end"], 0:col_num]
@@ -310,6 +314,12 @@ def partition_axis(axis_img, axis_id, axis_direction):
             if tick_end <= row_num - MARGIN:
                 tick_end = tick_end + MARGIN
             tick_array = axis_array_smooth[tick_start:tick_end, 0:col_num]
+            tick_bbox = {
+                "x": 0,
+                "y": tick_start,
+                "width": col_num,
+                "height": tick_end - tick_start + 1
+            }
         if title_range:
             title_start = title_range["start"]
             title_end = title_range["end"]
@@ -318,14 +328,14 @@ def partition_axis(axis_img, axis_id, axis_direction):
             if title_end <= row_num - MARGIN:
                 title_end = title_end + MARGIN
             title_array = axis_array_smooth[title_start:title_end, 0:col_num]
-    elif axis_direction == 90:
-        # Step 2: divide the axis image
-        line_range, tick_range, title_range = divide_by_threshold(col_ent)
         if TESTING["axis"]["sign"]:
-            print("direction: 90")
+            print("direction: 0")
             print("line_range: ", line_range)
             print("tick_range: ", tick_range)
             print("title_range: ", title_range)
+    elif axis_direction == 90:
+        # Step 2: divide the axis image
+        line_range, tick_range, title_range = divide_by_threshold(col_ent)
         # Step 3: crop the axis image
         if line_range:
             line_array = axis_array_smooth[0:row_num, line_range["start"]:line_range["end"]]
@@ -337,6 +347,12 @@ def partition_axis(axis_img, axis_id, axis_direction):
             if tick_end <= col_num - MARGIN:
                 tick_end = tick_end + MARGIN
             tick_array = axis_array_smooth[0:row_num, tick_start:tick_end]
+            tick_bbox = {
+                "x": 0,
+                "y": tick_start,
+                "width": col_num,
+                "height": tick_end - tick_start + 1
+            }
         if title_range:
             title_start = title_range["start"]
             title_end = title_range["end"]
@@ -347,13 +363,18 @@ def partition_axis(axis_img, axis_id, axis_direction):
             title_array = axis_array_smooth[0:row_num, title_start:title_end]
             # Assume the title should be rotated clockwise for 90 degrees
             title_array = np.rot90(title_array, 3)
+        if TESTING["axis"]["sign"]:
+            print("direction: 90")
+            print("line_range: ", line_range)
+            print("tick_range: ", tick_range)
+            print("title_range: ", title_range)
     # Scale the images in case the dpi is too low for detection
     if tick_array is not None:
         (h, w) = tick_array.shape[:2]
-        tick_array = cv2.resize(tick_array, (2*w, 2*h), interpolation=cv2.INTER_AREA)
+        tick_array = cv2.resize(tick_array, (SCALE_DEGREE * w, SCALE_DEGREE * h), interpolation=cv2.INTER_AREA)
     if title_array is not None:
         (h, w) = title_array.shape[:2]
-        title_array = cv2.resize(title_array, (2*w, 2*h), interpolation=cv2.INTER_AREA)
+        title_array = cv2.resize(title_array, (SCALE_DEGREE * w, SCALE_DEGREE * h), interpolation=cv2.INTER_AREA)
     if TESTING["axis"]["sign"]:
         if line_array is not None:
             cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_line.png', \
@@ -367,7 +388,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
             cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_title.png', \
                 title_array, \
                 [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
-    return line_array, tick_array, title_array
+    return line_array, tick_array, title_array, tick_bbox
 
 def get_axes_texts(img, axis_entities):
     """The function for getting the texts in the axis"""
@@ -381,6 +402,7 @@ def get_axes_texts(img, axis_entities):
             axis_bbox = axis_entity.get("bbox")
             axis_direction = axis_entity.get("direction")
             axis_score = axis_entity.get("score")
+            new_axis_bbox = axis_bbox
             if axis_bbox:
                 axis_x = axis_bbox.get("x")
                 axis_y = axis_bbox.get("y")
@@ -403,12 +425,18 @@ def get_axes_texts(img, axis_entities):
                                 axis_height = axis_height + axis_y_extra
                             if axis_y + axis_height + axis_y_extra < img_height:
                                 axis_height = axis_height + axis_y_extra
+                        new_axis_bbox = {
+                            "x": axis_x,
+                            "y": axis_y,
+                            "axis_width": axis_width,
+                            "axis_height": axis_height
+                        }
                         # Step 1: crop the axis image
                         axis_img = img[axis_y:(axis_y + axis_height), axis_x:(axis_x + axis_width)].copy()
                         # Step 2: enhance the contrast
                         axis_img_enhanced = contrast_enhance(axis_img)
                         # Step 3: partition the image
-                        line_img, tick_img, title_img = partition_axis(axis_img_enhanced, \
+                        line_img, tick_img, title_img, tick_bbox = partition_axis(axis_img_enhanced, \
                             axis_id, axis_direction)
                         tick_texts = None
                         title_texts = None
@@ -426,8 +454,8 @@ def get_axes_texts(img, axis_entities):
                                     '_test_title.png')
                             title_texts = pt.image_to_string(title_img_pil, config='--psm 6')
                         if tick_texts is not None:
-                            formated_axis = get_format_axis(tick_texts, title_texts, \
-                                axis_bbox, axis_direction, axis_score)
+                            formated_axis = get_format_axis(tick_texts, title_texts, tick_bbox,\
+                                new_axis_bbox, axis_direction, axis_score)
                             data.append(formated_axis)
     except Exception as e:
         print(repr(e))

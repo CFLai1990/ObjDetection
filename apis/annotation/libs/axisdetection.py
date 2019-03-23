@@ -13,6 +13,7 @@ GRAY_SCALE_BINARY = 128
 GRAY_RANGE = 10
 GAP_PERSENTAGE = 0.04
 SCALE_DEGREE = 2
+MINI_TICK_EXTRA = 2
 THRES_PERSENTAGE = 0
 MARGIN = 3
 
@@ -99,7 +100,7 @@ def classify_texts(direction, f_items, ticks, labels):
     for label_i in label_class:
         labels.append(f_items[label_i]["text"])
 
-def get_format_axis(ticks_data, label_texts, tick_bbox, axis_bbox, axis_direction, axis_score):
+def get_format_axis(ticks_data, label_texts, tick_bbox, img_shape, axis_bbox, axis_direction, axis_score):
     """Pack the textual information of the axis"""
     axis = {}
     axis_range = {
@@ -114,21 +115,30 @@ def get_format_axis(ticks_data, label_texts, tick_bbox, axis_bbox, axis_directio
         "height": 0
     }
     if tick_bbox is not None:
-        tick_range = tick_bbox
+        tick_range = tick_bbox.copy()
+        if (tick_range["x"] > MINI_TICK_EXTRA) and\
+            (tick_range["x"] + tick_range["width"] + MINI_TICK_EXTRA < img_shape["width"]):
+            tick_range["x"] = tick_range["x"] - MINI_TICK_EXTRA
+            tick_range["width"] = tick_range["width"] + 2 * MINI_TICK_EXTRA
+        if (tick_range["y"] > MINI_TICK_EXTRA) and\
+            (tick_range["y"] + tick_range["height"] + MINI_TICK_EXTRA < img_shape["height"]):
+            tick_range["y"] = tick_range["y"] - MINI_TICK_EXTRA
+            tick_range["height"] = tick_range["height"] + 2 * MINI_TICK_EXTRA
         print("tick_range: ", tick_range)
     # format_items = []
     for tick_data in ticks_data:
         item_text = tick_data.get("text")
         tick = {}
         tick["text"] = item_text
+        print("tick_data: ", tick_data)
+        print("axis_bbox: ", axis_bbox)
+        print("tick_range: ", tick_range)
         tick_bbox = {
             "x": round(tick_data["left"] / SCALE_DEGREE) + tick_range.get("x") + axis_bbox.get("x"),
             "y": round(tick_data["top"] / SCALE_DEGREE) + tick_range.get("y") + axis_bbox.get("y"),
             "width": round(tick_data.get("width") / SCALE_DEGREE),
             "height": round(tick_data.get("height") / SCALE_DEGREE)
         }
-        print("tick_text: ", item_text)
-        print("tick_bbox: ", tick_bbox)
         tick["bbox"] = tick_bbox
         position = {
             "x": tick_bbox["x"] + tick_bbox["width"] / 2,
@@ -458,7 +468,12 @@ def get_axes_texts(img, axis_entities):
                             title_texts = pt.image_to_string(title_img_pil, config='--psm 6')
                         if tick_texts is not None:
                             print("axis_bbox: ", new_axis_bbox)
-                            formated_axis = get_format_axis(tick_texts, title_texts, tick_bbox,\
+                            img_shape = {
+                                "width": img_width,
+                                "height": img_height
+                            }
+                            formated_axis = get_format_axis(tick_texts, title_texts,\
+                                tick_bbox, img_shape,\
                                 new_axis_bbox, axis_direction, axis_score)
                             data.append(formated_axis)
     except Exception as e:

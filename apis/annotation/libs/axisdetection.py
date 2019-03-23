@@ -121,16 +121,18 @@ def get_format_axis(ticks_data, label_texts, tick_bbox, axis_bbox, axis_directio
         item_text = tick_data.get("text")
         tick = {}
         tick["text"] = item_text
-        bbox = {
+        tick_bbox = {
             "x": round(tick_data["left"] / SCALE_DEGREE) + tick_range.get("x") + axis_bbox.get("x"),
             "y": round(tick_data["top"] / SCALE_DEGREE) + tick_range.get("y") + axis_bbox.get("y"),
-            "width": round(tick_range.get("width") / SCALE_DEGREE),
-            "height": round(tick_range.get("height") / SCALE_DEGREE)
+            "width": round(tick_data.get("width") / SCALE_DEGREE),
+            "height": round(tick_data.get("height") / SCALE_DEGREE)
         }
-        tick["bbox"] = bbox
+        print("tick_text: ", item_text)
+        print("tick_bbox: ", tick_bbox)
+        tick["bbox"] = tick_bbox
         position = {
-            "x": bbox["x"] + bbox["width"] / 2,
-            "y": bbox["y"] + bbox["height"] / 2
+            "x": tick_bbox["x"] + tick_bbox["width"] / 2,
+            "y": tick_bbox["y"] + tick_bbox["height"] / 2
         }
         tick["position"] = position
         if tick["text"] != "":
@@ -404,7 +406,6 @@ def get_axes_texts(img, axis_entities):
             axis_direction = axis_entity.get("direction")
             axis_score = axis_entity.get("score")
             new_axis_bbox = axis_bbox
-            print("axis_bbox_1: ", new_axis_bbox)
             if axis_bbox:
                 axis_x = axis_bbox.get("x")
                 axis_y = axis_bbox.get("y")
@@ -433,7 +434,6 @@ def get_axes_texts(img, axis_entities):
                             "width": axis_width,
                             "height": axis_height
                         }
-                        print("axis_bbox_2: ", new_axis_bbox)
                         # Step 1: crop the axis image
                         axis_img = img[axis_y:(axis_y + axis_height), axis_x:(axis_x + axis_width)].copy()
                         # Step 2: enhance the contrast
@@ -457,7 +457,7 @@ def get_axes_texts(img, axis_entities):
                                     '_test_title.png')
                             title_texts = pt.image_to_string(title_img_pil, config='--psm 6')
                         if tick_texts is not None:
-                            print("axis_bbox_3: ", new_axis_bbox)
+                            print("axis_bbox: ", new_axis_bbox)
                             formated_axis = get_format_axis(tick_texts, title_texts, tick_bbox,\
                                 new_axis_bbox, axis_direction, axis_score)
                             data.append(formated_axis)

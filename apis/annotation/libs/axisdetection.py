@@ -121,9 +121,11 @@ def get_format_axis(ticks_data, label_texts, ticks_bbox, img_shape, axis_bbox, a
         item_text = tick_data.get("text")
         tick = {}
         tick["text"] = item_text
+        print("____________________________________")
         print("tick_data: ", tick_data)
         print("axis_bbox: ", axis_bbox)
         print("tick_range: ", tick_range)
+        print("____________________________________")
         tick_bbox = {
             "x": round(tick_data["left"] / SCALE_DEGREE) + tick_range.get("x") + axis_bbox.get("x"),
             "y": round(tick_data["top"] / SCALE_DEGREE) + tick_range.get("y") + axis_bbox.get("y"),
@@ -360,10 +362,10 @@ def partition_axis(axis_img, axis_id, axis_direction):
                 tick_end = tick_end + MARGIN
             tick_array = axis_array_smooth[0:row_num, tick_start:tick_end]
             ticks_bbox = {
-                "x": 0,
-                "y": tick_start,
-                "width": col_num,
-                "height": tick_end - tick_start + 1
+                "x": tick_start,
+                "y": 0,
+                "width": tick_end - tick_start + 1,
+                "height": row_num,
             }
         if title_range:
             title_start = title_range["start"]

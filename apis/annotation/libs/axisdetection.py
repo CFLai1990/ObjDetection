@@ -430,8 +430,8 @@ def get_axes_texts(img, axis_entities):
                         new_axis_bbox = {
                             "x": axis_x,
                             "y": axis_y,
-                            "axis_width": axis_width,
-                            "axis_height": axis_height
+                            "width": axis_width,
+                            "height": axis_height
                         }
                         print("axis_bbox_2: ", new_axis_bbox)
                         # Step 1: crop the axis image

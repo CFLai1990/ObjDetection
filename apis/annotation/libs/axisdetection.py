@@ -404,6 +404,7 @@ def get_axes_texts(img, axis_entities):
             axis_direction = axis_entity.get("direction")
             axis_score = axis_entity.get("score")
             new_axis_bbox = axis_bbox
+            print("axis_bbox_1: ", new_axis_bbox)
             if axis_bbox:
                 axis_x = axis_bbox.get("x")
                 axis_y = axis_bbox.get("y")
@@ -432,6 +433,7 @@ def get_axes_texts(img, axis_entities):
                             "axis_width": axis_width,
                             "axis_height": axis_height
                         }
+                        print("axis_bbox_2: ", new_axis_bbox)
                         # Step 1: crop the axis image
                         axis_img = img[axis_y:(axis_y + axis_height), axis_x:(axis_x + axis_width)].copy()
                         # Step 2: enhance the contrast
@@ -455,6 +457,7 @@ def get_axes_texts(img, axis_entities):
                                     '_test_title.png')
                             title_texts = pt.image_to_string(title_img_pil, config='--psm 6')
                         if tick_texts is not None:
+                            print("axis_bbox_3: ", new_axis_bbox)
                             formated_axis = get_format_axis(tick_texts, title_texts, tick_bbox,\
                                 new_axis_bbox, axis_direction, axis_score)
                             data.append(formated_axis)

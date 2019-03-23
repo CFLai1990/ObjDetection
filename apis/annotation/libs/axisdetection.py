@@ -115,6 +115,7 @@ def get_format_axis(ticks_data, label_texts, tick_bbox, axis_bbox, axis_directio
     }
     if tick_bbox is not None:
         tick_range = tick_bbox
+        print("tick_range: ", tick_range)
     # format_items = []
     for tick_data in ticks_data:
         item_text = tick_data.get("text")

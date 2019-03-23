@@ -100,7 +100,7 @@ def classify_texts(direction, f_items, ticks, labels):
     for label_i in label_class:
         labels.append(f_items[label_i]["text"])
 
-def get_format_axis(ticks_data, label_texts, tick_bbox, img_shape, axis_bbox, axis_direction, axis_score):
+def get_format_axis(ticks_data, label_texts, ticks_bbox, img_shape, axis_bbox, axis_direction, axis_score):
     """Pack the textual information of the axis"""
     axis = {}
     axis_range = {
@@ -114,17 +114,8 @@ def get_format_axis(ticks_data, label_texts, tick_bbox, img_shape, axis_bbox, ax
         "width": 0,
         "height": 0
     }
-    if tick_bbox is not None:
-        tick_range = tick_bbox.copy()
-        if (tick_range["x"] > MINI_TICK_EXTRA) and\
-            (tick_range["x"] + tick_range["width"] + MINI_TICK_EXTRA < img_shape["width"]):
-            tick_range["x"] = tick_range["x"] - MINI_TICK_EXTRA
-            tick_range["width"] = tick_range["width"] + 2 * MINI_TICK_EXTRA
-        if (tick_range["y"] > MINI_TICK_EXTRA) and\
-            (tick_range["y"] + tick_range["height"] + MINI_TICK_EXTRA < img_shape["height"]):
-            tick_range["y"] = tick_range["y"] - MINI_TICK_EXTRA
-            tick_range["height"] = tick_range["height"] + 2 * MINI_TICK_EXTRA
-        print("tick_range: ", tick_range)
+    if ticks_bbox is not None:
+        tick_range = ticks_bbox.copy()
     # format_items = []
     for tick_data in ticks_data:
         item_text = tick_data.get("text")
@@ -139,6 +130,14 @@ def get_format_axis(ticks_data, label_texts, tick_bbox, img_shape, axis_bbox, ax
             "width": round(tick_data.get("width") / SCALE_DEGREE),
             "height": round(tick_data.get("height") / SCALE_DEGREE)
         }
+        if (tick_bbox["x"] > MINI_TICK_EXTRA) and\
+            (tick_bbox["x"] + tick_bbox["width"] + MINI_TICK_EXTRA < img_shape["width"]):
+            tick_bbox["x"] = tick_bbox["x"] - MINI_TICK_EXTRA
+            tick_bbox["width"] = tick_bbox["width"] + 2 * MINI_TICK_EXTRA
+        if (tick_bbox["y"] > MINI_TICK_EXTRA) and\
+            (tick_bbox["y"] + tick_bbox["height"] + MINI_TICK_EXTRA < img_shape["height"]):
+            tick_bbox["y"] = tick_bbox["y"] - MINI_TICK_EXTRA
+            tick_bbox["height"] = tick_bbox["height"] + 2 * MINI_TICK_EXTRA
         tick["bbox"] = tick_bbox
         position = {
             "x": tick_bbox["x"] + tick_bbox["width"] / 2,
@@ -327,7 +326,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
             if tick_end <= row_num - MARGIN:
                 tick_end = tick_end + MARGIN
             tick_array = axis_array_smooth[tick_start:tick_end, 0:col_num]
-            tick_bbox = {
+            ticks_bbox = {
                 "x": 0,
                 "y": tick_start,
                 "width": col_num,
@@ -360,7 +359,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
             if tick_end <= col_num - MARGIN:
                 tick_end = tick_end + MARGIN
             tick_array = axis_array_smooth[0:row_num, tick_start:tick_end]
-            tick_bbox = {
+            ticks_bbox = {
                 "x": 0,
                 "y": tick_start,
                 "width": col_num,
@@ -401,7 +400,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
             cv2.imwrite(TESTING['dir'] + '/axis_' + str(axis_id) + '_title.png', \
                 title_array, \
                 [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
-    return line_array, tick_array, title_array, tick_bbox
+    return line_array, tick_array, title_array, ticks_bbox
 
 def get_axes_texts(img, axis_entities):
     """The function for getting the texts in the axis"""
@@ -449,7 +448,7 @@ def get_axes_texts(img, axis_entities):
                         # Step 2: enhance the contrast
                         axis_img_enhanced = contrast_enhance(axis_img)
                         # Step 3: partition the image
-                        line_img, tick_img, title_img, tick_bbox = partition_axis(axis_img_enhanced, \
+                        line_img, tick_img, title_img, ticks_bbox = partition_axis(axis_img_enhanced, \
                             axis_id, axis_direction)
                         tick_texts = None
                         title_texts = None
@@ -473,7 +472,7 @@ def get_axes_texts(img, axis_entities):
                                 "height": img_height
                             }
                             formated_axis = get_format_axis(tick_texts, title_texts,\
-                                tick_bbox, img_shape,\
+                                ticks_bbox, img_shape,\
                                 new_axis_bbox, axis_direction, axis_score)
                             data.append(formated_axis)
     except Exception as e:

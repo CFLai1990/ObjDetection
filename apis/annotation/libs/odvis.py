@@ -299,17 +299,17 @@ def vis_one_image(
             plt.Rectangle((bbox[0], bbox[1]),
                           bbox[2] - bbox[0],
                           bbox[3] - bbox[1],
-                          fill=False, edgecolor='g',
-                          linewidth=0.5, alpha=box_alpha))
+                          fill=False, edgecolor='black',
+                          linewidth=1.5, alpha=box_alpha))
 
         if show_class:
             ax.text(
                 bbox[0], bbox[1] - 2,
                 get_class_string(classes[i], score, dataset),
-                fontsize=3,
+                fontsize=6,
                 family='serif',
                 bbox=dict(
-                    facecolor='g', alpha=0.4, pad=0, edgecolor='none'),
+                    facecolor='black', alpha=0.4, pad=0, edgecolor='none'),
                 color='white')
 
         # show mask
@@ -335,7 +335,7 @@ def vis_one_image(
                 polygon = Polygon(
                     c.reshape((-1, 2)),
                     fill=True, facecolor=color_mask,
-                    edgecolor='w', linewidth=1.2,
+                    edgecolor='black', linewidth=1.5,
                     alpha=0.5)
                 ax.add_patch(polygon)
 

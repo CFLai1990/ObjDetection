@@ -61,7 +61,7 @@ class ObjDetection:
             'Models that require precomputed proposals are not supported'
 
         # Initiate the model from configurations
-        self.model = infer_engine.initialize_model_from_cfg(self.setting['weights'], gpu_id=1)
+        self.model = infer_engine.initialize_model_from_cfg(self.setting['weights'])
         # Acquire classes from the COCO dataset
         # It returns a AttrDict object stored with 'classes: value'
         # Each value is a dictionary that looks like this: 0:'__background__', 1:'person', ...

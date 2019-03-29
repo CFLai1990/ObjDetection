@@ -50,6 +50,7 @@ class ObjDetection:
     def init(self):
         """Set up all configurations for Detectron"""
         merge_cfg_from_file(self.setting['config'])
+        # Number of GPUs used for testing
         cfg.NUM_GPUS = 1
         assert_and_infer_cfg(cache_urls=False)
 

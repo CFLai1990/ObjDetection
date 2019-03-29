@@ -11,8 +11,8 @@ DT_MODEL = {
         'weights': '/home/chufan.lai/packages/detectron_models/demo/model_final.pkl',
     },
     'vis': {
-        'config':'/home/chufan.lai/packages/OD_Images/dtconfigs/e2e_mask_rcnn_R-50-FPN_1x_cls4.yaml',
-        'weights': '/home/chufan.lai/packages/detectron_models/test/train_cls4_20190318/cflai_train/generalized_rcnn/model_iter69999.pkl',
+        'config':'/home/chufan.lai/packages/OD_Images/dtconfigs/e2e_mask_rcnn_R-50-FPN_1x.yaml',
+        'weights': '/home/chufan.lai/packages/detectron_models/test/train/cflai_train/generalized_rcnn/model_vis.pkl',
     }
 }
 

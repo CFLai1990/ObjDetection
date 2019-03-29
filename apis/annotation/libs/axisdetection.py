@@ -280,7 +280,7 @@ def partition_axis(axis_img, axis_id, axis_direction):
     line_array = None
     tick_array = None
     title_array = None
-    tick_bbox = None
+    ticks_bbox = None
     # Initialize
     axis_array = cv2.cvtColor(axis_img, cv2.COLOR_BGR2GRAY).astype(np.uint8)
     row_num = axis_array.shape[0]

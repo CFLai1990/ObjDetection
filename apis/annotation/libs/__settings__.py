@@ -29,10 +29,10 @@ TS_LANG = 'eng'
 # Testing settings
 TESTING = {
     'axis': {
-        'sign': True,
+        'sign': False,
     },
     'legend': {
-        'sign': False,
+        'sign': True,
     },
     'label': {
         'sign': False,

@@ -251,7 +251,7 @@ def vis_one_image_opencv(
 
 def vis_one_image(
         im, outputPath, boxes, segms=None, keypoints=None, thresh=0.9,
-        kp_thresh=2, dpi=200, box_alpha=0.0, dataset=None, show_class=False,
+        kp_thresh=2, dpi=200, box_alpha=0.5, dataset=None, show_class=False,
         out_when_no_box=False, contours_dict=None):
     """Visual debugging of detections."""
 

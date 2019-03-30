@@ -35,7 +35,7 @@ TESTING = {
         'sign': False,
     },
     'label': {
-        'sign': False,
+        'sign': True,
     },
     'dir': '/home/chufan.lai/testing'
 }

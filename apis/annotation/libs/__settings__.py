@@ -32,7 +32,7 @@ TESTING = {
         'sign': False,
     },
     'legend': {
-        'sign': True,
+        'sign': False,
     },
     'label': {
         'sign': False,

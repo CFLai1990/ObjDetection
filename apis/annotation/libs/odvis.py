@@ -306,7 +306,7 @@ def vis_one_image(
             ax.text(
                 bbox[0], bbox[1] - 2,
                 get_class_string(classes[i], score, dataset),
-                fontsize=6,
+                fontsize=2,
                 family='serif',
                 bbox=dict(
                     facecolor='black', alpha=0.6, pad=0, edgecolor='none'),

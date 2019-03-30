@@ -251,7 +251,7 @@ def vis_one_image_opencv(
 
 def vis_one_image(
         im, outputPath, boxes, segms=None, keypoints=None, thresh=0.9,
-        kp_thresh=2, dpi=200, box_alpha=0.5, dataset=None, show_class=False,
+        kp_thresh=2, dpi=200, box_alpha=0.8, dataset=None, show_class=False,
         out_when_no_box=False, contours_dict=None):
     """Visual debugging of detections."""
 
@@ -309,7 +309,7 @@ def vis_one_image(
                 fontsize=6,
                 family='serif',
                 bbox=dict(
-                    facecolor='black', alpha=0.4, pad=0, edgecolor='none'),
+                    facecolor='black', alpha=0.6, pad=0, edgecolor='none'),
                 color='white')
 
         # show mask

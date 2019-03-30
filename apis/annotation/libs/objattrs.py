@@ -186,8 +186,8 @@ class ObjAttrs:
     def get_mask_position(self, contour_list, areas, total_area):
         """Get the position of the (centroid of the) mask"""
         ctr_centroid = {
-            'x': 0,
-            'y': 0,
+            'x': -1,
+            'y': -1,
         }
         for index, contour in enumerate(contour_list):
             contour_area = areas[index]
@@ -196,8 +196,10 @@ class ObjAttrs:
             centroid_y = int(moment['m01']/moment['m00'])
             ctr_centroid['x'] += contour_area * centroid_x
             ctr_centroid['y'] += contour_area * centroid_y
-        ctr_centroid['x'] = int(ctr_centroid['x'] / total_area)
-        ctr_centroid['y'] = int(ctr_centroid['y'] / total_area)
+        if total_area != 0:
+            ctr_centroid['x'] = int(ctr_centroid['x'] / total_area)
+        if total_area != 0:
+            ctr_centroid['y'] = int(ctr_centroid['y'] / total_area)
         return ctr_centroid
 
     def clear_all(self):

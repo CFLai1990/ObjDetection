@@ -442,8 +442,8 @@ def parse_results(
                 cv2.CHAIN_APPROX_SIMPLE)
             # Get the attributes
             mask_attrs = attrs.get_mask(binary, contour_list)
-            if FIX_CONTOUR and class_name in FIX_DICT:
-                contour_list = attrs.fix_contours(new_bbox, mask_attrs, contour_list)
+            # if FIX_CONTOUR and class_name in FIX_DICT:
+            #     contour_list = attrs.fix_contours(new_bbox, mask_attrs, contour_list)
             contours_dict[i] = contour_list
             contours = []
             for contour in contour_list:

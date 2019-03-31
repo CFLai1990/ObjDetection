@@ -46,7 +46,6 @@ class ApiClass(API):
         """Main function"""
         try:
             result = self.od_mask(data)
-            print(result)
             self.emit2client(result)
         except Exception as e:
             print(repr(e))

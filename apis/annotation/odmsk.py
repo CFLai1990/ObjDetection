@@ -1,4 +1,5 @@
 """odmsk: take the image, return the masks"""
+import traceback
 import base64
 from .__settings__ import API, INFER_SIGN
 from .libs import NLPData
@@ -43,6 +44,11 @@ class ApiClass(API):
 
     def execute(self, data):
         """Main function"""
-        result = self.od_mask(data)
-        self.emit2client(result)
+        try:
+            result = self.od_mask(data)
+            print(result)
+            self.emit2client(result)
+        except Exception as e:
+            print(repr(e))
+            traceback.print_exc()
         self.logger.info('Result sent')

@@ -10,4 +10,4 @@ def get_vis_dict():
     ds_dict.classes = {i: name for i, name in enumerate(classes)}
     return ds_dict
 
-FIX_DICT = ['sector']
+FIX_DICT = ['rectangle', 'sector']
